@@ -5,13 +5,13 @@ tags: [hexo, post, git]
 categories: [trials]
 comments: true
 ---
-#如何使用git管理hexo源码目录并在多台电脑上同步
+# 如何使用git管理hexo源码目录并在多台电脑上同步
 费了些力气，终于是把hexo-gitPage搭起来了，因为觉得自己无论如何要开始做好记录，以便以后能够回顾。git是熟悉了又忘记，这篇文章就先记录一下如何使用git将hexo工程的源码一并管理，方便在不同的机器上撰写并发布post。
 [hexo main page](https://hexo.io)
 [Markdown gramma](http://www.appinn.com/markdown/#link)
 [hexo目录结构及作用](http://www.tuicool.com/articles/fiYVbaY)
 
-##首次配置hexo与node.js环境
+## 首次配置hexo与node.js环境
 1.安装node.js，这里直接去[node.js官网](https://nodejs.org/en/)下载pkg进行安装就可以了。
 2.安装hexo
 
@@ -56,7 +56,7 @@ comments: true
   	branch: master
 	
 到此应该就告一段落了
-##在新机器上同步hexo仓库并进行撰文
+## 在新机器上同步hexo仓库并进行撰文
 1.首先将博客仓库clone下来
 
 git clone git@github.com:Marcteen/Marcteen.github.io
@@ -65,7 +65,7 @@ git clone git@github.com:Marcteen/Marcteen.github.io
 
 2.重新配置hexo工程，这个可以参考上文首次配置中的第二步就可以了，唯一的不同就是不要执行hexo init，不然git工程配置文件就挂了。
 
-##发布博文注意事项
+## 发布博文注意事项
 1.新建并编辑博文，[参考](http://blog.csdn.net/wizardforcel/article/details/40684575)
 
 	hexo new “title”
@@ -92,7 +92,7 @@ git clone git@github.com:Marcteen/Marcteen.github.io
 	hexo g
 	hexo -d
 	
-##一点用git进行同步与合并分支的内容
+## 一点用git进行同步与合并分支的内容
 由于可能使用多台设备进行文章的编辑，所以需要进行同步动作，保持当前工作目录处于最新进展。
 首先是从远程主机取回更新，
 
