@@ -3,9 +3,13 @@ title: first post
 date: 2016-10-31 23:45:36
 tags: [hexo, post, git]
 categories: [trials]
+comments: true
 ---
 #如何使用git管理hexo源码目录并在多台电脑上同步
-费了些力气，终于是把hexo-gitPage搭起来了，因为觉得自己无论如何要开始做好记录，以便以后能够回顾。git是熟悉了又忘记，这篇文章就先记录一下如何使用git将hexo工程的源码一并管理，方便在不同的机器上撰写并发布post。[Markdown gramma](http://www.appinn.com/markdown/#link)
+费了些力气，终于是把hexo-gitPage搭起来了，因为觉得自己无论如何要开始做好记录，以便以后能够回顾。git是熟悉了又忘记，这篇文章就先记录一下如何使用git将hexo工程的源码一并管理，方便在不同的机器上撰写并发布post。
+[hexo main page](https://hexo.io)
+[Markdown gramma](http://www.appinn.com/markdown/#link)
+[hexo目录结构及作用](http://www.tuicool.com/articles/fiYVbaY)
 
 ##首次配置hexo与node.js环境
 1.安装node.js，这里直接去[node.js官网](https://nodejs.org/en/)下载pkg进行安装就可以了。
@@ -18,7 +22,7 @@ categories: [trials]
 	npm install
 	npm install hexo-deployer-git
 	
-3.在github上创见博客仓库Marcteen.github.io， [配置ssh 登录密钥](http://www.jianshu.com/p/a655bbc178e3)
+3.在github上创见博客仓库Marcteen.github.io， [配置ssh登录密钥](http://www.jianshu.com/p/a655bbc178e3)
 
 	git clone git@github.com:Marcteen/Marcteen.github.io.git
 	git branch hexo #管理工程源码的分支
@@ -62,17 +66,47 @@ git clone git@github.com:Marcteen/Marcteen.github.io
 2.重新配置hexo工程，这个可以参考上文首次配置中的第二步就可以了，唯一的不同就是不要执行hexo init，不然git工程配置文件就挂了。
 
 ##发布博文注意事项
-1.新建并编辑博文，[具体方法参考](http://blog.csdn.net/wizardforcel/article/details/40684575)
-2.依次执行
+1.新建并编辑博文，[参考](http://blog.csdn.net/wizardforcel/article/details/40684575)
+
+	hexo new “title”
+	
+常用的文章属性有
+
+* layout #post或page
+* title	#文章的标题	 
+* date	#文件的创建日期
+* updated	#文件的修改日期
+* comments	#是否开启评论	
+* tags	#标签	 
+* categories	#分类	 
+* permalink	#url中的名字
+	
+2.依次执行,进行工程源码的远程同步，这样就没有只能在本地写博文的问题啦！
 
 	git add .
 	git commit -m “提交信息”
 	git push origin hexo
 	
-3.然后才进行发布，感觉这样的顺序是最佳的
+3.然后才进行发布，感觉这样的顺序是最佳的。
 	hexo clean
 	hexo g
 	hexo -d
+	
+##一点用git进行同步与合并分支的内容
+由于可能使用多台设备进行文章的编辑，所以需要进行同步动作，保持当前工作目录处于最新进展。
+首先是从远程主机取回更新，
+
+	git fetch origin hexo #<主机名> <分支名>
+	
+然后将更新合并到本地分支，
+
+	git merge origin/hexo
+	
+或者使用
+
+	git rebase
+	
+由于hexo博客涉及分支内容较少，此处暂时给出少量相关内容，以后再按需学习git吧~
 	
 
 	

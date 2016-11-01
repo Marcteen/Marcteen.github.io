@@ -22,6 +22,15 @@
         <%- post.content %>
       <% } %>
     </div>
+    <div class = "entry">
+    <% if (item.excerpt && index){ %>   <!--01-->
+      <%- item.excerpt %>
+    <% } else { if (item.toc !== false) {%>   <!--02-->
+      <%- partial('post/toc') %>
+    <% } %>
+      <%- item.content %>
+    <% } %>
+    </div>
     <footer class="article-footer">
       <a data-url="<%- post.permalink %>" data-id="<%= post._id %>" class="article-share-link"><%= __('share') %></a>
       <% if (post.comments && config.disqus_shortname){ %>
