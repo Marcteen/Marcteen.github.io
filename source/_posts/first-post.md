@@ -106,8 +106,13 @@ git clone git@github.com:Marcteen/Marcteen.github.io
 或者使用
 
 	git rebase
-	
-由于hexo博客涉及分支内容较少，此处暂时给出少量相关内容，以后再按需学习git吧~
+
+实际中可能遇到冲突的情况，对于文件内容冲突，可以在文件中进行相关内容的编辑；而删除冲突则可直接将工作目录中的对应文件删除，然后执行
+
+	git add ...
+	git commit -m "message"
+
+然后就可以进行merge/rebase了。	由于hexo博客涉及分支内容较少，此处暂时给出少量相关内容，以后再按需学习git吧~
 	
 
 	
