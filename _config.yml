@@ -71,3 +71,6 @@ deploy:
   type: git
   repository: git@github.com:Marcteen/Marcteen.github.io.git
   branch: master
+
+# Duoshuo comments
+duoshuo_shortname: marcteen

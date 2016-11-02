@@ -1,10 +1,10 @@
----
-title: Launch-applications-with-shell-command
-date: 2016-11-01 22:51:07
-tags: [Unix, Linux, shell, OSX]
-categories: [trials]
-comments: true
 ---
+title: How to launch apps with shell command
+date: 2016-11-02 08:08:48
+tags: [linux, Unix, OSX, link]
+categories: [tricks]
+---
+
 # 就像vim那样在shell终端启动应用程序吧！
 自从习惯使用终端进行操作之后，就越来越习惯这么做了，当然在没有完全发挥vim潜能的情况下，使用图形化编辑器还是一个比较好的选择。那么，如果希望能够像vim那样输入一个命令就启动编辑器，也是一个很棒的功能。
 下面给出了两种实现方法，按需要来吧。感觉第一种比较厉害，但是不是一直有效，第二种方法的适用程度应该更高

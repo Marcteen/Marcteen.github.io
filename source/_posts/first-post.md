@@ -10,6 +10,7 @@ comments: true
 [hexo main page](https://hexo.io)
 [Markdown gramma](http://www.appinn.com/markdown/#link)
 [hexo目录结构及作用](http://www.tuicool.com/articles/fiYVbaY)
+[neXt主题配置文档](https://github.com/iissnan/hexo-theme-next/wiki)
 
 ## 首次配置hexo与node.js环境
 1.安装node.js，这里直接去[node.js官网](https://nodejs.org/en/)下载pkg进行安装就可以了。
