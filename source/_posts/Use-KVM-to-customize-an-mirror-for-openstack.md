@@ -116,7 +116,7 @@ AMD cpu
 	sudo service NetworkManager stop
 	sudo service network restart
 	sudo service NetworkManager start
-可是呢，无论如何尝试，在ifcfg-em1中添加BRIDGE=br0之后，服务器就断网了。。于是尝试virt-install,可供参考的[内容](http://www.361way.com/virt-install/2721.html)，后来发现只要不恢复NetworkManager就好像没有问题，虽然ifconfig里em*一堆的error.
+可是呢，无论如何尝试，在ifcfg-em1中添加BRIDGE=br0之后，服务器就断网了。。于是尝试virt-install,可供参考的[内容](http://www.361way.com/virt-install/2721.html)，后来发现只要不恢复NetworkManager就好像没有问题，虽然ifconfig里em*一堆的error，[这里](https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i)也是这样，看来应该没有大碍吧。还有[这里](http://www.cnblogs.com/jankie/archive/2012/10/19/2730826.html)提到，确实需要关闭NetworkManager才可以使网桥正常运行。
 
     virt-install -n PDMECENTOS \
     -r 512 -vcpus=1 \
@@ -166,3 +166,49 @@ AMD cpu
 
 	student ALL=(ALL) ALL
 退出并保存，完成。
+
+## 配置virt vnc连接
+上面提到了一个vnc连接kvm虚拟机的参数配置问题，这下也不得不面对一下了，因为很开心地设置好用户之后将虚拟机示例shutdown，然后现在重新启动之后不知道怎么再用vnc连接了，对就是下面的命令不起作用，输密码验证错误，我输的默认密码。。
+
+	vncviewer 0.0.0.0:1
+
+对了，记录一个Mac上好用的VNC，[chicken of vnc](https://sourceforge.net/projects/cotvnc/),恩主要是因为免费，图标简直太可爱。当然功能也是简单够用的，但是注意最好不要在建立连接的时候选全屏模式，会抽风。
+那么接着尝试解决vnc连不上虚拟机的问题，尝试如下方法
+
+	virsh console PDMECENTOS
+结果是卡住不动了，搜索之后找到了[类似问题](http://www.linuxidc.com/Linux/2014-10/107891.htm)，可是人家是vnc能连上虚拟机的情况啊。。。
+
+然后事情出现了转机，查看[这里](http://blog.csdn.net/taiyang1987912/article/details/50474219)，前面配置虚拟主机vnc没啥好说的，默认就是那样，注意后面
+
+	virsh edit PDMECENTOS
+将端口值改为-1，之前被我照着另一个很像的教程改成了5910，最原本的默认值不记得了，嗯这里应该就可以配置和vnc相关的参数了，改好之后启动虚拟机，查看qemu-kvm运行的端口
+
+	netstat -tunlp
+记得把终端全屏才能看见进程信息列，然后前面的ip:port就是vncviewer登陆所使用的参数啦。这个时候虚拟机并没有图形界面
+## 配置virt虚拟客户机桥接上网
+[参考内容](https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i)
+
+	virsh edit PDMECENTOS
+添加内容
+
+	<interface type="bridge"> <!--虚拟机网络连接方式-->
+	<source bridge="br0" /> <!-- 当前主机网桥的名称-->
+	<mac address="00:16:e4:9a:b3:6a" /> <!--为虚拟机分配mac地址，务必唯一，否则dhcp获得同样ip,引起冲突，而我是从已经创建好的虚拟机里面抄的，后来发现这样做十分正确-->
+	</interface>
+然后启动网卡，我们可以设置其随开机启动
+
+	ifconfig eth0 up
+	vim /etc/sysconfig/network-scripts/ifcfg-eth0 #置ONBOOT=true
+	
+	这个时候运行ifconfig就可以看到eth0的信息啦，然而没有卵用，最后发现安装虚拟机应该还是需要root，否则重启虚拟机的时候tap vnet会有权限错误
+很奇怪重启服务器后执行命令会遇到locale unsupport错误，可以这么解决
+
+	export LC_ALL=C
+	
+	然后virt-install出现了无法启动vnc显示的问题，又照上面修改了虚拟机的监听端口为-1，然后再用vncviewer重连就好了（改之前重连也会无法启动显示），再然后直接安装又能启动vnc显示了，我晕，完全不懂怎么好的。对了，root用户就不要在普通用户目录里安装了，会有蜜汁文件权限问题。。
+	
+
+
+	
+	
+
