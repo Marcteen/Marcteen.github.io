@@ -258,12 +258,71 @@ AMD cpu
 	netstat -tunlp
 
 首先是虚拟主机，当前得到的输出为
-	Proto Recv-Q Send-Q Local Address               Foreign Address             State       PID/Program name   
-tcp        0      0 0.0.0.0:60989               0.0.0.0:*                   LISTEN      1892/rpc.statd      
-tcp        0      0 0.0.0.0:5900                0.0.0.0:*                   LISTEN      4012/qemu-kvm       
-tcp        0      0 0.0.0.0:5901                0.0.0.0:*                   LISTEN      2848/Xvnc           
-tcp        0      0 127.0.0.1:5902              0.0.0.0:*                   LISTEN      2275/Xvnc
 
+|Proto |Recv-Q |Send-Q |Local Address |Foreign Address |State| PID/Program name|
+|---|---|---|---|---|---|---|   
+tcp|        0|      0| 0.0.0.0:60989|               0.0.0.0:*|LISTEN|1892/rpc.statd|
+|tcp|0|0| 0.0.0.0:5900|0.0.0.0:*|LISTEN|4012/qemu-kvm|       
+|tcp|0|0| 0.0.0.0:5901|0.0.0.0:*|LISTEN|2848/Xvnc
+|tcp|0|0| 127.0.0.1:5902|0.0.0.0:*|LISTEN|2275/Xvnc|
+用markdown画表格真是累人。我们看到qemu-kvm监听了所有内网ip的5900，也就是说只要vncviewer向5900端口发出连接请求，虚拟机进程就会响应，那么我们要如何访问呢？
+1.在虚拟主机上，使用
+	
+	vncviewer localhost:5900
+因为这个虚拟机进程是在虚拟主机上运行的，用本机ip定位就可以了。再看下一个，2848/Xvnc，监听了所有内网ip的5901端口，这个是虚拟主机的vncserver进程，验证方法是输入
+
+	service vncserver status
+进行验证，执行后会输出一样的PID，那么对于其他内网主机，使用如下命令即可通过vnc连接虚拟主机
+
+	vncviewer node4:5901
+看再下一项，注意其监听ip是127.0.0.1，这说明他只会相应本机进程，其他内网机器无法与其成功建立连接。
+另外，vnc有自己的一套映射规则，默认从5900端口开始，vncviewer所接受参数中端口可用0替换，并递增对应，也就是说，如果此时通过内网机器远程虚拟主机，会有如下对应关系及情况
+
+	vncviewer node4:0 #实际远程到了虚拟主机上的5900监听虚拟机示例进程
+	vncviewer node4:1 #连接到虚拟主机的5901，vncserver进程
+	vncviewer node4:2 #虚拟主机本机ip监听端口，无法连接
+	
+基于这些，我们来看一下虚拟机中的情况。先简单做一下“故障排除”,将Xvnc进程杀掉，此时查看vncserver情况，提示
+
+	Xvnc 已死，但是 subsys 被锁
+	
+呵呵。
+那么执行以下命令删除锁吧
+
+	rm -rf /var/lock/subsys/Xvnc
+然后将~/.vnc/下的.log以及.pid删除。重启虚拟机，让配置的vncserver服务自动启动，再查看进程监听情况
+这里，并没有发现vncserver自动启动，于是输入
+
+	vncserver
+反馈信息为
+
+	You will require a password to access your desktops.
+
+	Password:
+	Verify:
+	
+	New 'localhost.localdomain:1 (student)' desktop is localhost.localdomain:1
+	
+	Creating default startup script /home/student/.vnc/xstartup
+	Starting applications specified in /home/student/.vnc/xstartup
+	Log file is /home/student/.vnc/localhost.localdomain:1.log
+	
+看起来还挺正常了，不小心又起了一次，于是出现了localhost.localdomain:2。。好的此查看进程占用情况(只取到需要看的那一行)
+
+|Proto |Recv-Q |Send-Q |LocalAddress|Foreign Address|State|PID/Program name|
+|---|---|---|---|---|---|---|   
+|tcp|0|0| 0.0.0.0:5901|0.0.0.0:*|LISTEN|2003/Xvnc|           
+|tcp|0|0| 0.0.0.0:5902|0.0.0.0:*|LISTEN|2369/Xvnc|
+刚才明明还发现Xvnc监听的都是本地ip，但是测试后依然不能使用内网机器进行vnc远程，错误信息完全没有改变。先将其关闭
+
+	vncserver -kill :1
+	vncserver -kill :2
+检查开放端口，没有异常，还是修改后的样子，开放了5901和5902,重新为当前用户设置密码，然后再检查自动启动配置，确认无误后重启虚拟机系统，发现vncserver自动启动了，可是监听ip又是之前的127.0.0.1，处于其他机器无法连接的状态，呵呵。这时自己再起一个vncserver则会监听所有ip，可是依然连不上。
+
+
+	
+	
+	
 
 	
 	
