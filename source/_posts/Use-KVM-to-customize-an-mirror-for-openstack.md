@@ -261,7 +261,7 @@ AMD cpu
 
 |Proto |Recv-Q |Send-Q |Local Address |Foreign Address |State| PID/Program name|
 |---|---|---|---|---|---|---|   
-tcp|        0|      0| 0.0.0.0:60989|               0.0.0.0:*|LISTEN|1892/rpc.statd|
+|tcp|        0|      0| 0.0.0.0:60989|               0.0.0.0:*|LISTEN|1892/rpc.statd|
 |tcp|0|0| 0.0.0.0:5900|0.0.0.0:*|LISTEN|4012/qemu-kvm|       
 |tcp|0|0| 0.0.0.0:5901|0.0.0.0:*|LISTEN|2848/Xvnc
 |tcp|0|0| 127.0.0.1:5902|0.0.0.0:*|LISTEN|2275/Xvnc|
