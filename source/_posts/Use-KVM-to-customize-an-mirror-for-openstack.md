@@ -45,10 +45,10 @@ AMD cpu
 不是很确定服务器上是否有vnc server，检查一下，[参考链接](http://blog.163.com/likaifeng@126/blog/static/3209731020147614916768/)
 	
 	ls /etc/sysconfig | grep "vncservers"
-返回为空，那么就先安装一下吧
+返回为空，于是先安装
 
 	sudo yum install tigervnc tigervnc-server -y
-配置一下
+简单配置一下
 
 	sudo vim /etc/sysconfig/vncservers
 去掉注释并修改
@@ -67,17 +67,18 @@ AMD cpu
 	chkconfig --level 5 vncserver on
 	chkconfig --list | grep vnc
 
-这时候就可以使用vncviewer之类的客户端进行登录了，输入如下主机名:1即可
+这时候就可以使用vncviewer之类的客户端进行登录了，输入如下主机名:1即可（一般可以，但实际有其他情况）
 
 	node4:1
 ## 准备centOS-6.7镜像，创建KVM虚拟机并启动
+（这里遇到了一个坑，用普通用户进行虚拟机创建的话，后面通过virsh edit为虚拟机配置网桥后启动会出现权限错误，而直接使用root来创建虚拟机，网桥字段会被自动配好，再无报错，所以就不要尝试普通用户+sudo往坑里跳了。）
 我们可以查看虚拟机列表，当然现在暂时没有任何虚拟机实例在运行
 	
 	virsh list
 创建虚拟机硬盘文件，据说10GB可以了，不然后面使用费时费力
 
 	kvm-img create -f raw PDME.img 10G
-很不幸，出现 kvm-img: command not found了。搜索后发现好像qemu-img也是一样的
+很不幸，出现 kvm-img: command not found了。搜索后发现好像qemu-img也是一样的，这里注意一下，可以直接用-f指定为qcow2格式，还省去后面转换img了
 
 	qemu-img create -f raw PDME.img 10G
 成功创建镜像，那么就可以使用centOS镜像将系统安装在这个创建的硬盘文件中了
@@ -95,7 +96,7 @@ AMD cpu
 	/etc/qemu-ifup: could not launch network script
 	kvm: -net tap: Device 'tap' could not be initialized
 ### 尝试网桥配置
-似乎是网络方面的问题？搜了一下遇到这个问题的人还是不少，不过想起自己似乎略过了针对kvm进行网络方面的配置。
+似乎是网络方面的问题？搜了一下遇到这个问题的人还是不少，不过想起自己似乎略过了针对kvm进行网络方面的配置，这里补一下吧。
 虚拟机采用桥接方式，使其可以获得与物理机同样级别的IP，参考[这里](http://www.centoscn.com/image-text/config/2016/0218/6765.html)
 ，另外还有[更详细的参考](http://blog.csdn.net/hzhsan/article/details/44098537/)，包括了NAT模式的介绍。
 下面我们为其配置网桥模式
@@ -120,7 +121,8 @@ AMD cpu
 	sudo service NetworkManager stop
 	sudo service network restart
 	sudo service NetworkManager start
-可是呢，无论如何尝试，在ifcfg-em1中添加BRIDGE=br0之后，服务器就断网了。。于是尝试virt-install,可供参考的[内容](http://www.361way.com/virt-install/2721.html)，后来发现只要不恢复NetworkManager就好像没有问题，虽然ifconfig里em*一堆的error，[这里](https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i)也是这样，看来应该没有大碍吧。还有[这里](http://www.cnblogs.com/jankie/archive/2012/10/19/2730826.html)提到，确实需要关闭NetworkManager才可以使网桥正常运行。
+可是呢，无论如何尝试，在ifcfg-em1中添加BRIDGE=br0之后，服务器就“断网”了。。
+于是尝试virt-install,可供参考的[内容](http://www.361way.com/virt-install/2721.html)，后来发现只要不恢复NetworkManager就好像没有问题，虽然ifconfig里em*一堆的error，[这里](https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i)也是这样，看来应该没有大碍吧。还有[这里](http://www.cnblogs.com/jankie/archive/2012/10/19/2730826.html)提到，确实需要关闭NetworkManager才可以使网桥正常运行。不过也有可能是地址变化了，所以连不上？似乎依然说不通。
 
     virt-install -n PDMECENTOS \
     -r 512 -vcpus=1 \
@@ -153,10 +155,9 @@ AMD cpu
 - virsh dominfo win03_2 #查看虚拟机的信息
 - virsh console name #控制台进入指定虚拟机实例
 
-于是又经历了一次漫长的服务器重启，上面列出的virt-install命令经过了一些修改，直接使用创建的img作为磁盘文件。当vncviewer启动并弹出之后，最好不要去动窗口，这回造成安装过程中断。使用键盘在操作界面进行安装过程就可以啦。
+于是又经历了一次漫长的服务器重启，上面列出的virt-install命令是经过了一些修改后的样子，直接使用创建的img作为磁盘文件。当vncviewer启动并弹出之后，最好不要去动vnc窗口，这会造成安装过程中断。使用键盘在操作界面进行安装过程就可以啦。
 
-不过疑问还是有的，virt-install创建的虚拟机实例是如何配置所在ip及端口的呢？上面只是直接给vnc指定了一组参数。嗯在下面好像就发现了。
-
+不过疑问还是有的，virt-install创建的虚拟机实例是如何配置所在ip及端口的呢？上面只是直接给vnc指定了一组参数。下面有进一步思考。
 进入安装好的系统之后，只有一个root用户，此时可以先创建一个普通用户并设置密码
 
 	useradd -d /home/student student
@@ -185,7 +186,7 @@ AMD cpu
 然后事情出现了转机，查看[这里](http://blog.csdn.net/taiyang1987912/article/details/50474219)，前面配置虚拟主机vnc没啥好说的，默认就是那样，注意后面
 
 	virsh edit PDMECENTOS
-将端口值改为-1，之前被我照着另一个很像的教程改成了5910，最原本的默认值不记得了，嗯这里应该就可以配置和vnc相关的参数了，改好之后启动虚拟机，查看qemu-kvm运行的端口，不要使用：1，感觉这个需要虚拟机配置vncserver后进行验证才可用，通过进程端口直接连接显然更佳。
+将端口值改为-1，之前被我照着另一个很像的教程改成了5910，最原本的默认值不记得了，嗯这里应该就可以配置和vnc相关的参数了，改好之后启动虚拟机，查看qemu-kvm运行的端口，不要使用：1，感觉这个需要虚拟机配置vncserver后进行验证才可用，通过进程端口直接连接显然更佳。（这里理解不是很到位，后面还是有进一步思考）
 
 	netstat -tunlp
 记得把终端全屏才能看见进程信息列，然后前面的ip:port就是vncviewer登陆所使用的参数啦。这个时候虚拟机并没有图形界面,我们可以安装一下
@@ -220,14 +221,14 @@ AMD cpu
 	vim /etc/sysconfig/network-scripts/ifcfg-eth0 #置ONBOOT=true
 	
 	这个时候运行ifconfig就可以看到eth0的信息啦，然而没有卵用，最后发现安装虚拟机应该还是需要root，否则重启虚拟机的时候tap vnet会有权限错误
-很奇怪重启服务器后执行命令会遇到locale unsupport错误，可以这么解决
+很奇怪重启服务器后执行命令会遇到locale unsupport错误，可以这么解决，虽然只是当时生效，重启后就恢复原样了。
 
 	export LC_ALL=C
-另外是修改系统语言的方法，感觉更有效，虽然好像对虚拟机（vnc字符界面下）没有效果，但是对虚拟主机有效果。
+后来发现是mac上的终端有问题，进入其配置面板，去掉Adcanced选项卡中set locale ...项前面的对勾就可以了。另外是修改系统语言的方法，比较推荐使用。
 	
 	vim /etc/profile
-	/export #找到export xx xx xxx语句，在前增加LANG="zh_CN.UTF-8",在后追加LANG
-然后重启系统即可生效，后来发现在工作机上直接ssh虚拟机无乱码，但是在服务器通过vnc到字符界面却会中文显示小方块，真是累，而在图形界面下又是正常的。
+	/export #找到export xx xx xxx语句，在前增加一行LANG="zh_CN.UTF-8",在后追加LANG
+然后重启系统即可生效。
 			
 然后virt-install出现了无法启动vnc显示的问题，又照上面修改了虚拟机的监听端口为-1，然后再用vncviewer重连就好了（改之前重连也会无法启动显示），再然后直接安装又能启动vnc显示了，我晕，完全不懂怎么好的。对了，root用户就不要在普通用户目录里安装了，会有蜜汁文件权限问题。。
 	
@@ -236,7 +237,32 @@ AMD cpu
 	sudo apt-get install nautilus-open-terminal #ubuntu
 	sudo yum install nautilus-open-terminal #centos
 另外virsh shutdown命令需要对虚拟机进行[一定配置](http://www.bubuko.com/infodetail-771662.html)才可用。
+
+## vnc直接连接kvm问题与进程监听地址端口的思考
+虚拟机终于是运行起来了，配置也到了一定程度，可以比较方便地使用了，但是出现了一个很奇怪的现象，直接在本地机器通过vnc连接虚拟机总是出现拒绝连接的提示，此时虚拟机中vncserver随系统启动，处于运行状态，可以输入如下命令查看
+
+	service vncserver status
+同时也排除了防火墙开放端口的问题，依然没有进展。虽然用shell连接是正常的，但还是很不甘心。
+
+然后就很无聊的了解了一下netstat里面出现的进程监听地址和端口，唉计网本来就没怎么学好，考完研后丢的也差不多了。首先是这个
+
+	127.0.0.1
 	
+了解了一下，表示本机，另一个代称就是我们很熟悉的localhost，更神奇的是127.x.x.x其实都是一样的。如果一个进程监听这个ip，那就表示它实际上只能监听到本地的程序并作出回应。
+
+另外就是
+
+	0.0.0.0
+这个可不得了，表示一切ip，本机不认识的任何地址都可以归到这个地址里，监听这个地址的进程，当然机会对所有地址对应端口的通信作出反应啦。了解了这个，我们来看一下虚拟主机，虚拟机相应的vnc进程监听情况，也就是这会一个比较关键的命令的输出
+
+	netstat -tunlp
+
+首先是虚拟主机，当前得到的输出为
+	Proto Recv-Q Send-Q Local Address               Foreign Address             State       PID/Program name   
+tcp        0      0 0.0.0.0:60989               0.0.0.0:*                   LISTEN      1892/rpc.statd      
+tcp        0      0 0.0.0.0:5900                0.0.0.0:*                   LISTEN      4012/qemu-kvm       
+tcp        0      0 0.0.0.0:5901                0.0.0.0:*                   LISTEN      2848/Xvnc           
+tcp        0      0 127.0.0.1:5902              0.0.0.0:*                   LISTEN      2275/Xvnc
 
 
 	
