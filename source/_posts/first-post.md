@@ -97,7 +97,10 @@ git clone git@github.com:Marcteen/Marcteen.github.io
 4.本地预览。有时候github的速度真的挺慢，本地查看也不错，同时也可以让它不要占用一个终端
 
 	nohup hexo s &
-	然后按下ctrl+c，就能够不中断本地预览并退出了。
+	然后按下ctrl+c，就能够不中断本地预览并退出了。不过这样要结束本地预览呢，毕竟这不是正式环境，进程号又不好记，那么就通过下面的命令发现进程号并杀掉就好了
+	
+	ps aux | grep hexo
+	kill -9 pidOfHexo
 	
 ## 一点用git进行同步与合并分支的内容
 由于可能使用多台设备进行文章的编辑，所以需要进行同步动作，保持当前工作目录处于最新进展。
