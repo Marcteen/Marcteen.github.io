@@ -62,8 +62,12 @@ AMD cpu
 验证两次，然后启动vnc服务
 
 	vncserver &
+也可以设置其随系统启动
 
-这时候就可以使用vncviewer之类的客户端进行登录了，输入如下主机名
+	chkconfig --level 5 vncserver on
+	chkconfig --list | grep vnc
+
+这时候就可以使用vncviewer之类的客户端进行登录了，输入如下主机名:1即可
 
 	node4:1
 ## 准备centOS-6.7镜像，创建KVM虚拟机并启动
@@ -168,11 +172,11 @@ AMD cpu
 退出并保存，完成。
 
 ## 配置virt vnc连接
-上面提到了一个vnc连接kvm虚拟机的参数配置问题，这下也不得不面对一下了，因为很开心地设置好用户之后将虚拟机示例shutdown，然后现在重新启动之后不知道怎么再用vnc连接了，对就是下面的命令不起作用，输密码验证错误，我输的默认密码。。
+上面提到了一个vnc连接kvm虚拟机的参数配置问题，这下也不得不面对一下了，因为很开心地设置好用户之后将虚拟机示例shutdown，然后现在重新启动之后不知道怎么再用vnc连接了，
 
 	vncviewer 0.0.0.0:1
 
-对了，记录一个Mac上好用的VNC，[chicken of vnc](https://sourceforge.net/projects/cotvnc/),恩主要是因为免费，图标简直太可爱。当然功能也是简单够用的，但是注意最好不要在建立连接的时候选全屏模式，会抽风。
+对了，记录一个Mac上好用的VNC，[chicken of vnc](https://sourceforge.net/projects/cotvnc/),恩主要是因为免费，图标简直太可爱。当然功能也是简单够用的，但是注意最好不要在建立连对就是下面的命令不起作用，输密码验证错误，我输的默认密码。。接的时候选全屏模式，会抽风。
 那么接着尝试解决vnc连不上虚拟机的问题，尝试如下方法
 
 	virsh console PDMECENTOS
@@ -181,10 +185,25 @@ AMD cpu
 然后事情出现了转机，查看[这里](http://blog.csdn.net/taiyang1987912/article/details/50474219)，前面配置虚拟主机vnc没啥好说的，默认就是那样，注意后面
 
 	virsh edit PDMECENTOS
-将端口值改为-1，之前被我照着另一个很像的教程改成了5910，最原本的默认值不记得了，嗯这里应该就可以配置和vnc相关的参数了，改好之后启动虚拟机，查看qemu-kvm运行的端口
+将端口值改为-1，之前被我照着另一个很像的教程改成了5910，最原本的默认值不记得了，嗯这里应该就可以配置和vnc相关的参数了，改好之后启动虚拟机，查看qemu-kvm运行的端口，不要使用：1，感觉这个需要虚拟机配置vncserver后进行验证才可用，通过进程端口直接连接显然更佳。
 
 	netstat -tunlp
-记得把终端全屏才能看见进程信息列，然后前面的ip:port就是vncviewer登陆所使用的参数啦。这个时候虚拟机并没有图形界面
+记得把终端全屏才能看见进程信息列，然后前面的ip:port就是vncviewer登陆所使用的参数啦。这个时候虚拟机并没有图形界面,我们可以安装一下
+	
+	yum -y groupinstall Desktop
+	yum -y groupinstall "X Window System"
+安装完成后就可以启动图形界面了
+
+	startx
+添加中文支持
+
+	yum -y groupinstall chinese-support
+
+设置开机自动进入图形界面
+
+	vim /etc/inittab
+将id:x:initdefautl中的x改成5即可
+	
 ## 配置virt虚拟客户机桥接上网
 [参考内容](https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i)
 
@@ -204,11 +223,19 @@ AMD cpu
 很奇怪重启服务器后执行命令会遇到locale unsupport错误，可以这么解决
 
 	export LC_ALL=C
+另外是修改系统语言的方法，感觉更有效，虽然好像对虚拟机（vnc字符界面下）没有效果，但是对虚拟主机有效果。
 	
-	然后virt-install出现了无法启动vnc显示的问题，又照上面修改了虚拟机的监听端口为-1，然后再用vncviewer重连就好了（改之前重连也会无法启动显示），再然后直接安装又能启动vnc显示了，我晕，完全不懂怎么好的。对了，root用户就不要在普通用户目录里安装了，会有蜜汁文件权限问题。。
+	vim /etc/profile
+	/export #找到export xx xx xxx语句，在前增加LANG="zh_CN.UTF-8",在后追加LANG
+然后重启系统即可生效，后来发现在工作机上直接ssh虚拟机无乱码，但是在服务器通过vnc到字符界面却会中文显示小方块，真是累，而在图形界面下又是正常的。
+			
+然后virt-install出现了无法启动vnc显示的问题，又照上面修改了虚拟机的监听端口为-1，然后再用vncviewer重连就好了（改之前重连也会无法启动显示），再然后直接安装又能启动vnc显示了，我晕，完全不懂怎么好的。对了，root用户就不要在普通用户目录里安装了，会有蜜汁文件权限问题。。
 	
-最后只得注意的是对虚拟机配置的变更很可能要重启后才生效，不管什么情况，试一试最好，我这里的网桥配置就是删除libvirt自带的nat虚拟网桥再重启虚拟机就生效了。嗯不要使用普通用户运行virsh，很坑。
-另外virsh shutdown命令需要对虚拟机进行[一定配置](http://www.bubuko.com/infodetail-771662.html)才有效。
+最后只得注意的是对虚拟机配置的变更很可能要重启后才生效，不管什么情况，试一试最好，我这里的网桥配置就是删除libvirt自带的nat虚拟网桥再重启虚拟机就生效了。嗯不要使用普通用户运行virsh，很坑。另一个例子，我们进入图形界面后，可以给右键菜单添加打开终端的选项，也需要重启系统
+
+	sudo apt-get install nautilus-open-terminal #ubuntu
+	sudo yum install nautilus-open-terminal #centos
+另外virsh shutdown命令需要对虚拟机进行[一定配置](http://www.bubuko.com/infodetail-771662.html)才可用。
 	
 
 

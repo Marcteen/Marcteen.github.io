@@ -240,6 +240,234 @@
             
               
                 
+                <a class="post-title-link" href="/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/" itemprop="url">
+                  Use Kvm to customize an mirror for openstack
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-11-03T10:15:31+08:00" content="2016-11-03">
+              2016-11-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/trials/" itemprop="url" rel="index">
+                    <span itemprop="name">trials</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"><a href="#在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成" class="headerlink" title="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"></a>在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成</h1><p>由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。<br>服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。</p>
+<h2 id="基础环境检查与简单配置"><a href="#基础环境检查与简单配置" class="headerlink" title="基础环境检查与简单配置"></a>基础环境检查与简单配置</h2><p><a href="http://www.111cn.net/sys/CentOS/87211.htm" target="_blank" rel="external">参考内容1</a><br><a href="http://www.vpsee.com/2012/02/create-centos-kvm-image-for-openstack-nova/" target="_blank" rel="external">参考内容2</a><br>Intel cpu</p>
+<pre><code>cat /proc/cpuinfo | grep &quot;vmx&quot;
+</code></pre><p>AMD cpu</p>
+<pre><code>cat /proc/cpuinfo | grep &quot;svm&quot;
+</code></pre><p>有输出内容就表示满足条件，否则进入bios更改虚拟化设置。然后安装kvm以及虚拟化所需相关软件包</p>
+<pre><code>yum install -y kvm virt-* libvirts bridge-utils qemu-img
+</code></pre><ul>
+<li>kvm：软件包中含有KVM内核模块，它在默认linux内核中提供kvm管理程序</li>
+<li>libvirts：安装虚拟机管理工具，使用virsh等命令来管理和控制虚拟机</li>
+<li>bridge-utils：设置网络网卡桥接</li>
+<li>virt-*：创建、克隆虚拟机命令，使用qemu命令来创建磁盘等。</li>
+<li>qemu-img：安装qemu组件，使用qemu命令来创建磁盘等。</li>
+</ul>
+<p>加载kvm模块</p>
+<pre><code>modprobe kvm-intel
+</code></pre><p>检查kvm模块是否被加载</p>
+<pre><code>lsmod | grep kvm
+</code></pre><p>最好是重启再确认一次</p>
+<pre><code>reboot
+</code></pre><h2 id="安装vncserver"><a href="#安装vncserver" class="headerlink" title="安装vncserver"></a>安装vncserver</h2><p>不是很确定服务器上是否有vnc server，检查一下，<a href="http://blog.163.com/likaifeng@126/blog/static/3209731020147614916768/" target="_blank" rel="external">参考链接</a></p>
+<pre><code>ls /etc/sysconfig | grep &quot;vncservers&quot;
+</code></pre><p>返回为空，那么就先安装一下吧</p>
+<pre><code>sudo yum install tigervnc tigervnc-server -y
+</code></pre><p>配置一下</p>
+<pre><code>sudo vim /etc/sysconfig/vncservers
+</code></pre><p>去掉注释并修改</p>
+<pre><code>VNCSERVERS=&quot;2:node4&quot;
+VNCSERVERARGS[2]=&quot;-geometry 1024x768  -nolisten tcp -localhost&quot;
+</code></pre><p>然后配置一下当前用户的vnc登录密码</p>
+<pre><code>vncpasswd
+</code></pre><p>验证两次，然后启动vnc服务</p>
+<pre><code>vncserver &amp;
+</code></pre><p>这时候就可以使用vncviewer之类的客户端进行登录了，输入如下主机名</p>
+<pre><code>node4:1
+</code></pre><h2 id="准备centOS-6-7镜像，创建KVM虚拟机并启动"><a href="#准备centOS-6-7镜像，创建KVM虚拟机并启动" class="headerlink" title="准备centOS-6.7镜像，创建KVM虚拟机并启动"></a>准备centOS-6.7镜像，创建KVM虚拟机并启动</h2><p>我们可以查看虚拟机列表，当然现在暂时没有任何虚拟机实例在运行</p>
+<pre><code>virsh list
+</code></pre><p>创建虚拟机硬盘文件，据说10GB可以了，不然后面使用费时费力</p>
+<pre><code>kvm-img create -f raw PDME.img 10G
+</code></pre><p>很不幸，出现 kvm-img: command not found了。搜索后发现好像qemu-img也是一样的</p>
+<pre><code>qemu-img create -f raw PDME.img 10G
+</code></pre><p>成功创建镜像，那么就可以使用centOS镜像将系统安装在这个创建的硬盘文件中了</p>
+<pre><code>sudo kvm -m 512 -cdrom CentOS-6.7-x86_64-bin-DVD1.iso\
+ -drive file=PDME.img -boot d -net nic -net tap -nographic -vnc :0
+</code></pre><p>-vnc参数用于打开vnc访问，这样就可以通过其他机器登录到这个界面安装系统了，同时注意须加上-net nic -net tap才能建立镜像到kvm网桥virbr0的映射，网络才通。</p>
+<p>不过这时候依然出现了找不到kvm命令的提示，我觉得适可而止惹。查阅后发现是新版本系统会把命令藏起来，推荐使用新命令virtual-install/virsh进行操作，而把qemu-kvm转移到了不起眼的地方/usr/libexex，那么就自己链接过来使用吧</p>
+<pre><code>sudo ln -sf /usr/libexec/qemu-kvm /usr/bin/kvm
+</code></pre><p>这好像还是和kvm-img没有关系。运行kvm创建虚拟机，报错如下</p>
+<pre><code>/etc/qemu-ifup: could not launch network script
+kvm: -net tap: Device &apos;tap&apos; could not be initialized
+</code></pre><h3 id="尝试网桥配置"><a href="#尝试网桥配置" class="headerlink" title="尝试网桥配置"></a>尝试网桥配置</h3><p>似乎是网络方面的问题？搜了一下遇到这个问题的人还是不少，不过想起自己似乎略过了针对kvm进行网络方面的配置。<br>虚拟机采用桥接方式，使其可以获得与物理机同样级别的IP，参考<a href="http://www.centoscn.com/image-text/config/2016/0218/6765.html" target="_blank" rel="external">这里</a><br>，另外还有<a href="http://blog.csdn.net/hzhsan/article/details/44098537/" target="_blank" rel="external">更详细的参考</a>，包括了NAT模式的介绍。<br>下面我们为其配置网桥模式</p>
+<pre><code>cd /etc/sysconfig/network-scripts
+sudo cp ifcfg-em1 ifcfg-br1
+</code></pre><p>编辑ifcfg-em1，添加内容</p>
+<pre><code>BRIDGE=br1
+</code></pre><p>编辑ifcfg-br1,参考内容为</p>
+<pre><code>DEVICE=br1
+TYPE=Bridge
+ONBOOT=yes
+NM_CONTROLLED=yes
+BOOTPROTO=dhcp
+</code></pre><p>因为我们这里没用固定的网段分配，指定静态ip是不明智的，所以直接将IPADDR等相关项省略，对于NM_CONTROLLED字段，参考内容中说明RedHat系统需要设置为NO，而CentOS似乎没有特别需要注意的说法，就保持默认的yes好了。</p>
+<p>保存好后，重启network service</p>
+<pre><code>sudo service NetworkManager stop
+sudo service network restart
+sudo service NetworkManager start
+</code></pre><p>可是呢，无论如何尝试，在ifcfg-em1中添加BRIDGE=br0之后，服务器就断网了。。于是尝试virt-install,可供参考的<a href="http://www.361way.com/virt-install/2721.html" target="_blank" rel="external">内容</a>，后来发现只要不恢复NetworkManager就好像没有问题，虽然ifconfig里em*一堆的error.</p>
+<pre><code>virt-install -n PDMECENTOS \
+-r 512 -vcpus=1 \
+-c /home/node4/techbase/CentOS-6.7-x86_64-bin-DVD1.iso \
+--hvm --os-type=linux \
+--disk /home/node4/techbase/PDME.img \
+--graphics vnc,listen=0.0.0.0,port=7789 \
+--force --autostart
+</code></pre><p>好像是可以成功的，自动打开了一个VNC连接至创建的虚拟机实例，但是一直没动静，过了一会连接至物理服务器的VNC黑掉了，重新连接还是黑的并提示未加密链接。</p>
+<h2 id="笑着活下去。记录一下常用virsh命令"><a href="#笑着活下去。记录一下常用virsh命令" class="headerlink" title="笑着活下去。记录一下常用virsh命令"></a>笑着活下去。记录一下常用virsh命令</h2><ul>
+<li>virsh list #显示本地活动虚拟机</li>
+<li>virsh list –all #显示本地所有的虚拟机（活动的+不活动的）</li>
+<li>virsh define ubuntu.xml #通过配置文件定义一个虚拟机（这个虚拟机还不是活动的）</li>
+<li>virsh start ubuntu #启动名字为ubuntu的非活动虚拟机</li>
+<li>virsh create ubuntu.xml #创建虚拟机（创建后，虚拟机立即执行，成为活动主机）</li>
+<li>virsh suspend ubuntu #暂停虚拟机</li>
+<li>virsh resume ubuntu #启动暂停的虚拟机</li>
+<li>virsh shutdown ubuntu #正常关闭虚拟机</li>
+<li>virsh destroy ubuntu #强制关闭虚拟机</li>
+<li>virsh undefine ubuntu #移除ubuntu虚拟机</li>
+<li>virsh dumpxml ubuntu #显示虚拟机的当前配置文件（可能和定义虚拟机时的配置不同，因为当虚拟机启动时，需要给虚拟机分配id号、uuid、vnc端口号等等）</li>
+<li>virsh setmem ubuntu 512000 #给不活动虚拟机设置内存大小</li>
+<li>virsh setvcpus ubuntu 4 # 给不活动虚拟机设置cpu个数</li>
+<li>针对虚拟机操作</li>
+<li>virsh domid win03_3 #查看虚拟机的标识符</li>
+<li>virsh domname win03_2 #查看虚拟机的名称</li>
+<li>virsh domuuid win03_2 #查看虚拟机的 UUID</li>
+<li>virsh domstate win03_2 #查看虚拟机目前的状态</li>
+<li>virsh dominfo win03_2 #查看虚拟机的信息</li>
+<li>virsh console name #控制台进入指定虚拟机实例</li>
+</ul>
+<p>于是又经历了一次漫长的服务器重启，上面列出的virt-install命令经过了一些修改，直接使用创建的img作为磁盘文件。当vncviewer启动并弹出之后，最好不要去动窗口，这回造成安装过程中断。使用键盘在操作界面进行安装过程就可以啦。</p>
+<p>不过疑问还是有的，virt-install创建的虚拟机实例是如何配置所在ip及端口的呢？上面只是直接给vnc指定了一组参数。</p>
+<p>进入安装好的系统之后，只有一个root用户，此时可以先创建一个普通用户并设置密码</p>
+<pre><code>useradd -d /home/student student
+passwd student
+</code></pre><p>为了能够使该账户能够使用sudo，我们需要将其添加到sudo配置文件中去</p>
+<pre><code>su
+visudo
+/ALL
+</code></pre><p>找到root ALL=(ALL) ALL，在下方添加</p>
+<pre><code>student ALL=(ALL) ALL
+</code></pre><p>退出并保存，完成。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/11/02/Language-and-timezone/" itemprop="url">
                   Language and timezone
                 </a>
@@ -785,7 +1013,7 @@ git commit -m &quot;message&quot;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -802,7 +1030,7 @@ git commit -m &quot;message&quot;
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
