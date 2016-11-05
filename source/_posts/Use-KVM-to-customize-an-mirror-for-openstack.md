@@ -9,6 +9,8 @@ categories: [trials]
 由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。
 服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。
 
+<!--more-->
+
 ## 基础环境检查与简单配置
 [参考内容1](http://www.111cn.net/sys/CentOS/87211.htm)
 [参考内容2](http://www.vpsee.com/2012/02/create-centos-kvm-image-for-openstack-nova/)

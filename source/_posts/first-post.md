@@ -7,6 +7,9 @@ comments: true
 ---
 # 如何使用git管理hexo源码目录并在多台电脑上同步
 费了些力气，终于是把hexo-gitPage搭起来了，因为觉得自己无论如何要开始做好记录，以便以后能够回顾。git是熟悉了又忘记，这篇文章就先记录一下如何使用git将hexo工程的源码一并管理，方便在不同的机器上撰写并发布post。
+
+<!--more-->
+
 [hexo main page](https://hexo.io)
 [Markdown gramma](http://www.appinn.com/markdown/#link)
 [Markdown入门指南](http://www.jianshu.com/p/1e402922ee32/)
