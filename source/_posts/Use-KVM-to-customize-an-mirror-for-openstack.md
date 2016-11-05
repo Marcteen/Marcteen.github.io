@@ -154,6 +154,7 @@ AMD cpu
 - virsh domstate win03_2 #查看虚拟机目前的状态
 - virsh dominfo win03_2 #查看虚拟机的信息
 - virsh console name #控制台进入指定虚拟机实例
+- virsh vncdisplay name #显示虚拟机桌面所在端口
 
 于是又经历了一次漫长的服务器重启，上面列出的virt-install命令是经过了一些修改后的样子，直接使用创建的img作为磁盘文件。当vncviewer启动并弹出之后，最好不要去动vnc窗口，这会造成安装过程中断。使用键盘在操作界面进行安装过程就可以啦。
 
