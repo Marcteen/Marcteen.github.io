@@ -9,6 +9,7 @@ description:
 author: Gyllen Lyou
 language: en
 timezone:
+use_font_lato: false
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
