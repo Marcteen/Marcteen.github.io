@@ -1,0 +1,708 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hexo,post,git," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="如何使用git管理hexo源码目录并在多台电脑上同步费了些力气，终于是把hexo-gitPage搭起来了，因为觉得自己无论如何要开始做好记录，以便以后能够回顾。git是熟悉了又忘记，这篇文章就先记录一下如何使用git将hexo工程的源码一并管理，方便在不同的机器上撰写并发布post。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="first post">
+<meta property="og:url" content="http://yoursite.com/2016/10/31/first-post/index.html">
+<meta property="og:site_name" content="Marcteen">
+<meta property="og:description" content="如何使用git管理hexo源码目录并在多台电脑上同步费了些力气，终于是把hexo-gitPage搭起来了，因为觉得自己无论如何要开始做好记录，以便以后能够回顾。git是熟悉了又忘记，这篇文章就先记录一下如何使用git将hexo工程的源码一并管理，方便在不同的机器上撰写并发布post。">
+<meta property="og:updated_time" content="2016-11-06T02:48:17.110Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="first post">
+<meta name="twitter:description" content="如何使用git管理hexo源码目录并在多台电脑上同步费了些力气，终于是把hexo-gitPage搭起来了，因为觉得自己无论如何要开始做好记录，以便以后能够回顾。git是熟悉了又忘记，这篇文章就先记录一下如何使用git将hexo工程的源码一并管理，方便在不同的机器上撰写并发布post。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/31/first-post/"/>
+
+
+  <title> first post | Marcteen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Marcteen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule" rel="section">
+            
+            Schedule
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                first post
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-10-31T23:45:36+08:00" content="2016-10-31">
+              2016-10-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/trials/" itemprop="url" rel="index">
+                    <span itemprop="name">trials</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/31/first-post/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/31/first-post/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="如何使用git管理hexo源码目录并在多台电脑上同步"><a href="#如何使用git管理hexo源码目录并在多台电脑上同步" class="headerlink" title="如何使用git管理hexo源码目录并在多台电脑上同步"></a>如何使用git管理hexo源码目录并在多台电脑上同步</h1><p>费了些力气，终于是把hexo-gitPage搭起来了，因为觉得自己无论如何要开始做好记录，以便以后能够回顾。git是熟悉了又忘记，这篇文章就先记录一下如何使用git将hexo工程的源码一并管理，方便在不同的机器上撰写并发布post。</p>
+<a id="more"></a>
+<p><a href="https://hexo.io" target="_blank" rel="external">hexo main page</a><br><a href="http://www.appinn.com/markdown/#link" target="_blank" rel="external">Markdown gramma</a><br><a href="http://www.jianshu.com/p/1e402922ee32/" target="_blank" rel="external">Markdown入门指南</a><br><a href="http://www.tuicool.com/articles/fiYVbaY" target="_blank" rel="external">hexo目录结构及作用</a><br><a href="https://github.com/iissnan/hexo-theme-next/wiki" target="_blank" rel="external">neXt主题配置文档</a></p>
+<h2 id="首次配置hexo与node-js环境"><a href="#首次配置hexo与node-js环境" class="headerlink" title="首次配置hexo与node.js环境"></a>首次配置hexo与node.js环境</h2><p>1.安装node.js，这里直接去<a href="https://nodejs.org/en/" target="_blank" rel="external">node.js官网</a>下载pkg进行安装就可以了。<br>2.安装hexo</p>
+<pre><code>mkdir blog//临时初始化目录
+cd blog
+npm install hexo --no-optional #避免执行中报异常的方法
+npm init
+npm install
+npm install hexo-deployer-git
+</code></pre><p>3.在github上创见博客仓库Marcteen.github.io， <a href="http://www.jianshu.com/p/a655bbc178e3" target="_blank" rel="external">配置ssh登录密钥</a></p>
+<pre><code>git clone git@github.com:Marcteen/Marcteen.github.io.git
+git branch hexo #管理工程源码的分支
+git checkout hexo
+git push origin hexo #将分支发布到github上
+</code></pre><p>此时我们可以在github上将仓库的默认分支设置为hexo，进一步的，我们可以为当前工程目录设置默认的push分支。</p>
+<pre><code>git config --global push.default &quot;current&quot;
+</code></pre><p>4.将刚才初始化的blog内容完全复制到博客仓库的本地目录中。</p>
+<pre><code>cp ../blog/* ./
+rm -rf ../blog #可以考虑将其删除，或者刚才直接使用mv命令
+</code></pre><p>5.配置.gitignore<br>可以适当地忽略一些不需要同步的文件。</p>
+<p>6.将hexo内容同步到github仓库的hexo分支。<br>    git add .<br>    git commit -m “提交信息”<br>    git push origin hexo</p>
+<p>7.配置部署参数</p>
+<pre><code>vim _config.yml
+</code></pre><p>为deploy字段追加内容</p>
+<pre><code>type: git
+  repository: git@github.com:Marcteen/Marcteen.github.io.git
+  branch: master
+</code></pre><p>到此应该就告一段落了</p>
+<h2 id="在新机器上同步hexo仓库并进行撰文"><a href="#在新机器上同步hexo仓库并进行撰文" class="headerlink" title="在新机器上同步hexo仓库并进行撰文"></a>在新机器上同步hexo仓库并进行撰文</h2><p>1.首先将博客仓库clone下来</p>
+<p>git clone git@github.com:Marcteen/Marcteen.github.io</p>
+<p>但是这时候只有一个hexo分支，这是为什么呢？<a href="http://ilewen.com/questions/1940" target="_blank" rel="external">参考内容</a></p>
+<p>2.重新配置hexo工程，这个可以参考上文首次配置中的第二步就可以了，唯一的不同就是不要执行hexo init，不然git工程配置文件就挂了。后来有次在实验室的win7机器上，突然出现了local hexo未安装的异常，无论如何安装都不行，即使重新clone下来后按上述步骤配置也不行，而且git-bash也已经由管理员身份运行了。后来发现，重启的电脑后，重新clone并配置，就一切正常。</p>
+<h2 id="发布博文注意事项"><a href="#发布博文注意事项" class="headerlink" title="发布博文注意事项"></a>发布博文注意事项</h2><p>1.新建并编辑博文，<a href="http://blog.csdn.net/wizardforcel/article/details/40684575" target="_blank" rel="external">参考</a></p>
+<pre><code>hexo new “title”
+</code></pre><p>常用的文章属性有</p>
+<ul>
+<li>layout #post或page</li>
+<li>title    #文章的标题     </li>
+<li>date    #文件的创建日期</li>
+<li>updated    #文件的修改日期</li>
+<li>comments    #是否开启评论    </li>
+<li>tags    #标签     </li>
+<li>categories    #分类     </li>
+<li>permalink    #url中的名字</li>
+</ul>
+<p>2.依次执行,进行工程源码的远程同步，这样就没有只能在本地写博文的问题啦！</p>
+<pre><code>git add .
+git commit -m “提交信息”
+git push origin hexo
+</code></pre><p>3.然后才进行发布，感觉这样的顺序是最佳的。<br>    hexo clean<br>    hexo g<br>    hexo -d</p>
+<p>4.本地预览。有时候github的速度真的挺慢，本地查看也不错，同时也可以让它不要占用一个终端</p>
+<pre><code>nohup hexo s &amp;
+然后按下ctrl+c，就能够不中断本地预览并退出了。不过这样要结束本地预览呢，毕竟这不是正式环境，进程号又不好记，那么就通过下面的命令发现进程号并杀掉就好了
+
+ps aux | grep hexo
+kill -9 pidOfHexo
+</code></pre><h2 id="一点用git进行同步与合并分支的内容"><a href="#一点用git进行同步与合并分支的内容" class="headerlink" title="一点用git进行同步与合并分支的内容"></a>一点用git进行同步与合并分支的内容</h2><p>由于可能使用多台设备进行文章的编辑，所以需要进行同步动作，保持当前工作目录处于最新进展。<br>首先是从远程主机取回更新，</p>
+<pre><code>git fetch origin hexo #&lt;主机名&gt; &lt;分支名&gt;
+</code></pre><p>然后将更新合并到本地分支，</p>
+<pre><code>git merge origin/hexo
+</code></pre><p>或者使用</p>
+<pre><code>git rebase
+</code></pre><p>实际中可能遇到冲突的情况，对于文件内容冲突，可以在文件中进行相关内容的编辑；而删除冲突则可直接将工作目录中的对应文件删除，然后执行</p>
+<pre><code>git add ...
+git commit -m &quot;message&quot;
+</code></pre><p>然后就可以进行merge/rebase了。    由于hexo博客涉及分支内容较少，此处暂时给出少量相关内容，以后再按需学习git吧~</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hexo/" rel="tag">#hexo</a>
+          
+            <a href="/tags/post/" rel="tag">#post</a>
+          
+            <a href="/tags/git/" rel="tag">#git</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/29/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/02/How-to-launch-apps-with-shell-command/" rel="prev" title="How to launch apps with shell command">
+                How to launch apps with shell command <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/31/first-post/"
+           data-title="first post" data-url="http://yoursite.com/2016/10/31/first-post/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Gyllen Lyou" />
+          <p class="site-author-name" itemprop="name">Gyllen Lyou</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何使用git管理hexo源码目录并在多台电脑上同步"><span class="nav-number">1.</span> <span class="nav-text">如何使用git管理hexo源码目录并在多台电脑上同步</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#首次配置hexo与node-js环境"><span class="nav-number">1.1.</span> <span class="nav-text">首次配置hexo与node.js环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在新机器上同步hexo仓库并进行撰文"><span class="nav-number">1.2.</span> <span class="nav-text">在新机器上同步hexo仓库并进行撰文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布博文注意事项"><span class="nav-number">1.3.</span> <span class="nav-text">发布博文注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一点用git进行同步与合并分支的内容"><span class="nav-number">1.4.</span> <span class="nav-text">一点用git进行同步与合并分支的内容</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gyllen Lyou</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"marcteen"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

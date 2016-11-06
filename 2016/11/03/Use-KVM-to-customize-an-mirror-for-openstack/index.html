@@ -1,0 +1,923 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux,KVM,openstack," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Use Kvm to customize an mirror for openstack">
+<meta property="og:url" content="http://yoursite.com/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/index.html">
+<meta property="og:site_name" content="Marcteen">
+<meta property="og:description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
+<meta property="og:updated_time" content="2016-11-06T02:31:55.731Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Use Kvm to customize an mirror for openstack">
+<meta name="twitter:description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/"/>
+
+
+  <title> Use Kvm to customize an mirror for openstack | Marcteen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Marcteen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule" rel="section">
+            
+            Schedule
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Use Kvm to customize an mirror for openstack
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-11-03T10:15:31+08:00" content="2016-11-03">
+              2016-11-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/trials/" itemprop="url" rel="index">
+                    <span itemprop="name">trials</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"><a href="#在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成" class="headerlink" title="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"></a>在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成</h1><p>由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。<br>服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。</p>
+<a id="more"></a>
+<h2 id="基础环境检查与简单配置"><a href="#基础环境检查与简单配置" class="headerlink" title="基础环境检查与简单配置"></a>基础环境检查与简单配置</h2><p><a href="http://www.111cn.net/sys/CentOS/87211.htm" target="_blank" rel="external">参考内容1</a><br><a href="http://www.vpsee.com/2012/02/create-centos-kvm-image-for-openstack-nova/" target="_blank" rel="external">参考内容2</a><br>Intel cpu</p>
+<pre><code>cat /proc/cpuinfo | grep &quot;vmx&quot;
+</code></pre><p>AMD cpu</p>
+<pre><code>cat /proc/cpuinfo | grep &quot;svm&quot;
+</code></pre><p>有输出内容就表示满足条件，否则进入bios更改虚拟化设置。然后安装kvm以及虚拟化所需相关软件包</p>
+<pre><code>yum install -y kvm virt-* libvirts bridge-utils qemu-img
+</code></pre><ul>
+<li>kvm：软件包中含有KVM内核模块，它在默认linux内核中提供kvm管理程序</li>
+<li>libvirts：安装虚拟机管理工具，使用virsh等命令来管理和控制虚拟机</li>
+<li>bridge-utils：设置网络网卡桥接</li>
+<li>virt-*：创建、克隆虚拟机命令，使用qemu命令来创建磁盘等。</li>
+<li>qemu-img：安装qemu组件，使用qemu命令来创建磁盘等。</li>
+</ul>
+<p>加载kvm模块</p>
+<pre><code>modprobe kvm-intel
+</code></pre><p>检查kvm模块是否被加载</p>
+<pre><code>lsmod | grep kvm
+</code></pre><p>最好是重启再确认一次</p>
+<pre><code>reboot
+</code></pre><h2 id="安装vncserver"><a href="#安装vncserver" class="headerlink" title="安装vncserver"></a>安装vncserver</h2><p>不是很确定服务器上是否有vnc server，检查一下，<a href="http://blog.163.com/likaifeng@126/blog/static/3209731020147614916768/" target="_blank" rel="external">参考链接</a></p>
+<pre><code>ls /etc/sysconfig | grep &quot;vncservers&quot;
+</code></pre><p>返回为空，于是先安装</p>
+<pre><code>sudo yum install tigervnc tigervnc-server -y
+</code></pre><p>简单配置一下</p>
+<pre><code>sudo vim /etc/sysconfig/vncservers
+</code></pre><p>去掉注释并修改</p>
+<pre><code>VNCSERVERS=&quot;2:node4&quot;
+VNCSERVERARGS[2]=&quot;-geometry 1024x768  -nolisten tcp -localhost&quot;
+</code></pre><p>然后配置一下当前用户的vnc登录密码</p>
+<pre><code>vncpasswd
+</code></pre><p>验证两次，然后启动vnc服务</p>
+<pre><code>vncserver &amp;
+</code></pre><p>也可以设置其随系统启动</p>
+<pre><code>chkconfig --level 5 vncserver on
+chkconfig --list | grep vnc
+</code></pre><p>这时候就可以使用vncviewer之类的客户端进行登录了，输入如下主机名:1即可（一般可以，但实际有其他情况）</p>
+<pre><code>node4:1
+</code></pre><h2 id="准备centOS-6-7镜像，创建KVM虚拟机并启动"><a href="#准备centOS-6-7镜像，创建KVM虚拟机并启动" class="headerlink" title="准备centOS-6.7镜像，创建KVM虚拟机并启动"></a>准备centOS-6.7镜像，创建KVM虚拟机并启动</h2><p>（这里遇到了一个坑，用普通用户进行虚拟机创建的话，后面通过virsh edit为虚拟机配置网桥后启动会出现权限错误，而直接使用root来创建虚拟机，网桥字段会被自动配好，再无报错，所以就不要尝试普通用户+sudo往坑里跳了。）<br>我们可以查看虚拟机列表，当然现在暂时没有任何虚拟机实例在运行</p>
+<pre><code>virsh list
+</code></pre><p>创建虚拟机硬盘文件，据说10GB可以了，不然后面使用费时费力</p>
+<pre><code>kvm-img create -f raw PDME.img 10G
+</code></pre><p>很不幸，出现 kvm-img: command not found了。搜索后发现好像qemu-img也是一样的，这里注意一下，可以直接用-f指定为qcow2格式，还省去后面转换img了</p>
+<pre><code>qemu-img create -f raw PDME.img 10G
+</code></pre><p>成功创建镜像，那么就可以使用centOS镜像将系统安装在这个创建的硬盘文件中了</p>
+<pre><code>sudo kvm -m 512 -cdrom CentOS-6.7-x86_64-bin-DVD1.iso\
+ -drive file=PDME.img -boot d -net nic -net tap -nographic -vnc :0
+</code></pre><p>-vnc参数用于打开vnc访问，这样就可以通过其他机器登录到这个界面安装系统了，同时注意须加上-net nic -net tap才能建立镜像到kvm网桥virbr0的映射，网络才通。</p>
+<p>不过这时候依然出现了找不到kvm命令的提示，我觉得适可而止惹。查阅后发现是新版本系统会把命令藏起来，推荐使用新命令virtual-install/virsh进行操作，而把qemu-kvm转移到了不起眼的地方/usr/libexex，那么就自己链接过来使用吧</p>
+<pre><code>sudo ln -sf /usr/libexec/qemu-kvm /usr/bin/kvm
+</code></pre><p>这好像还是和kvm-img没有关系。运行kvm创建虚拟机，报错如下</p>
+<pre><code>/etc/qemu-ifup: could not launch network script
+kvm: -net tap: Device &apos;tap&apos; could not be initialized
+</code></pre><h3 id="尝试网桥配置"><a href="#尝试网桥配置" class="headerlink" title="尝试网桥配置"></a>尝试网桥配置</h3><p>似乎是网络方面的问题？搜了一下遇到这个问题的人还是不少，不过想起自己似乎略过了针对kvm进行网络方面的配置，这里补一下吧。<br>虚拟机采用桥接方式，使其可以获得与物理机同样级别的IP，参考<a href="http://www.centoscn.com/image-text/config/2016/0218/6765.html" target="_blank" rel="external">这里</a><br>，另外还有<a href="http://blog.csdn.net/hzhsan/article/details/44098537/" target="_blank" rel="external">更详细的参考</a>，包括了NAT模式的介绍。<br>下面我们为其配置网桥模式</p>
+<pre><code>cd /etc/sysconfig/network-scripts
+sudo cp ifcfg-em1 ifcfg-br1
+</code></pre><p>编辑ifcfg-em1，添加内容</p>
+<pre><code>BRIDGE=br1
+</code></pre><p>编辑ifcfg-br1,参考内容为</p>
+<pre><code>DEVICE=br1
+TYPE=Bridge
+ONBOOT=yes
+NM_CONTROLLED=yes
+BOOTPROTO=dhcp
+</code></pre><p>因为我们这里没用固定的网段分配，指定静态ip是不明智的，所以直接将IPADDR等相关项省略，对于NM_CONTROLLED字段，参考内容中说明RedHat系统需要设置为NO，而CentOS似乎没有特别需要注意的说法，就保持默认的yes好了。</p>
+<p>保存好后，重启network service</p>
+<pre><code>sudo service NetworkManager stop
+sudo service network restart
+sudo service NetworkManager start
+</code></pre><p>可是呢，无论如何尝试，在ifcfg-em1中添加BRIDGE=br0之后，服务器就“断网”了。。<br>于是尝试virt-install,可供参考的<a href="http://www.361way.com/virt-install/2721.html" target="_blank" rel="external">内容</a>，后来发现只要不恢复NetworkManager就好像没有问题，虽然ifconfig里em*一堆的error，<a href="https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i" target="_blank" rel="external">这里</a>也是这样，看来应该没有大碍吧。还有<a href="http://www.cnblogs.com/jankie/archive/2012/10/19/2730826.html" target="_blank" rel="external">这里</a>提到，确实需要关闭NetworkManager才可以使网桥正常运行。不过也有可能是地址变化了，所以连不上？似乎依然说不通。</p>
+<pre><code>virt-install -n PDMECENTOS \
+-r 512 -vcpus=1 \
+-c /home/node4/techbase/CentOS-6.7-x86_64-bin-DVD1.iso \
+--hvm --os-type=linux \
+--disk /home/node4/techbase/PDME.img \
+--graphics vnc,listen=0.0.0.0,port=7789 \
+--force --autostart
+</code></pre><p>好像是可以成功的，自动打开了一个VNC连接至创建的虚拟机实例，但是一直没动静，过了一会连接至物理服务器的VNC黑掉了，重新连接还是黑的并提示未加密链接。</p>
+<h2 id="笑着活下去。记录一下常用virsh命令"><a href="#笑着活下去。记录一下常用virsh命令" class="headerlink" title="笑着活下去。记录一下常用virsh命令"></a>笑着活下去。记录一下常用virsh命令</h2><ul>
+<li>virsh list #显示本地活动虚拟机</li>
+<li>virsh list –all #显示本地所有的虚拟机（活动的+不活动的）</li>
+<li>virsh define ubuntu.xml #通过配置文件定义一个虚拟机（这个虚拟机还不是活动的）</li>
+<li>virsh start ubuntu #启动名字为ubuntu的非活动虚拟机</li>
+<li>virsh create ubuntu.xml #创建虚拟机（创建后，虚拟机立即执行，成为活动主机）</li>
+<li>virsh suspend ubuntu #暂停虚拟机</li>
+<li>virsh resume ubuntu #启动暂停的虚拟机</li>
+<li>virsh shutdown ubuntu #正常关闭虚拟机</li>
+<li>virsh destroy ubuntu #强制关闭虚拟机</li>
+<li>virsh undefine ubuntu #移除ubuntu虚拟机</li>
+<li>virsh dumpxml ubuntu #显示虚拟机的当前配置文件（可能和定义虚拟机时的配置不同，因为当虚拟机启动时，需要给虚拟机分配id号、uuid、vnc端口号等等）</li>
+<li>virsh setmem ubuntu 512000 #给不活动虚拟机设置内存大小</li>
+<li>virsh setvcpus ubuntu 4 # 给不活动虚拟机设置cpu个数</li>
+<li>针对虚拟机操作</li>
+<li>virsh domid win03_3 #查看虚拟机的标识符</li>
+<li>virsh domname win03_2 #查看虚拟机的名称</li>
+<li>virsh domuuid win03_2 #查看虚拟机的 UUID</li>
+<li>virsh domstate win03_2 #查看虚拟机目前的状态</li>
+<li>virsh dominfo win03_2 #查看虚拟机的信息</li>
+<li>virsh console name #控制台进入指定虚拟机实例</li>
+<li>virsh vncdisplay name #显示虚拟机桌面所在端口</li>
+</ul>
+<p>于是又经历了一次漫长的服务器重启，上面列出的virt-install命令是经过了一些修改后的样子，直接使用创建的img作为磁盘文件。当vncviewer启动并弹出之后，最好不要去动vnc窗口，这会造成安装过程中断。使用键盘在操作界面进行安装过程就可以啦。</p>
+<p>不过疑问还是有的，virt-install创建的虚拟机实例是如何配置所在ip及端口的呢？上面只是直接给vnc指定了一组参数。下面有进一步思考。<br>进入安装好的系统之后，只有一个root用户，此时可以先创建一个普通用户并设置密码</p>
+<pre><code>useradd -d /home/student student
+passwd student
+</code></pre><p>为了能够使该账户能够使用sudo，我们需要将其添加到sudo配置文件中去</p>
+<pre><code>su
+visudo
+/ALL
+</code></pre><p>找到root ALL=(ALL) ALL，在下方添加</p>
+<pre><code>student ALL=(ALL) ALL
+</code></pre><p>退出并保存，完成。</p>
+<h2 id="配置virt-vnc连接"><a href="#配置virt-vnc连接" class="headerlink" title="配置virt vnc连接"></a>配置virt vnc连接</h2><p>上面提到了一个vnc连接kvm虚拟机的参数配置问题，这下也不得不面对一下了，因为很开心地设置好用户之后将虚拟机示例shutdown，然后现在重新启动之后不知道怎么再用vnc连接了，</p>
+<pre><code>vncviewer 0.0.0.0:1
+</code></pre><p>对了，记录一个Mac上好用的VNC，<a href="https://sourceforge.net/projects/cotvnc/" target="_blank" rel="external">chicken of vnc</a>,恩主要是因为免费，图标简直太可爱。当然功能也是简单够用的，但是注意最好不要在建立连对就是下面的命令不起作用，输密码验证错误，我输的默认密码。。接的时候选全屏模式，会抽风。<br>那么接着尝试解决vnc连不上虚拟机的问题，尝试如下方法</p>
+<pre><code>virsh console PDMECENTOS
+</code></pre><p>结果是卡住不动了，搜索之后找到了<a href="http://www.linuxidc.com/Linux/2014-10/107891.htm" target="_blank" rel="external">类似问题</a>，可是人家是vnc能连上虚拟机的情况啊。。。</p>
+<p>然后事情出现了转机，查看<a href="http://blog.csdn.net/taiyang1987912/article/details/50474219" target="_blank" rel="external">这里</a>，前面配置虚拟主机vnc没啥好说的，默认就是那样，注意后面</p>
+<pre><code>virsh edit PDMECENTOS
+</code></pre><p>将端口值改为-1，之前被我照着另一个很像的教程改成了5910，最原本的默认值不记得了，嗯这里应该就可以配置和vnc相关的参数了，改好之后启动虚拟机，查看qemu-kvm运行的端口，不要使用：1，感觉这个需要虚拟机配置vncserver后进行验证才可用，通过进程端口直接连接显然更佳。（这里理解不是很到位，后面还是有进一步思考）</p>
+<pre><code>netstat -tunlp
+</code></pre><p>记得把终端全屏才能看见进程信息列，然后前面的ip:port就是vncviewer登陆所使用的参数啦。这个时候虚拟机并没有图形界面,我们可以安装一下</p>
+<pre><code>yum -y groupinstall Desktop
+yum -y groupinstall &quot;X Window System&quot;
+</code></pre><p>安装完成后就可以启动图形界面了</p>
+<pre><code>startx
+</code></pre><p>添加中文支持</p>
+<pre><code>yum -y groupinstall chinese-support
+</code></pre><p>设置开机自动进入图形界面</p>
+<pre><code>vim /etc/inittab
+</code></pre><p>将id:x:initdefautl中的x改成5即可</p>
+<h2 id="配置virt虚拟客户机桥接上网"><a href="#配置virt虚拟客户机桥接上网" class="headerlink" title="配置virt虚拟客户机桥接上网"></a>配置virt虚拟客户机桥接上网</h2><p><a href="https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i" target="_blank" rel="external">参考内容</a></p>
+<pre><code>virsh edit PDMECENTOS
+</code></pre><p>添加内容</p>
+<pre><code>&lt;interface type=&quot;bridge&quot;&gt; &lt;!--虚拟机网络连接方式--&gt;
+&lt;source bridge=&quot;br0&quot; /&gt; &lt;!-- 当前主机网桥的名称--&gt;
+&lt;mac address=&quot;00:16:e4:9a:b3:6a&quot; /&gt; &lt;!--为虚拟机分配mac地址，务必唯一，否则dhcp获得同样ip,引起冲突，而我是从已经创建好的虚拟机里面抄的，后来发现这样做十分正确--&gt;
+&lt;/interface&gt;
+</code></pre><p>然后启动网卡，我们可以设置其随开机启动</p>
+<pre><code>ifconfig eth0 up
+vim /etc/sysconfig/network-scripts/ifcfg-eth0 #置ONBOOT=true
+
+这个时候运行ifconfig就可以看到eth0的信息啦，然而没有卵用，最后发现安装虚拟机应该还是需要root，否则重启虚拟机的时候tap vnet会有权限错误
+</code></pre><p>很奇怪重启服务器后执行命令会遇到locale unsupport错误，可以这么解决，虽然只是当时生效，重启后就恢复原样了。</p>
+<pre><code>export LC_ALL=C
+</code></pre><p>后来发现是mac上的终端有问题，进入其配置面板，去掉Adcanced选项卡中set locale …项前面的对勾就可以了。另外是修改系统语言的方法，比较推荐使用。</p>
+<pre><code>vim /etc/profile
+/export #找到export xx xx xxx语句，在前增加一行LANG=&quot;zh_CN.UTF-8&quot;,在后追加LANG
+</code></pre><p>然后重启系统即可生效。</p>
+<p>然后virt-install出现了无法启动vnc显示的问题，又照上面修改了虚拟机的监听端口为-1，然后再用vncviewer重连就好了（改之前重连也会无法启动显示），再然后直接安装又能启动vnc显示了，我晕，完全不懂怎么好的。对了，root用户就不要在普通用户目录里安装了，会有蜜汁文件权限问题。。</p>
+<p>最后只得注意的是对虚拟机配置的变更很可能要重启后才生效，不管什么情况，试一试最好，我这里的网桥配置就是删除libvirt自带的nat虚拟网桥再重启虚拟机就生效了。嗯不要使用普通用户运行virsh，很坑。另一个例子，我们进入图形界面后，可以给右键菜单添加打开终端的选项，也需要重启系统</p>
+<pre><code>sudo apt-get install nautilus-open-terminal #ubuntu
+sudo yum install nautilus-open-terminal #centos
+</code></pre><p>另外virsh shutdown命令需要对虚拟机进行<a href="http://www.bubuko.com/infodetail-771662.html" target="_blank" rel="external">一定配置</a>才可用。</p>
+<h2 id="vnc直接连接kvm问题与进程监听地址端口的思考"><a href="#vnc直接连接kvm问题与进程监听地址端口的思考" class="headerlink" title="vnc直接连接kvm问题与进程监听地址端口的思考"></a>vnc直接连接kvm问题与进程监听地址端口的思考</h2><p>虚拟机终于是运行起来了，配置也到了一定程度，可以比较方便地使用了，但是出现了一个很奇怪的现象，直接在本地机器通过vnc连接虚拟机总是出现拒绝连接的提示，此时虚拟机中vncserver随系统启动，处于运行状态，可以输入如下命令查看</p>
+<pre><code>service vncserver status
+</code></pre><p>同时也排除了防火墙开放端口的问题，依然没有进展。虽然用shell连接是正常的，但还是很不甘心。</p>
+<p>然后就很无聊的了解了一下netstat里面出现的进程监听地址和端口，唉计网本来就没怎么学好，考完研后丢的也差不多了。首先是这个</p>
+<pre><code>127.0.0.1
+</code></pre><p>了解了一下，表示本机，另一个代称就是我们很熟悉的localhost，更神奇的是127.x.x.x其实都是一样的。如果一个进程监听这个ip，那就表示它实际上只能监听到本地的程序并作出回应。</p>
+<p>另外就是</p>
+<pre><code>0.0.0.0
+</code></pre><p>这个可不得了，表示一切ip，本机不认识的任何地址都可以归到这个地址里，监听这个地址的进程，当然机会对所有地址对应端口的通信作出反应啦。了解了这个，我们来看一下虚拟主机，虚拟机相应的vnc进程监听情况，也就是这会一个比较关键的命令的输出</p>
+<pre><code>netstat -tunlp
+</code></pre><p>首先是虚拟主机，当前得到的输出为</p>
+<table>
+<thead>
+<tr>
+<th>Proto</th>
+<th>Recv-Q</th>
+<th>Send-Q</th>
+<th>Local Address</th>
+<th>Foreign Address</th>
+<th>State</th>
+<th>PID/Program name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tcp</td>
+<td>0</td>
+<td>0</td>
+<td>0.0.0.0:60989</td>
+<td>0.0.0.0:*</td>
+<td>LISTEN</td>
+<td>1892/rpc.statd</td>
+</tr>
+<tr>
+<td>tcp</td>
+<td>0</td>
+<td>0</td>
+<td>0.0.0.0:5900</td>
+<td>0.0.0.0:*</td>
+<td>LISTEN</td>
+<td>4012/qemu-kvm</td>
+</tr>
+<tr>
+<td>tcp</td>
+<td>0</td>
+<td>0</td>
+<td>0.0.0.0:5901</td>
+<td>0.0.0.0:*</td>
+<td>LISTEN</td>
+<td>2848/Xvnc</td>
+</tr>
+<tr>
+<td>tcp</td>
+<td>0</td>
+<td>0</td>
+<td>127.0.0.1:5902</td>
+<td>0.0.0.0:*</td>
+<td>LISTEN</td>
+<td>2275/Xvnc</td>
+</tr>
+</tbody>
+</table>
+<p>用markdown画表格真是累人。我们看到qemu-kvm监听了所有内网ip的5900，也就是说只要vncviewer向5900端口发出连接请求，虚拟机进程就会响应，那么我们要如何访问呢？<br>1.在虚拟主机上，使用</p>
+<pre><code>vncviewer localhost:5900
+</code></pre><p>因为这个虚拟机进程是在虚拟主机上运行的，用本机ip定位就可以了。再看下一个，2848/Xvnc，监听了所有内网ip的5901端口，这个是虚拟主机的vncserver进程，验证方法是输入</p>
+<pre><code>service vncserver status
+</code></pre><p>进行验证，执行后会输出一样的PID，那么对于其他内网主机，使用如下命令即可通过vnc连接虚拟主机</p>
+<pre><code>vncviewer node4:5901
+</code></pre><p>看再下一项，注意其监听ip是127.0.0.1，这说明他只会相应本机进程，其他内网机器无法与其成功建立连接。<br>另外，vnc有自己的一套映射规则，默认从5900端口开始，vncviewer所接受参数中端口可用0替换，并递增对应，也就是说，如果此时通过内网机器远程虚拟主机，会有如下对应关系及情况</p>
+<pre><code>vncviewer node4:0 #实际远程到了虚拟主机上的5900监听虚拟机示例进程
+vncviewer node4:1 #连接到虚拟主机的5901，vncserver进程
+vncviewer node4:2 #虚拟主机本机ip监听端口，无法连接
+</code></pre><p>基于这些，我们来看一下虚拟机中的情况。先简单做一下“故障排除”,将Xvnc进程杀掉，此时查看vncserver情况，提示</p>
+<pre><code>Xvnc 已死，但是 subsys 被锁
+</code></pre><p>呵呵。<br>那么执行以下命令删除锁吧</p>
+<pre><code>rm -rf /var/lock/subsys/Xvnc
+</code></pre><p>然后将~/.vnc/下的.log以及.pid删除。重启虚拟机，让配置的vncserver服务自动启动，再查看进程监听情况<br>这里，并没有发现vncserver自动启动，于是输入</p>
+<pre><code>vncserver
+</code></pre><p>反馈信息为</p>
+<pre><code>You will require a password to access your desktops.
+
+Password:
+Verify:
+
+New &apos;localhost.localdomain:1 (student)&apos; desktop is localhost.localdomain:1
+
+Creating default startup script /home/student/.vnc/xstartup
+Starting applications specified in /home/student/.vnc/xstartup
+Log file is /home/student/.vnc/localhost.localdomain:1.log
+</code></pre><p>看起来还挺正常了，不小心又起了一次，于是出现了localhost.localdomain:2。。好的此查看进程占用情况(只取到需要看的那一行)</p>
+<table>
+<thead>
+<tr>
+<th>Proto</th>
+<th>Recv-Q</th>
+<th>Send-Q</th>
+<th>LocalAddress</th>
+<th>Foreign Address</th>
+<th>State</th>
+<th>PID/Program name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tcp</td>
+<td>0</td>
+<td>0</td>
+<td>0.0.0.0:5901</td>
+<td>0.0.0.0:*</td>
+<td>LISTEN</td>
+<td>2003/Xvnc</td>
+</tr>
+<tr>
+<td>tcp</td>
+<td>0</td>
+<td>0</td>
+<td>0.0.0.0:5902</td>
+<td>0.0.0.0:*</td>
+<td>LISTEN</td>
+<td>2369/Xvnc</td>
+</tr>
+</tbody>
+</table>
+<p>刚才明明还发现Xvnc监听的都是本地ip，但是测试后依然不能使用内网机器进行vnc远程，错误信息完全没有改变。先将其关闭</p>
+<pre><code>vncserver -kill :1
+vncserver -kill :2
+</code></pre><p>检查开放端口，没有异常，还是修改后的样子，开放了5901和5902,重新为当前用户设置密码，然后再检查自动启动配置，确认无误后重启虚拟机系统，发现vncserver自动启动了，可是监听ip又是之前的127.0.0.1，处于其他机器无法连接的状态，呵呵。这时自己再起一个vncserver则会监听所有ip，可是依然连不上。偶然发现<a href="http://www.admin-magazine.com/Archive/2013/13/Controlling-virtual-machines-with-VNC-and-Spice" target="_blank" rel="external">这里</a>似乎有提到相关问题，待进一步研究。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag">#Linux</a>
+          
+            <a href="/tags/KVM/" rel="tag">#KVM</a>
+          
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/02/Language-and-timezone/" rel="next" title="Language and timezone">
+                <i class="fa fa-chevron-left"></i> Language and timezone
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/05/Fix-an-bug-bring-by-GitPage-s-update/" rel="prev" title="Fix an bug bring by GitPage's update">
+                Fix an bug bring by GitPage's update <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/"
+           data-title="Use Kvm to customize an mirror for openstack" data-url="http://yoursite.com/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Gyllen Lyou" />
+          <p class="site-author-name" itemprop="name">Gyllen Lyou</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"><span class="nav-number">1.</span> <span class="nav-text">在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础环境检查与简单配置"><span class="nav-number">1.1.</span> <span class="nav-text">基础环境检查与简单配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装vncserver"><span class="nav-number">1.2.</span> <span class="nav-text">安装vncserver</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备centOS-6-7镜像，创建KVM虚拟机并启动"><span class="nav-number">1.3.</span> <span class="nav-text">准备centOS-6.7镜像，创建KVM虚拟机并启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#尝试网桥配置"><span class="nav-number">1.3.1.</span> <span class="nav-text">尝试网桥配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笑着活下去。记录一下常用virsh命令"><span class="nav-number">1.4.</span> <span class="nav-text">笑着活下去。记录一下常用virsh命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置virt-vnc连接"><span class="nav-number">1.5.</span> <span class="nav-text">配置virt vnc连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置virt虚拟客户机桥接上网"><span class="nav-number">1.6.</span> <span class="nav-text">配置virt虚拟客户机桥接上网</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vnc直接连接kvm问题与进程监听地址端口的思考"><span class="nav-number">1.7.</span> <span class="nav-text">vnc直接连接kvm问题与进程监听地址端口的思考</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gyllen Lyou</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"marcteen"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
