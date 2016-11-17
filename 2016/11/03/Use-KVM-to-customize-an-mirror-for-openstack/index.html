@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
-<meta property="og:updated_time" content="2016-11-06T02:31:55.731Z">
+<meta property="og:updated_time" content="2016-11-08T02:04:45.641Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Use Kvm to customize an mirror for openstack">
 <meta name="twitter:description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
@@ -433,7 +433,7 @@ visudo
 </code></pre><p>结果是卡住不动了，搜索之后找到了<a href="http://www.linuxidc.com/Linux/2014-10/107891.htm" target="_blank" rel="external">类似问题</a>，可是人家是vnc能连上虚拟机的情况啊。。。</p>
 <p>然后事情出现了转机，查看<a href="http://blog.csdn.net/taiyang1987912/article/details/50474219" target="_blank" rel="external">这里</a>，前面配置虚拟主机vnc没啥好说的，默认就是那样，注意后面</p>
 <pre><code>virsh edit PDMECENTOS
-</code></pre><p>将端口值改为-1，之前被我照着另一个很像的教程改成了5910，最原本的默认值不记得了，嗯这里应该就可以配置和vnc相关的参数了，改好之后启动虚拟机，查看qemu-kvm运行的端口，不要使用：1，感觉这个需要虚拟机配置vncserver后进行验证才可用，通过进程端口直接连接显然更佳。（这里理解不是很到位，后面还是有进一步思考）</p>
+</code></pre><p>将端口值改为-1，之前被我照着另一个很像的教程改成了5910，最原本的默认值不记得了，嗯这里应该就可以配置和vnc相关的参数了，改好之后启动虚拟机，查看qemu-kvm运行的端口，通过进程端口直接连接显然更佳。（这里理解不是很到位，后面还是有进一步思考）</p>
 <pre><code>netstat -tunlp
 </code></pre><p>记得把终端全屏才能看见进程信息列，然后前面的ip:port就是vncviewer登陆所使用的参数啦。这个时候虚拟机并没有图形界面,我们可以安装一下</p>
 <pre><code>yum -y groupinstall Desktop
@@ -595,6 +595,10 @@ Log file is /home/student/.vnc/localhost.localdomain:1.log
 <pre><code>vncserver -kill :1
 vncserver -kill :2
 </code></pre><p>检查开放端口，没有异常，还是修改后的样子，开放了5901和5902,重新为当前用户设置密码，然后再检查自动启动配置，确认无误后重启虚拟机系统，发现vncserver自动启动了，可是监听ip又是之前的127.0.0.1，处于其他机器无法连接的状态，呵呵。这时自己再起一个vncserver则会监听所有ip，可是依然连不上。偶然发现<a href="http://www.admin-magazine.com/Archive/2013/13/Controlling-virtual-machines-with-VNC-and-Spice" target="_blank" rel="external">这里</a>似乎有提到相关问题，待进一步研究。</p>
+<h1 id="vncserver配置文件的含义？"><a href="#vncserver配置文件的含义？" class="headerlink" title="vncserver配置文件的含义？"></a>vncserver配置文件的含义？</h1><p>今天又发现新的问题，通过node4:0在其他主机上又连不上kvm了，而且在node4上通过root用户使用如下命令也会报错</p>
+<pre><code>vncviewer localhost:5900
+Incalid MIT-MAGIC-COOKIE-1 keyvncviewer: unable to open display &quot;:1.0&quot;
+</code></pre><p>切换至一般用户，同样的命令连接正常，看来还是得了解一下vncsevers配置文件的含义。</p>
 
       
     </div>
@@ -712,7 +716,7 @@ vncserver -kill :2
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -758,7 +762,7 @@ vncserver -kill :2
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"><span class="nav-number">1.</span> <span class="nav-text">在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础环境检查与简单配置"><span class="nav-number">1.1.</span> <span class="nav-text">基础环境检查与简单配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装vncserver"><span class="nav-number">1.2.</span> <span class="nav-text">安装vncserver</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备centOS-6-7镜像，创建KVM虚拟机并启动"><span class="nav-number">1.3.</span> <span class="nav-text">准备centOS-6.7镜像，创建KVM虚拟机并启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#尝试网桥配置"><span class="nav-number">1.3.1.</span> <span class="nav-text">尝试网桥配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笑着活下去。记录一下常用virsh命令"><span class="nav-number">1.4.</span> <span class="nav-text">笑着活下去。记录一下常用virsh命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置virt-vnc连接"><span class="nav-number">1.5.</span> <span class="nav-text">配置virt vnc连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置virt虚拟客户机桥接上网"><span class="nav-number">1.6.</span> <span class="nav-text">配置virt虚拟客户机桥接上网</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vnc直接连接kvm问题与进程监听地址端口的思考"><span class="nav-number">1.7.</span> <span class="nav-text">vnc直接连接kvm问题与进程监听地址端口的思考</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"><span class="nav-number">1.</span> <span class="nav-text">在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础环境检查与简单配置"><span class="nav-number">1.1.</span> <span class="nav-text">基础环境检查与简单配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装vncserver"><span class="nav-number">1.2.</span> <span class="nav-text">安装vncserver</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备centOS-6-7镜像，创建KVM虚拟机并启动"><span class="nav-number">1.3.</span> <span class="nav-text">准备centOS-6.7镜像，创建KVM虚拟机并启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#尝试网桥配置"><span class="nav-number">1.3.1.</span> <span class="nav-text">尝试网桥配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笑着活下去。记录一下常用virsh命令"><span class="nav-number">1.4.</span> <span class="nav-text">笑着活下去。记录一下常用virsh命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置virt-vnc连接"><span class="nav-number">1.5.</span> <span class="nav-text">配置virt vnc连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置virt虚拟客户机桥接上网"><span class="nav-number">1.6.</span> <span class="nav-text">配置virt虚拟客户机桥接上网</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vnc直接连接kvm问题与进程监听地址端口的思考"><span class="nav-number">1.7.</span> <span class="nav-text">vnc直接连接kvm问题与进程监听地址端口的思考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vncserver配置文件的含义？"><span class="nav-number">2.</span> <span class="nav-text">vncserver配置文件的含义？</span></a></li></ol></div>
             
           </div>
         </section>
