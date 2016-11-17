@@ -1,5 +1,5 @@
 ---
-title: Try deeplearning4j on spark yarn cluster.md
+title: Try deeplearning4j on spark yarn cluster
 date: 2016-11-17 16:52:47
 tags: [Deep Learning, Spark]
 categories: [Trials]
