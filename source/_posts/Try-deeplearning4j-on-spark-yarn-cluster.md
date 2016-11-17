@@ -2,7 +2,7 @@
 title: Try deeplearning4j on spark yarn cluster.md
 date: 2016-11-17 16:52:47
 tags: [Deep Learning, Spark]
-categories:[Trials]
+categories: [Trials]
 ---
 # 尝试在Spark on Yarn集群上运行DeepLearning4j样例程序
 Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个[测评](https://spark-summit.org/2016/events/which-is-deeper-comparison-of-deep-learning-frameworks-on-spark/)指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了
