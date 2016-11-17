@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/07/submit-a-new-working-directory-to-github/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="如何将本地工程与github仓库关联今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。">
-<meta property="og:updated_time" content="2016-11-17T03:55:36.223Z">
+<meta property="og:updated_time" content="2016-11-17T06:17:10.282Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="submit a new working directory to github">
 <meta name="twitter:description" content="如何将本地工程与github仓库关联今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。">
@@ -303,9 +303,10 @@ git commit -m &quot;first commit&quot;
 git remote add origin git@github.com:Marcteen/leeTs.git
 git push origin master
 </code></pre><p>完成。</p>
-<p>对了，将仓库同步下来的时候，有一点注意一下，源码大小不打但是整个工程目录巨大无比。后来发现是.git目录很大，主要原因应该是该仓库commit很多，导致本地仓库记录了很多分支信息，解决的一个思路是控制clone的深度，因为目前往往不会参与到开源项目的贡献中,历史信息与分支都没什么用。</p>
+<p>对了，将仓库同步下来的时候，有一点注意一下，源码大小不大但是整个工程目录巨大无比。后来发现是.git目录很大，主要原因应该是该仓库commit很多，导致本地仓库记录了很多分支信息，解决的一个思路是控制clone的深度，因为目前往往不会参与到开源项目的贡献中,历史信息与分支暂时都没什么用。</p>
 <pre><code>git clone xxx --depth 1
-</code></pre>
+</code></pre><p>这样就可以只把仓库当前最新的内容同步下来了。</p>
+
       
     </div>
 
