@@ -189,7 +189,7 @@ AMD cpu
 然后事情出现了转机，查看[这里](http://blog.csdn.net/taiyang1987912/article/details/50474219)，前面配置虚拟主机vnc没啥好说的，默认就是那样，注意后面
 
 	virsh edit PDMECENTOS
-将端口值改为-1，之前被我照着另一个很像的教程改成了5910，最原本的默认值不记得了，嗯这里应该就可以配置和vnc相关的参数了，改好之后启动虚拟机，查看qemu-kvm运行的端口，不要使用：1，感觉这个需要虚拟机配置vncserver后进行验证才可用，通过进程端口直接连接显然更佳。（这里理解不是很到位，后面还是有进一步思考）
+将端口值改为-1，之前被我照着另一个很像的教程改成了5910，最原本的默认值不记得了，嗯这里应该就可以配置和vnc相关的参数了，改好之后启动虚拟机，查看qemu-kvm运行的端口，通过进程端口直接连接显然更佳。（这里理解不是很到位，后面还是有进一步思考）
 
 	netstat -tunlp
 记得把终端全屏才能看见进程信息列，然后前面的ip:port就是vncviewer登陆所使用的参数啦。这个时候虚拟机并没有图形界面,我们可以安装一下
@@ -321,6 +321,13 @@ AMD cpu
 	vncserver -kill :1
 	vncserver -kill :2
 检查开放端口，没有异常，还是修改后的样子，开放了5901和5902,重新为当前用户设置密码，然后再检查自动启动配置，确认无误后重启虚拟机系统，发现vncserver自动启动了，可是监听ip又是之前的127.0.0.1，处于其他机器无法连接的状态，呵呵。这时自己再起一个vncserver则会监听所有ip，可是依然连不上。偶然发现[这里](http://www.admin-magazine.com/Archive/2013/13/Controlling-virtual-machines-with-VNC-and-Spice)似乎有提到相关问题，待进一步研究。
+
+# vncserver配置文件的含义？
+今天又发现新的问题，通过node4:0在其他主机上又连不上kvm了，而且在node4上通过root用户使用如下命令也会报错
+
+	vncviewer localhost:5900
+	Incalid MIT-MAGIC-COOKIE-1 keyvncviewer: unable to open display ":1.0"
+切换至一般用户，同样的命令连接正常，看来还是得了解一下vncsevers配置文件的含义。
 
 	
 	
