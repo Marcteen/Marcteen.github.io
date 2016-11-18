@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="尝试在Spark on Yarn集群上运行DeepLearning4j样例程序Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个测评指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了">
-<meta property="og:updated_time" content="2016-11-18T06:15:02.395Z">
+<meta property="og:updated_time" content="2016-11-18T09:27:49.722Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Try deeplearning4j on spark yarn cluster">
 <meta name="twitter:description" content="尝试在Spark on Yarn集群上运行DeepLearning4j样例程序Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个测评指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了">
@@ -353,7 +353,16 @@ private boolean useSparkLocal = true;
 </code></pre><p>4.尝试将所有依赖jar添加到集群</p>
 <p>首先需要导出所有的依赖包，maven工具可以用一个命令实现，在工程目录下输入</p>
 <pre><code>mvn dependency:copy-dependencies -DoutputDirectory=lib
-</code></pre><p>然后就可以在工程下的lib目录找到所有依赖的jar包了。然后将其放大hdfs上去（待续）</p>
+</code></pre><p>然后就可以在工程下的lib目录找到所有依赖的jar包了。这里先尝试了是将他们放大集群各节点的$SPARK_HOME/lib/下就能使用。</p>
+<p>4.1 首先是通过idea中artifact打成fat-jar，然后传至各节点的对应lib目录，提交执行，失败<br>，那么为什么实验室集群这个目录下还有其他jar呢？例如jblas.jar。</p>
+<p>4.2 检验一下上一条是否由fat-jar引起，刚才报错找不到jcommander相关的类，那么将这个依赖的jar包单独拷贝到各个节点的lib文件夹，提交执行，报错信息没有任何变化。结论是似乎单纯将其放置到lib文件夹并不起作用。</p>
+<p>4.3尝试一下在hdfs中上传所需jar包，分别使用SparkConf.setJars()与SparkContext.addJar()进行添加，都不起作用。。不管是fat-jar还是原始的jar（测试jcommander得出无效结论);同时也排除了hdfs路径存在问题的可能性，因为写不写ip端口都不行。</p>
+<p>4.4在$SPARK_HOME/conf/spark-defaults.conf中配置如下属性</p>
+<pre><code>spark.driver.extraJars  xxx.jar:xxx.jars...
+spark.executor.extraJars xxx.jar:xxx.jars...
+</code></pre><p>指定一个所有节点都一样的额外jar包存放目录就可以了，但是需要每个节点都进行配置且保存一份jar包，有一点麻烦，这样不会造成jar包的上传。配置文件是可以使用$SPARK_HOME这样的字段进行配置的。</p>
+<p>虽然程序成功进入了RUNNING状态，但是ApplicationMaster一直没有更新输出，可能数据加载还是有问题的，改天自己准备数据跑一跑试试。</p>
+<p>另外使用jcommander处理入口类参数的时候，注意要在创建相关spark配置及上下文类之前进行，否则输入的参数可能不会生效分（注意代码逻辑哦）。</p>
 
       
     </div>

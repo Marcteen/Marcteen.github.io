@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/17/Understanding-KMP/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="复习一百遍都难以彻底记住的KMP算法记得大二学数据结构的时候，期中考试复习时很好地记住了KMP算法中nextval数组的求法，到了期末就完全忘记了，重新复习再也找不到当初的感觉。考研的时候被告知其内容不是考研大纲的要求，没有复习，然后考试的时候在选择题里看见了它。。现在刷leetcode遇到了子串匹配，于是再一次复习。">
-<meta property="og:updated_time" content="2016-11-18T03:43:36.665Z">
+<meta property="og:updated_time" content="2016-11-18T09:57:27.816Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Understanding KMP">
 <meta name="twitter:description" content="复习一百遍都难以彻底记住的KMP算法记得大二学数据结构的时候，期中考试复习时很好地记住了KMP算法中nextval数组的求法，到了期末就完全忘记了，重新复习再也找不到当初的感觉。考研的时候被告知其内容不是考研大纲的要求，没有复习，然后考试的时候在选择题里看见了它。。现在刷leetcode遇到了子串匹配，于是再一次复习。">
@@ -320,7 +320,7 @@
 <ol>
 <li>被匹配字符串叫做haystack,使用变量i进行遍历</li>
 <li>待匹配子串叫做needle，使用变量j进行遍历</li>
-<li>为了效率，发生失配时，基本不移动i，只是改变j的值，也就是说，只是将needle向字符串尾方向进行适当移动（也就是将重启匹配的位置适当往前进行调整）。</li>
+<li>为了效率，发生失配时，基本不移动i，只是改变j的值，也就是说，只是将needle向字符串尾方向进行适当移动（也就是将重启匹配的位置适当往needle头部方向进行调整）。</li>
 <li>为了决定j的下一次匹配开始的合适位置，利用needle中潜在的重复段信息进行这个合理位置的计算，形成nextval数组。</li>
 <li>nextval对应needle中所有元素，表示下一次比较开始时j的值。</li>
 </ol>
@@ -329,7 +329,7 @@
 j = 0；
 </code></pre><p>并且在后续步骤前，一定有如下赋值</p>
 <pre><code>nextval[0] = -1；
-</code></pre><p>因为如果首字符适配，则必须将haystack的i往后移一位，属于特殊情况。</p>
+</code></pre><p>因为如果首字符失配，则必须将haystack的i往后移一位，属于特殊情况。</p>
 <ol>
 <li>只要k = -1，就停止判断needle的相同前后缀，进行下一个字符对应nextval的赋值。</li>
 <li>当needle[j]字符的nextval值已经求出(即当前的k)，决定needle[j + 1]对应nextval值的步骤分为两种情况，一个是可以进行赋值；一个是需要缩短潜在的重复段的位置，简单来说，就是利用已有的nextval进行k的前溯。k值处于不断的变化中，当调整其到了合理位置的时候，就可以用来继续为nextval数组赋值（始终是一个nextval“增长”，但是基于的k不一样，发现不能直接继承了，就往前找可以继承的位置，再进行继承）。</li>
