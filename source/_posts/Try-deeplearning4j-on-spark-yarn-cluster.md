@@ -72,5 +72,22 @@ Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在�
 首先需要导出所有的依赖包，maven工具可以用一个命令实现，在工程目录下输入
 
 	mvn dependency:copy-dependencies -DoutputDirectory=lib
-然后就可以在工程下的lib目录找到所有依赖的jar包了。然后将其放大hdfs上去（待续）
+然后就可以在工程下的lib目录找到所有依赖的jar包了。这里先尝试了是将他们放大集群各节点的$SPARK_HOME/lib/下就能使用。
 
+4.1 首先是通过idea中artifact打成fat-jar，然后传至各节点的对应lib目录，提交执行，失败
+，那么为什么实验室集群这个目录下还有其他jar呢？例如jblas.jar。
+
+4.2 检验一下上一条是否由fat-jar引起，刚才报错找不到jcommander相关的类，那么将这个依赖的jar包单独拷贝到各个节点的lib文件夹，提交执行，报错信息没有任何变化。结论是似乎单纯将其放置到lib文件夹并不起作用。
+
+4.3尝试一下在hdfs中上传所需jar包，分别使用SparkConf.setJars()与SparkContext.addJar()进行添加，都不起作用。。不管是fat-jar还是原始的jar（测试jcommander得出无效结论);同时也排除了hdfs路径存在问题的可能性，因为写不写ip端口都不行。
+
+4.4在$SPARK_HOME/conf/spark-defaults.conf中配置如下属性
+
+	spark.driver.extraJars  xxx.jar:xxx.jars...
+	spark.executor.extraJars xxx.jar:xxx.jars...
+
+指定一个所有节点都一样的额外jar包存放目录就可以了，但是需要每个节点都进行配置且保存一份jar包，有一点麻烦，这样不会造成jar包的上传。配置文件是可以使用$SPARK_HOME这样的字段进行配置的。
+
+虽然程序成功进入了RUNNING状态，但是ApplicationMaster一直没有更新输出，可能数据加载还是有问题的，改天自己准备数据跑一跑试试。
+
+另外使用jcommander处理入口类参数的时候，注意要在创建相关spark配置及上下文类之前进行，否则输入的参数可能不会生效分（注意代码逻辑哦）。
