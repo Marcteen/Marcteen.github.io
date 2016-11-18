@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="尝试在Spark on Yarn集群上运行DeepLearning4j样例程序Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个测评指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了">
-<meta property="og:updated_time" content="2016-11-18T03:58:20.541Z">
+<meta property="og:updated_time" content="2016-11-18T06:15:02.395Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Try deeplearning4j on spark yarn cluster">
 <meta name="twitter:description" content="尝试在Spark on Yarn集群上运行DeepLearning4j样例程序Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个测评指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了">
@@ -324,9 +324,7 @@ private boolean useSparkLocal = true;
 </code></pre><p>然后注释帮助里指出，当使用spark-submit的时候，注意在应用程序参数里加上如下内容，从而避免使用local模式，发挥集群的效力（但现在的情况看起来，我们的环境不能提供任何性能保证，悲伤。）</p>
 <pre><code>-useSparkLocal false
 </code></pre><p>感觉很棒的一个方法，不知道是什么原理，看来还是得好好学一下java基础。</p>
-<h2 id="尝试进行集群运行"><a href="#尝试进行集群运行" class="headerlink" title="尝试进行集群运行"></a>尝试进行集群运行</h2><ol>
-<li>尝试使用依赖项jar包</li>
-</ol>
+<h2 id="尝试进行集群运行"><a href="#尝试进行集群运行" class="headerlink" title="尝试进行集群运行"></a>尝试进行集群运行</h2><p>1.尝试使用依赖项jar包</p>
 <p>Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在工程中添加如下依赖</p>
 <pre><code>&lt;dependency&gt;
     &lt;groupId&gt;org.deeplearning4j&lt;/groupId&gt;
@@ -334,22 +332,25 @@ private boolean useSparkLocal = true;
     &lt;version&gt;${dl4j.version}&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre><p>于是打包样例程序的时候，只输出了dl4j-spark-example，然后取巧得将上面提到的依赖放到了集群SPARK_HOME/lib/目录下（注意选择对应的scala版本号）。然后提交执行，妥妥地找不到类。。</p>
-<ol>
-<li>尝试将所有依赖打包进入spark应用程序</li>
-</ol>
+<p>2.尝试将所有依赖打包进入spark应用程序</p>
 <p>这里使用idea创建artifact的时候使用from module with dependency项创建，这样打包输出的依赖jar包就会被加上extract前缀，这样的方法在之前有同学成功过。但是提交执行后出现了如下错误</p>
 <pre><code>java.lang.SecurityException: Invalid signature file digest for Manifest main attributes
 </code></pre><p>日志信息并没有让我明白为什么，网上有人指出是log4j依赖版本的问题，但是检查依赖项后发现没有出现版本问题。暂时无解。</p>
-<ol>
-<li><p>使用依赖项dl4j-spark_xx.jar包，在提交命令中追加依赖，像下面这样</p>
-<p> spark-submit \<br> --class org.deeplearning4j.mlp.MnistMLPExample \<br> --master yarn \<br> --deploy-mode cluster \<br> --driver-memory 8G \<br> --executor-memory 20G \<br> --num-executors 4 \<br> --jars /home/tseg/users/lc/dl14j-spark_2.10-0.6.0.jar \<br> /home/tseg/users/lc/dl4j-examples.jar \<br> -userSparkLocal false<br>似乎还是不行，依然会有类找不到的问题。<br>随后发现为了运行这个样例程序，需要的不仅仅是dl14j-spark_2.10-0.6.0.jar，仔细在idea中的代码import以及artifact的模块依赖中检查其依赖项，还包括了dl4j的nn，core（包含谜一样的输入数据的生成过程方法，这个后续开发中应该不会再用到了吧）这些子项目包，还有nd4j，slf4j这些，同时入口函数还使用了jcommander，这些在集群上都是没有的，于是将这些包extracted到应用程序jar中，提交执行就不会再报错了，但是此时的应用程序jar包会很臃肿，有34M，而且提交执行之后集群ApplicationMaster不会有任何输出信息，暂时不知道问题出哪里。</p>
-</li>
-</ol>
+<p>3.使用依赖项dl4j-spark_xx.jar包，在提交命令中追加依赖，像下面这样</p>
+<pre><code>spark-submit \
+\--class org.deeplearning4j.mlp.MnistMLPExample \
+\--master yarn \
+\--deploy-mode cluster \
+\--driver-memory 8G \
+\--executor-memory 20G \
+\--num-executors 4 \
+\--jars /home/tseg/users/lc/dl14j-spark_2.10-0.6.0.jar \
+/home/tseg/users/lc/dl4j-examples.jar \
+\-userSparkLocal false
+</code></pre><p>似乎还是不行，依然会有类找不到的问题。<br>随后发现为了运行这个样例程序，需要的不仅仅是dl14j-spark_2.10-0.6.0.jar，仔细在idea中的代码import以及artifact的模块依赖中检查其依赖项，还包括了dl4j的nn，core（包含谜一样的输入数据的生成过程方法，这个后续开发中应该不会再用到了吧）这些子项目包，还有nd4j，slf4j这些，同时入口函数还使用了jcommander，这些在集群上都是没有的，于是将这些包extracted到应用程序jar中，提交执行就不会再报错了，但是此时的应用程序jar包会很臃肿，有34M，而且提交执行之后集群ApplicationMaster不会有任何输出信息，暂时不知道问题出哪里。</p>
 <p>记录一个小问题，使用yarn application -kill时出现了报错，指出jvm达到资源上线，无法再分配资源，这是因为linux默认进程数的限制导致，解决方法是在如下文件中修改即可，可指定hadoop，spark进程限制等等</p>
 <pre><code>/etc/security/limits.d/90.nproc.conf
-</code></pre><ol>
-<li>尝试将所有依赖jar添加到集群</li>
-</ol>
+</code></pre><p>4.尝试将所有依赖jar添加到集群</p>
 <p>首先需要导出所有的依赖包，maven工具可以用一个命令实现，在工程目录下输入</p>
 <pre><code>mvn dependency:copy-dependencies -DoutputDirectory=lib
 </code></pre><p>然后就可以在工程下的lib目录找到所有依赖的jar包了。然后将其放大hdfs上去（待续）</p>
