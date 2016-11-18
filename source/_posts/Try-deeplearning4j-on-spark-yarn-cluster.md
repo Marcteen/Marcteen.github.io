@@ -28,7 +28,7 @@ Deeplearning4j看起来是一个较为规整的java深度学习工具包，基�
 感觉很棒的一个方法，不知道是什么原理，看来还是得好好学一下java基础。
 
 ## 尝试进行集群运行
-1. 尝试使用依赖项jar包
+1.尝试使用依赖项jar包
 
 Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在工程中添加如下依赖
 
@@ -40,7 +40,7 @@ Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在�
 
 于是打包样例程序的时候，只输出了dl4j-spark-example，然后取巧得将上面提到的依赖放到了集群SPARK_HOME/lib/目录下（注意选择对应的scala版本号）。然后提交执行，妥妥地找不到类。。
 
-2. 尝试将所有依赖打包进入spark应用程序
+2.尝试将所有依赖打包进入spark应用程序
 
 这里使用idea创建artifact的时候使用from module with dependency项创建，这样打包输出的依赖jar包就会被加上extract前缀，这样的方法在之前有同学成功过。但是提交执行后出现了如下错误
 
@@ -48,7 +48,7 @@ Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在�
 
 日志信息并没有让我明白为什么，网上有人指出是log4j依赖版本的问题，但是检查依赖项后发现没有出现版本问题。暂时无解。
 
-3. 使用依赖项dl4j-spark_xx.jar包，在提交命令中追加依赖，像下面这样
+3.使用依赖项dl4j-spark_xx.jar包，在提交命令中追加依赖，像下面这样
 
 	spark-submit \
 	\--class org.deeplearning4j.mlp.MnistMLPExample \
@@ -67,7 +67,7 @@ Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在�
 
 	/etc/security/limits.d/90.nproc.conf
 
-4. 尝试将所有依赖jar添加到集群
+4.尝试将所有依赖jar添加到集群
 
 首先需要导出所有的依赖包，maven工具可以用一个命令实现，在工程目录下输入
 
