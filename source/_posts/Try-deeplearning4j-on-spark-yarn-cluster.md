@@ -61,6 +61,11 @@ Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在�
 	/home/tseg/users/lc/dl4j-examples.jar \
 	\-userSparkLocal false
 似乎还是不行，依然会有类找不到的问题。
+随后发现为了运行这个样例程序，需要的不仅仅是dl14j-spark_2.10-0.6.0.jar，仔细在idea中的代码import以及artifact的模块依赖中检查其依赖项，还包括了dl4j的nn，core（包含谜一样的输入数据的生成过程方法，这个后续开发中应该不会再用到了吧）这些子项目包，还有nd4j，slf4j这些，同时入口函数还使用了jcommander，这些在集群上都是没有的，于是将这些包extracted到应用程序jar中，提交执行就不会再报错了，但是此时的应用程序jar包会很臃肿，有34M，而且提交执行之后集群ApplicationMaster不会有任何输出信息，暂时不知道问题出哪里。
+
+记录一个小问题，使用yarn application -kill时出现了报错，指出jvm达到资源上线，无法再分配资源，这是因为linux默认进程数的限制导致，解决方法是在如下文件中修改即可，可指定hadoop，spark进程限制等等
+
+	/etc/security/limits.d/90.nproc.conf
 
 4. 尝试将所有依赖jar添加到集群
 
