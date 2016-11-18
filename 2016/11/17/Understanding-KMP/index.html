@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="algorithm,String,Java," />
 
 
 
@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="为Linux系统开放特定端口linux系统默认会开启防火墙（嗯应该是个系统就会开吧），那么如何开放特定端口满足实际需求呢？">
+<meta name="description" content="复习一百遍都难以彻底记住的KMP算法记得大二学数据结构的时候，期中考试复习时很好地记住了KMP算法中nextval数组的求法，到了期末就完全忘记了，重新复习再也找不到当初的感觉。考研的时候被告知其内容不是考研大纲的要求，没有复习，然后考试的时候在选择题里看见了它。。现在刷leetcode遇到了子串匹配，于是再一次复习。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Open up an port on Linux">
-<meta property="og:url" content="http://yoursite.com/2016/11/08/Open-up-an-port-on-Linux/index.html">
+<meta property="og:title" content="Understanding KMP">
+<meta property="og:url" content="http://yoursite.com/2016/11/17/Understanding-KMP/index.html">
 <meta property="og:site_name" content="Marcteen">
-<meta property="og:description" content="为Linux系统开放特定端口linux系统默认会开启防火墙（嗯应该是个系统就会开吧），那么如何开放特定端口满足实际需求呢？">
-<meta property="og:updated_time" content="2016-11-08T01:51:27.946Z">
+<meta property="og:description" content="复习一百遍都难以彻底记住的KMP算法记得大二学数据结构的时候，期中考试复习时很好地记住了KMP算法中nextval数组的求法，到了期末就完全忘记了，重新复习再也找不到当初的感觉。考研的时候被告知其内容不是考研大纲的要求，没有复习，然后考试的时候在选择题里看见了它。。现在刷leetcode遇到了子串匹配，于是再一次复习。">
+<meta property="og:updated_time" content="2016-11-18T03:43:36.665Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Open up an port on Linux">
-<meta name="twitter:description" content="为Linux系统开放特定端口linux系统默认会开启防火墙（嗯应该是个系统就会开吧），那么如何开放特定端口满足实际需求呢？">
+<meta name="twitter:title" content="Understanding KMP">
+<meta name="twitter:description" content="复习一百遍都难以彻底记住的KMP算法记得大二学数据结构的时候，期中考试复习时很好地记住了KMP算法中nextval数组的求法，到了期末就完全忘记了，重新复习再也找不到当初的感觉。考研的时候被告知其内容不是考研大纲的要求，没有复习，然后考试的时候在选择题里看见了它。。现在刷leetcode遇到了子串匹配，于是再一次复习。">
 
 
 
@@ -114,10 +114,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/08/Open-up-an-port-on-Linux/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/11/17/Understanding-KMP/"/>
 
 
-  <title> Open up an port on Linux | Marcteen </title>
+  <title> Understanding KMP | Marcteen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="en">
@@ -247,7 +247,7 @@
             
             
               
-                Open up an port on Linux
+                Understanding KMP
               
             
           </h1>
@@ -259,19 +259,38 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-11-08T09:43:12+08:00" content="2016-11-08">
-              2016-11-08
+            <time itemprop="dateCreated" datetime="2016-11-17T21:44:28+08:00" content="2016-11-17">
+              2016-11-17
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Tricks/" itemprop="url" rel="index">
+                    <span itemprop="name">Tricks</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/11/08/Open-up-an-port-on-Linux/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/08/Open-up-an-port-on-Linux/" itemprop="commentsCount"></span>
+                <a href="/2016/11/17/Understanding-KMP/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/17/Understanding-KMP/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -294,15 +313,40 @@
       
 
       
-        <h1 id="为Linux系统开放特定端口"><a href="#为Linux系统开放特定端口" class="headerlink" title="为Linux系统开放特定端口"></a>为Linux系统开放特定端口</h1><p>linux系统默认会开启防火墙（嗯应该是个系统就会开吧），那么如何开放特定端口满足实际需求呢？<br><a id="more"></a><br>输入如下命令</p>
-<pre><code>iptables -A INPUT -p tcp --dport port_number -j ACCEPT
-iptables -A OUTPUT -p tcp --dport port_number -j ACCEPT
-</code></pre><p>然后保存并重启防火墙</p>
-<pre><code>/etc/rc.d/init.d/iptables save
-/etc/init.d/iptables restart
-</code></pre><p>查看端口是否开放</p>
-<pre><code>/sbin/iptables -L -n
-</code></pre><p>完成。</p>
+        <h1 id="复习一百遍都难以彻底记住的KMP算法"><a href="#复习一百遍都难以彻底记住的KMP算法" class="headerlink" title="复习一百遍都难以彻底记住的KMP算法"></a>复习一百遍都难以彻底记住的KMP算法</h1><p>记得大二学数据结构的时候，期中考试复习时很好地记住了KMP算法中nextval数组的求法，到了期末就完全忘记了，重新复习再也找不到当初的感觉。考研的时候被告知其内容不是考研大纲的要求，没有复习，然后考试的时候在选择题里看见了它。。现在刷leetcode遇到了子串匹配，于是再一次复习。<br><a id="more"></a></p>
+<p><a href="http://www.cnblogs.com/yjiyjige/p/3263858.html" target="_blank" rel="external">参考内容</a>,这个是找了一会最好理解的一个。以前上课的课件暂时找不到，似乎讲的还是很好的，以后再找一找吧。</p>
+<h2 id="nextval数组"><a href="#nextval数组" class="headerlink" title="nextval数组"></a>nextval数组</h2><p>虽然买了大话数据结构这本神树，但是其中对于KMP的讲解并不是很好，看得我很晕，而且串的下标是从1开始的，很令人不爽。那么还是采用下标从零开始的方式。KMP的精髓与难点都在nextval数组里。</p>
+<p>记住如下几个要点：</p>
+<ol>
+<li>被匹配字符串叫做haystack,使用变量i进行遍历</li>
+<li>待匹配子串叫做needle，使用变量j进行遍历</li>
+<li>为了效率，发生失配时，基本不移动i，只是改变j的值，也就是说，只是将needle向字符串尾方向进行适当移动（也就是将重启匹配的位置适当往前进行调整）。</li>
+<li>为了决定j的下一次匹配开始的合适位置，利用needle中潜在的重复段信息进行这个合理位置的计算，形成nextval数组。</li>
+<li>nextval对应needle中所有元素，表示下一次比较开始时j的值。</li>
+</ol>
+<h2 id="nextval的求解"><a href="#nextval的求解" class="headerlink" title="nextval的求解"></a>nextval的求解</h2><p>详细不说，说了也会忘，就列一些要点吧。<br>使用k和j进行计算，初始值为</p>
+<pre><code>k = -1；
+j = 0；
+</code></pre><p>并且在后续步骤前，一定有如下赋值</p>
+<pre><code>nextval[0] = -1；
+</code></pre><p>因为如果首字符适配，则必须将haystack的i往后移一位，属于特殊情况。</p>
+<ol>
+<li>只要k = -1，就停止判断needle的相同前后缀，进行下一个字符对应nextval的赋值。</li>
+<li>当needle[j]字符的nextval值已经求出(即当前的k)，决定needle[j + 1]对应nextval值的步骤分为两种情况，一个是可以进行赋值；一个是需要缩短潜在的重复段的位置，简单来说，就是利用已有的nextval进行k的前溯。k值处于不断的变化中，当调整其到了合理位置的时候，就可以用来继续为nextval数组赋值（始终是一个nextval“增长”，但是基于的k不一样，发现不能直接继承了，就往前找可以继承的位置，再进行继承）。</li>
+<li>对于待求解的j + 1，当needle[j] == needle[k]时，说明needle当前0 至 j-1段添加needle[j]后，局部串匹配的前后缀可以增长，此时立即使用k来进行进行nextval[j + 1]的赋值，因为next[j]会被包含在needle[j + 1]前方局部串的匹配前后缀中。更为形象的解释就是，在needle[j + 1]看来，needle[j]恰好跟当前局部串匹配前后缀中的前缀后面的第一个字符相等，从而j + 1对应的局部串中匹配前后缀将可以增长，此时k就是可以被继承的合适的值。</li>
+<li><p>如果needle[j] ！= needle[k]，那么4中局部串匹配的前后缀并不能增长，而是被切断，只能尝试利用needle[j]构成新的更短的局部串匹配前后缀，此时需要将k进行前溯，确定是否可以在更靠近needle头部的位置进行局部串匹配前后缀的增长（本质上对于needle[j + 1]来说，依然是将needle[j]作为潜在局部串匹配前后缀的一部分）。此时要置k = nextval[k]。可以这么理解，假设在这里还是强行使前后缀进行增长，那么如果在needle[j + 1]发生失配后更新j（值为4.开始对应的k），接下来会在needle[新j]处又发生失配，因为更新j之前的局部串匹配前后缀并不成立，那么就需要再次利用nextval进行j的更新，但这一步可以避免，即在前面发现不可增长时就不要增长了，直接将k进行回溯；同时因为needle[i]虽然不能增长之前的前后缀，却有可能在前后缀内部构成新的匹配前后缀（从这个字符反向needle头部方向检查）。</p>
+<pre><code>abfabcabfabfe
+-000120123453
+</code></pre><p>上面的例子可以说明，当在最后的e发生失配，倒数第二个f切断了前面个增长的局部串匹配前后缀，可是它与前面的abf构成了更小的前后缀，本质上是利用k = nextval[nextval[倒数第二个f]]（找到的可以被继承的k值）与f进行一次继承检查，发现可以利用的更短的局部匹配前后缀</p>
+</li>
+<li><p>当合适的k值被找出来之后，进行判断，如果</p>
+<pre><code>needle[j + 1] == needle [k + 1]
+</code></pre><p>那么在发生失配的如果参考这个值进行j的更新，又会立即发生失配，解决办法是先进行判断，发现这个相等情况后，将继承过程改为</p>
+<pre><code>needle[j + 1] = nextval[k + 1]
+</code></pre><p>否则</p>
+<pre><code>needle[j + 1] = k + 1;
+</code></pre></li>
+</ol>
 
       
     </div>
@@ -323,22 +367,28 @@ iptables -A OUTPUT -p tcp --dport port_number -j ACCEPT
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/algorithm/" rel="tag">#algorithm</a>
+          
+            <a href="/tags/String/" rel="tag">#String</a>
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/07/submit-a-new-working-directory-to-github/" rel="next" title="submit a new working directory to github">
-                <i class="fa fa-chevron-left"></i> submit a new working directory to github
+              <a href="/2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/" rel="next" title="Try deeplearning4j on spark yarn cluster">
+                <i class="fa fa-chevron-left"></i> Try deeplearning4j on spark yarn cluster
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/" rel="prev" title="Try deeplearning4j on spark yarn cluster">
-                Try deeplearning4j on spark yarn cluster <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -364,8 +414,8 @@ iptables -A OUTPUT -p tcp --dport port_number -j ACCEPT
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/11/08/Open-up-an-port-on-Linux/"
-           data-title="Open up an port on Linux" data-url="http://yoursite.com/2016/11/08/Open-up-an-port-on-Linux/">
+      <div class="ds-thread" data-thread-key="2016/11/17/Understanding-KMP/"
+           data-title="Understanding KMP" data-url="http://yoursite.com/2016/11/17/Understanding-KMP/">
       </div>
     
   </div>
@@ -456,7 +506,7 @@ iptables -A OUTPUT -p tcp --dport port_number -j ACCEPT
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为Linux系统开放特定端口"><span class="nav-number">1.</span> <span class="nav-text">为Linux系统开放特定端口</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#复习一百遍都难以彻底记住的KMP算法"><span class="nav-number">1.</span> <span class="nav-text">复习一百遍都难以彻底记住的KMP算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nextval数组"><span class="nav-number">1.1.</span> <span class="nav-text">nextval数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nextval的求解"><span class="nav-number">1.2.</span> <span class="nav-text">nextval的求解</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

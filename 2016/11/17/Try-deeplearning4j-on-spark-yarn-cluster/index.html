@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="linux,Unix,OSX,link," />
+  <meta name="keywords" content="Deep Learning,Spark," />
 
 
 
@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="就像vim那样在shell终端启动应用程序吧！自从习惯使用终端进行操作之后，就越来越习惯这么做了，当然在没有完全发挥vim潜能的情况下，使用图形化编辑器还是一个比较好的选择。那么，如果能够像vim那样输入一个命令就启动编辑器，也是一个很棒的功能。">
+<meta name="description" content="尝试在Spark on Yarn集群上运行DeepLearning4j样例程序Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个测评指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了">
 <meta property="og:type" content="article">
-<meta property="og:title" content="How to launch apps with shell command">
-<meta property="og:url" content="http://yoursite.com/2016/11/02/How-to-launch-apps-with-shell-command/index.html">
+<meta property="og:title" content="Try deeplearning4j on spark yarn cluster">
+<meta property="og:url" content="http://yoursite.com/2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/index.html">
 <meta property="og:site_name" content="Marcteen">
-<meta property="og:description" content="就像vim那样在shell终端启动应用程序吧！自从习惯使用终端进行操作之后，就越来越习惯这么做了，当然在没有完全发挥vim潜能的情况下，使用图形化编辑器还是一个比较好的选择。那么，如果能够像vim那样输入一个命令就启动编辑器，也是一个很棒的功能。">
-<meta property="og:updated_time" content="2016-11-06T02:31:55.731Z">
+<meta property="og:description" content="尝试在Spark on Yarn集群上运行DeepLearning4j样例程序Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个测评指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了">
+<meta property="og:updated_time" content="2016-11-18T03:58:20.541Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How to launch apps with shell command">
-<meta name="twitter:description" content="就像vim那样在shell终端启动应用程序吧！自从习惯使用终端进行操作之后，就越来越习惯这么做了，当然在没有完全发挥vim潜能的情况下，使用图形化编辑器还是一个比较好的选择。那么，如果能够像vim那样输入一个命令就启动编辑器，也是一个很棒的功能。">
+<meta name="twitter:title" content="Try deeplearning4j on spark yarn cluster">
+<meta name="twitter:description" content="尝试在Spark on Yarn集群上运行DeepLearning4j样例程序Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个测评指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了">
 
 
 
@@ -114,10 +114,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/02/How-to-launch-apps-with-shell-command/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/"/>
 
 
-  <title> How to launch apps with shell command | Marcteen </title>
+  <title> Try deeplearning4j on spark yarn cluster | Marcteen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="en">
@@ -247,7 +247,7 @@
             
             
               
-                How to launch apps with shell command
+                Try deeplearning4j on spark yarn cluster
               
             
           </h1>
@@ -259,8 +259,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-11-02T08:08:48+08:00" content="2016-11-02">
-              2016-11-02
+            <time itemprop="dateCreated" datetime="2016-11-17T16:52:47+08:00" content="2016-11-17">
+              2016-11-17
             </time>
           </span>
 
@@ -273,8 +273,8 @@
               <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/tricks/" itemprop="url" rel="index">
-                    <span itemprop="name">tricks</span>
+                  <a href="/categories/Trials/" itemprop="url" rel="index">
+                    <span itemprop="name">Trials</span>
                   </a>
                 </span>
 
@@ -289,8 +289,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/11/02/How-to-launch-apps-with-shell-command/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/02/How-to-launch-apps-with-shell-command/" itemprop="commentsCount"></span>
+                <a href="/2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -313,23 +313,46 @@
       
 
       
-        <h1 id="就像vim那样在shell终端启动应用程序吧！"><a href="#就像vim那样在shell终端启动应用程序吧！" class="headerlink" title="就像vim那样在shell终端启动应用程序吧！"></a>就像vim那样在shell终端启动应用程序吧！</h1><p>自从习惯使用终端进行操作之后，就越来越习惯这么做了，当然在没有完全发挥vim潜能的情况下，使用图形化编辑器还是一个比较好的选择。那么，如果能够像vim那样输入一个命令就启动编辑器，也是一个很棒的功能。</p>
-<a id="more"></a>
-<p>下面给出了两种实现方法，按需要来吧。感觉第一种比较厉害，但是不是一直有效，第二种方法的适用程度应该更高</p>
-<p>1.在usr/local/bin/ 目录下创建软件可执行程序的软连接。<br>以sublime text为例</p>
-<pre><code>sudo ln -s /Application/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/subl
-</code></pre><p>然后就可以像这样在终端进行使用啦</p>
-<pre><code>subl [filename]
-</code></pre><p>2.使用alias自定义shell命令，那么这次使用MWeb lite为例，因为使用第一种方法为它创建命令，执行后会报错<br>切换到~</p>
-<pre><code>vim .bash_profile
-</code></pre><p>添加如下内容</p>
-<pre><code>alias mwebl=&apos;open -a /Applications/MWeb\ Lite.app/Contents/MacOS/MWeb\ Lite&apos;
-</code></pre><p>然后保存并退出，执行如下命令</p>
-<pre><code>source .bash_profile
-</code></pre><p>那么就可以像这样使用MWeb lite编辑md文件了</p>
-<pre><code>mwebl ./source/_post/somepost.md
-</code></pre><p>这样使用hexo新建md之后就可以接着敲命令将其打开进行编辑了，哈哈不要用鼠标点来点去。</p>
-<p>3.其实也可以将第二种方法的命令放到一个sh中，但是可以把sh脚本作为命令吗？其实把这个放在更具体的应用下好像也不错。</p>
+        <h1 id="尝试在Spark-on-Yarn集群上运行DeepLearning4j样例程序"><a href="#尝试在Spark-on-Yarn集群上运行DeepLearning4j样例程序" class="headerlink" title="尝试在Spark on Yarn集群上运行DeepLearning4j样例程序"></a>尝试在Spark on Yarn集群上运行DeepLearning4j样例程序</h1><p>Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个<a href="https://spark-summit.org/2016/events/which-is-deeper-comparison-of-deep-learning-frameworks-on-spark/" target="_blank" rel="external">测评</a>指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了<br><a id="more"></a></p>
+<h2 id="准备样例工程目录"><a href="#准备样例工程目录" class="headerlink" title="准备样例工程目录"></a>准备样例工程目录</h2><pre><code>git clone https://github.com/deeplearning4j/dl4j-examples.git
+ cd dl4j-examples/
+ mvn clean install
+</code></pre><p>我使用的是idea打开，也会自动解析pom.xml，maven依赖的下载速度即时是挂了代理也要相当一段时间。看了看依赖十几个，到时候集群上还得提供这些jar包才行。本地试着在idea上编译运行了一下，可以跑，但是速度非常慢，呵呵。</p>
+<h2 id="如何本机使用样例"><a href="#如何本机使用样例" class="headerlink" title="如何本机使用样例"></a>如何本机使用样例</h2><p>代码全是java，看来可以学着怎么使用java开发spark应用程序了。使用的样例是MnistMLPExample，其成员变量使用了@Parameter字段进行注解，像这样</p>
+<pre><code>@Parameter(names = &quot;-useSparkLocal&quot;, description = &quot;Use spark local (helper for testing/running without spark submit)&quot;, arity = 1)
+private boolean useSparkLocal = true;
+</code></pre><p>然后注释帮助里指出，当使用spark-submit的时候，注意在应用程序参数里加上如下内容，从而避免使用local模式，发挥集群的效力（但现在的情况看起来，我们的环境不能提供任何性能保证，悲伤。）</p>
+<pre><code>-useSparkLocal false
+</code></pre><p>感觉很棒的一个方法，不知道是什么原理，看来还是得好好学一下java基础。</p>
+<h2 id="尝试进行集群运行"><a href="#尝试进行集群运行" class="headerlink" title="尝试进行集群运行"></a>尝试进行集群运行</h2><ol>
+<li>尝试使用依赖项jar包</li>
+</ol>
+<p>Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在工程中添加如下依赖</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.deeplearning4j&lt;/groupId&gt;
+    &lt;artifactId&gt;dl4j-spark_${scala.binary.version}&lt;/artifactId&gt;
+    &lt;version&gt;${dl4j.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre><p>于是打包样例程序的时候，只输出了dl4j-spark-example，然后取巧得将上面提到的依赖放到了集群SPARK_HOME/lib/目录下（注意选择对应的scala版本号）。然后提交执行，妥妥地找不到类。。</p>
+<ol>
+<li>尝试将所有依赖打包进入spark应用程序</li>
+</ol>
+<p>这里使用idea创建artifact的时候使用from module with dependency项创建，这样打包输出的依赖jar包就会被加上extract前缀，这样的方法在之前有同学成功过。但是提交执行后出现了如下错误</p>
+<pre><code>java.lang.SecurityException: Invalid signature file digest for Manifest main attributes
+</code></pre><p>日志信息并没有让我明白为什么，网上有人指出是log4j依赖版本的问题，但是检查依赖项后发现没有出现版本问题。暂时无解。</p>
+<ol>
+<li><p>使用依赖项dl4j-spark_xx.jar包，在提交命令中追加依赖，像下面这样</p>
+<p> spark-submit \<br> --class org.deeplearning4j.mlp.MnistMLPExample \<br> --master yarn \<br> --deploy-mode cluster \<br> --driver-memory 8G \<br> --executor-memory 20G \<br> --num-executors 4 \<br> --jars /home/tseg/users/lc/dl14j-spark_2.10-0.6.0.jar \<br> /home/tseg/users/lc/dl4j-examples.jar \<br> -userSparkLocal false<br>似乎还是不行，依然会有类找不到的问题。<br>随后发现为了运行这个样例程序，需要的不仅仅是dl14j-spark_2.10-0.6.0.jar，仔细在idea中的代码import以及artifact的模块依赖中检查其依赖项，还包括了dl4j的nn，core（包含谜一样的输入数据的生成过程方法，这个后续开发中应该不会再用到了吧）这些子项目包，还有nd4j，slf4j这些，同时入口函数还使用了jcommander，这些在集群上都是没有的，于是将这些包extracted到应用程序jar中，提交执行就不会再报错了，但是此时的应用程序jar包会很臃肿，有34M，而且提交执行之后集群ApplicationMaster不会有任何输出信息，暂时不知道问题出哪里。</p>
+</li>
+</ol>
+<p>记录一个小问题，使用yarn application -kill时出现了报错，指出jvm达到资源上线，无法再分配资源，这是因为linux默认进程数的限制导致，解决方法是在如下文件中修改即可，可指定hadoop，spark进程限制等等</p>
+<pre><code>/etc/security/limits.d/90.nproc.conf
+</code></pre><ol>
+<li>尝试将所有依赖jar添加到集群</li>
+</ol>
+<p>首先需要导出所有的依赖包，maven工具可以用一个命令实现，在工程目录下输入</p>
+<pre><code>mvn dependency:copy-dependencies -DoutputDirectory=lib
+</code></pre><p>然后就可以在工程下的lib目录找到所有依赖的jar包了。然后将其放大hdfs上去（待续）</p>
 
       
     </div>
@@ -352,13 +375,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/linux/" rel="tag">#linux</a>
+            <a href="/tags/Deep-Learning/" rel="tag">#Deep Learning</a>
           
-            <a href="/tags/Unix/" rel="tag">#Unix</a>
-          
-            <a href="/tags/OSX/" rel="tag">#OSX</a>
-          
-            <a href="/tags/link/" rel="tag">#link</a>
+            <a href="/tags/Spark/" rel="tag">#Spark</a>
           
         </div>
       
@@ -367,16 +386,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/31/first-post/" rel="next" title="first post">
-                <i class="fa fa-chevron-left"></i> first post
+              <a href="/2016/11/08/Open-up-an-port-on-Linux/" rel="next" title="Open up an port on Linux">
+                <i class="fa fa-chevron-left"></i> Open up an port on Linux
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/11/02/Language-and-timezone/" rel="prev" title="Language and timezone">
-                Language and timezone <i class="fa fa-chevron-right"></i>
+              <a href="/2016/11/17/Understanding-KMP/" rel="prev" title="Understanding KMP">
+                Understanding KMP <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -403,8 +422,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/11/02/How-to-launch-apps-with-shell-command/"
-           data-title="How to launch apps with shell command" data-url="http://yoursite.com/2016/11/02/How-to-launch-apps-with-shell-command/">
+      <div class="ds-thread" data-thread-key="2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/"
+           data-title="Try deeplearning4j on spark yarn cluster" data-url="http://yoursite.com/2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/">
       </div>
     
   </div>
@@ -495,7 +514,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#就像vim那样在shell终端启动应用程序吧！"><span class="nav-number">1.</span> <span class="nav-text">就像vim那样在shell终端启动应用程序吧！</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#尝试在Spark-on-Yarn集群上运行DeepLearning4j样例程序"><span class="nav-number">1.</span> <span class="nav-text">尝试在Spark on Yarn集群上运行DeepLearning4j样例程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备样例工程目录"><span class="nav-number">1.1.</span> <span class="nav-text">准备样例工程目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何本机使用样例"><span class="nav-number">1.2.</span> <span class="nav-text">如何本机使用样例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#尝试进行集群运行"><span class="nav-number">1.3.</span> <span class="nav-text">尝试进行集群运行</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

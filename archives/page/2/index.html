@@ -84,16 +84,12 @@
 
 
 
-<meta name="description" content="为Linux系统开放特定端口linux系统默认会开启防火墙（嗯应该是个系统就会开吧），那么如何开放特定端口满足实际需求呢？">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Open up an port on Linux">
-<meta property="og:url" content="http://yoursite.com/2016/11/08/Open-up-an-port-on-Linux/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Marcteen">
+<meta property="og:url" content="http://yoursite.com/archives/page/2/index.html">
 <meta property="og:site_name" content="Marcteen">
-<meta property="og:description" content="为Linux系统开放特定端口linux系统默认会开启防火墙（嗯应该是个系统就会开吧），那么如何开放特定端口满足实际需求呢？">
-<meta property="og:updated_time" content="2016-11-08T01:51:27.946Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Open up an port on Linux">
-<meta name="twitter:description" content="为Linux系统开放特定端口linux系统默认会开启防火墙（嗯应该是个系统就会开吧），那么如何开放特定端口满足实际需求呢？">
+<meta name="twitter:title" content="Marcteen">
 
 
 
@@ -114,10 +110,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/08/Open-up-an-port-on-Linux/"/>
+  <link rel="canonical" href="http://yoursite.com/archives/page/2/"/>
 
 
-  <title> Open up an port on Linux | Marcteen </title>
+  <title> Archive | Marcteen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="en">
@@ -138,7 +134,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  page-archive  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -226,135 +222,70 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-collapse">
+    <span class="archive-move-on"></span>
+
+    <span class="archive-page-counter">
+      
+      
+      
+        
+      
+      Um..! 11 posts in total. Keep on posting.
+    </span>
+
     
 
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                Open up an port on Linux
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-11-08T09:43:12+08:00" content="2016-11-08">
-              2016-11-08
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/11/08/Open-up-an-port-on-Linux/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/08/Open-up-an-port-on-Linux/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
-      
-        <h1 id="为Linux系统开放特定端口"><a href="#为Linux系统开放特定端口" class="headerlink" title="为Linux系统开放特定端口"></a>为Linux系统开放特定端口</h1><p>linux系统默认会开启防火墙（嗯应该是个系统就会开吧），那么如何开放特定端口满足实际需求呢？<br><a id="more"></a><br>输入如下命令</p>
-<pre><code>iptables -A INPUT -p tcp --dport port_number -j ACCEPT
-iptables -A OUTPUT -p tcp --dport port_number -j ACCEPT
-</code></pre><p>然后保存并重启防火墙</p>
-<pre><code>/etc/rc.d/init.d/iptables save
-/etc/init.d/iptables restart
-</code></pre><p>查看端口是否开放</p>
-<pre><code>/sbin/iptables -L -n
-</code></pre><p>完成。</p>
-
-      
-    </div>
-
-    <div>
       
         
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/11/07/submit-a-new-working-directory-to-github/" rel="next" title="submit a new working directory to github">
-                <i class="fa fa-chevron-left"></i> submit a new working directory to github
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/" rel="prev" title="Try deeplearning4j on spark yarn cluster">
-                Try deeplearning4j on spark yarn cluster <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
+        <div class="collection-title">
+          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
         </div>
       
+      
 
       
-      
-    </footer>
+
+  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
+        
+            <a class="post-title-link" href="/2016/10/29/hello-world/" itemprop="url">
+              
+                <span itemprop="name">Hello World</span>
+              
+            </a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-10-29T08:08:48+08:00"
+              content="2016-10-29" >
+          10-29
+        </time>
+      </div>
+
+    </header>
   </article>
 
 
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+    
+
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/archives/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
+  </nav>
+
+
 
 
           </div>
@@ -362,14 +293,6 @@ iptables -A OUTPUT -p tcp --dport port_number -j ACCEPT
 
 
           
-  <div class="comments" id="comments">
-    
-      <div class="ds-thread" data-thread-key="2016/11/08/Open-up-an-port-on-Linux/"
-           data-title="Open up an port on Linux" data-url="http://yoursite.com/2016/11/08/Open-up-an-port-on-Linux/">
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -389,17 +312,8 @@ iptables -A OUTPUT -p tcp --dport port_number -j ACCEPT
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            Overview
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -449,17 +363,6 @@ iptables -A OUTPUT -p tcp --dport port_number -j ACCEPT
 
       </section>
 
-      
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为Linux系统开放特定端口"><span class="nav-number">1.</span> <span class="nav-text">为Linux系统开放特定端口</span></a></li></ol></div>
-            
-          </div>
-        </section>
       
 
     </div>
@@ -563,9 +466,11 @@ iptables -A OUTPUT -p tcp --dport port_number -j ACCEPT
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
-
+  
+    <script type="text/javascript" id="motion.page.archive">
+      $('.archive-year').velocity('transition.slideLeftIn');
+    </script>
+  
 
 
   
