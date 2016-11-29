@@ -16,3 +16,13 @@ categories: [Tricks]
 	Repository URL : http://github.com/davidB/scala-archetype-simple
 
 然后所需要的依赖在pom.xml中添加即可，这个有一个[网站](http://mvnrepository.com/)可以很方便地查询所需依赖的写法。暂时记录到这里。
+当然，我发现这个模板有一个bug，test中有一个JUnitRunner没有导入。
+
+然后还遇到了一些奇怪的问题。
+1.make工程出现EOF异常
+
+这个没有找到原因，使用invalidate cache不起作用，但是重启电脑后就好了。
+
+2.scala指出RDD对hadoop有不恰当引用。
+后来发现是因为spark依赖的scope问题，改为compile就不会报错了，但是这个应该设置为provided，实测命令行mvn编译不会受到这个影响。
+
