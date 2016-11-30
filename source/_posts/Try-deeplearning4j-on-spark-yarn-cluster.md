@@ -38,15 +38,12 @@ Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在�
         <version>${dl4j.version}</version>
     </dependency>
 
-于是打包样例程序的时候，只输出了dl4j-spark-example，然后取巧得将上面提到的依赖放到了集群SPARK_HOME/lib/目录下（注意选择对应的scala版本号）。然后提交执行，妥妥地找不到类。。
+于是打包样例程序的时候，只输出了dl4j-spark-example，然后取巧得将上面提到的依赖放到了集群SPARK_HOME/lib/目录下（注意选择对应的scala版本号）。然后提交执行，妥妥地找不到类，后面解释为什么，还是有很多要学习的地方。
 
 2.尝试将所有依赖打包进入spark应用程序
 
-这里使用idea创建artifact的时候使用from module with dependency项创建，这样打包输出的依赖jar包就会被加上extract前缀，这样的方法在之前有同学成功过。但是提交执行后出现了如下错误
-
-	java.lang.SecurityException: Invalid signature file digest for Manifest main attributes
-
-日志信息并没有让我明白为什么，网上有人指出是log4j依赖版本的问题，但是检查依赖项后发现没有出现版本问题。暂时无解。
+犯了好几次错，总结来说应该像这样：
+使用Idea建立maven工程，然后讲dl4j-spark样例中的pom抄过来（依赖项，properties这些），然后令其自动解析，这样所有依赖及其链式依赖都会被下载到本地，打包的时候挑出集群没有的一并加入（Extract方式），这样正常是可以执行的。
 
 3.使用依赖项dl4j-spark_xx.jar包，在提交命令中追加依赖，像下面这样
 
@@ -61,11 +58,8 @@ Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在�
 	/home/tseg/users/lc/dl4j-examples.jar \
 	\-userSparkLocal false
 似乎还是不行，依然会有类找不到的问题。
-随后发现为了运行这个样例程序，需要的不仅仅是dl14j-spark_2.10-0.6.0.jar，仔细在idea中的代码import以及artifact的模块依赖中检查其依赖项，还包括了dl4j的nn，core（包含谜一样的输入数据的生成过程方法，这个后续开发中应该不会再用到了吧）这些子项目包，还有nd4j，slf4j这些，同时入口函数还使用了jcommander，这些在集群上都是没有的，于是将这些包extracted到应用程序jar中，提交执行就不会再报错了，但是此时的应用程序jar包会很臃肿，有34M，而且提交执行之后集群ApplicationMaster不会有任何输出信息，暂时不知道问题出哪里。
-
-记录一个小问题，使用yarn application -kill时出现了报错，指出jvm达到资源上线，无法再分配资源，这是因为linux默认进程数的限制导致，解决方法是在如下文件中修改即可，可指定hadoop，spark进程限制等等
-
-	/etc/security/limits.d/90.nproc.conf
+后来发现是因为忽略了链式依赖，每一个依赖不可能将其所有的依赖都打包到自身，所以正确的做法是将这个依赖加入到maven当中，然后idea或者命令行maven都能将所有链式依赖一并下载，然后将集群运行时不能提供的依赖挑出来，一并打包成jar或者放置到集群上。另外
+dl4j官方提供的spark例子会从网络上下载数据集，所以离线的离线的集群还是不要直接尝试了，否则很久都不会执行的，需要自己编写程序从HDFS读取数据。
 
 4.尝试将所有依赖jar添加到集群
 
@@ -88,6 +82,41 @@ Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在�
 
 指定一个所有节点都一样的额外jar包存放目录就可以了，但是需要每个节点都进行配置且保存一份jar包，有一点麻烦，这样不会造成jar包的上传。配置文件是可以使用$SPARK_HOME这样的字段进行配置的。
 
-虽然程序成功进入了RUNNING状态，但是ApplicationMaster一直没有更新输出，可能数据加载还是有问题的，改天自己准备数据跑一跑试试。
+虽然程序成功进入了RUNNING状态，似乎jcommander能够找到，由于数据下载的问题，实际上spark计算一直没有运行。
 
 另外使用jcommander处理入口类参数的时候，注意要在创建相关spark配置及上下文类之前进行，否则输入的参数可能不会生效分（注意代码逻辑哦）。
+
+##记录一个小问题，关于进程数量限制
+使用yarn application -kill时出现了报错，指出jvm达到资源上线，无法再分配资源，这是因为linux默认进程数的限制导致，解决方法是在如下文件中修改即可，可指定hadoop，spark进程限制等等
+
+	/etc/security/limits.d/90.nproc.conf
+
+## 集群执行问题
+本质上deeplearning4j-spark本身并不需要修改集群的配置，只需提供依赖即可执行，但是在尝试过程中还是遇到了一些问题。
+重写dl4j-spark应用之后，本地使用idea在local模式下可以直接执行，注意运行时依赖需要在idea的module setting-model的dependency选项卡中将需要的依赖设置为compile。
+在集群上提交执行后遇到了这些问题
+
+1.graphbuilder目录找不到
+
+这是是reflection抛出的异常，不太明白这个依赖是什么来头。但是查看了服务器目录，driver节点上居然真的有这个目录，但是worker上没有，将目录拷贝到所有节点上之后，异常消失。
+
+2.hadoop contrib目录找不到
+
+依然是reflection抛出的异常，百度后发现这是一个hadoop第三方的调度工具，hadoopo2.x默认不会提供这个模块，但是解决方法不是将这个工具人工引入，而是修改hadoop-env.sh，将下列代码注释掉（这里我修改了所有集群节点上的文件），并重启hadoop
+
+	#Extra Java CLASSPATH elements.  Automatically insert capacity-scheduler.
+	for f in $HADOOP_HOME/contrib/capacity-scheduler/*.jar; do
+		if [ "$HADOOP_CLASSPATH" ]; then
+			export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$f
+		else
+			export HADOOP_CLASSPATH=$f
+		fi
+	done
+
+其实仔细看，这个明明是不存在的，却依然会构成影响。
+
+3.应用入口Object中定义了
+
+	var numPossibleFeatures
+
+并使用jcommander进行参数读取，在driver上，这个参数已经按照传入的参数字符串被正确赋值，但是通过map传到excutor上就变成0（和设定的默认值相同）了，等待发现原因。
