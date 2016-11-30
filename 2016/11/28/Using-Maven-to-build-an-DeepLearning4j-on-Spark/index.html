@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/28/Using-Maven-to-build-an-DeepLearning4j-on-Spark/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="#在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具">
-<meta property="og:updated_time" content="2016-11-29T12:35:19.645Z">
+<meta property="og:updated_time" content="2016-11-30T08:06:07.738Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Using Maven to build an DeepLearning4j on Spark">
 <meta name="twitter:description" content="#在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具">
@@ -319,8 +319,33 @@ Archetype Artifact Id : scala-archetype-simple
 Archetype Version : 1.6
 //如果下载失败在添加Repository URL试试
 Repository URL : http://github.com/davidB/scala-archetype-simple
-</code></pre><p>然后所需要的依赖在pom.xml中添加即可，这个有一个<a href="http://mvnrepository.com/" target="_blank" rel="external">网站</a>可以很方便地查询所需依赖的写法。暂时记录到这里。</p>
-
+</code></pre><p>然后所需要的依赖在pom.xml中添加即可，这个有一个<a href="http://mvnrepository.com/" target="_blank" rel="external">网站</a>可以很方便地查询所需依赖的写法。暂时记录到这里。<br>当然，我发现这个模板有一个bug，test中有一个JUnitRunner没有导入。</p>
+<p>##然后还遇到了一些奇怪的问题。<br>1.make工程出现EOF异常</p>
+<p>这个没有找到原因，使用invalidate cache不起作用，但是重启电脑后就好了。</p>
+<p>2.scala指出RDD对hadoop有不恰当引用。<br>后来发现是因为spark依赖的scope问题，改为compile就不会报错了，但是这个应该设置为provided，实测命令行mvn编译不会受到这个影响。</p>
+<p>##依赖项的scope<br>参考<a href="http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html" target="_blank" rel="external">官方文档</a>，这是一个可以控制依赖作用域的依赖项属性字段，也会影响依赖是否会在idea的module-settings的artifact以及library等选项中可见，具体的定义不再赘述，不知是不是由于理解不到位，这个属性并没有想象的那样可以解决从构建到配置集群运行时环境的问题。只简单记录一下：</p>
+<p>配置dependency管理插件</p>
+<pre><code>&lt;plugin&gt;
+    &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt;
+    &lt;configuration&gt;
+      &lt;outputDirectory&gt;${project.build.directory}/lib&lt;/outputDirectory&gt;
+      &lt;excludeTransitive&gt;false&lt;/excludeTransitive&gt;
+      &lt;stripVersion&gt;true&lt;/stripVersion&gt;
+      &lt;includeScope&gt;provided&lt;/includeScope&gt;
+      &lt;excludeGroupIds&gt;
+        org.apache.spark,
+        xxx,xxx
+      &lt;/excludeGroupIds&gt;
+        &lt;excludeArtifactIds&gt;
+        org.apache.spark,xxx,xxx
+      &lt;/excludeArtifactIds&gt;
+    &lt;/configuration&gt;
+ &lt;/plugin&gt;
+</code></pre><p>这里可以直接设置依赖拷贝命令的一些行为，比如是否加入链式依赖（能够保证将所有真正所需依赖拷贝出来），是否有不需要拷贝的项（比如十分确定运行时环境能够提供的依赖。<br>这样，拷贝工程依赖只需输入</p>
+<pre><code>mvn dependency:copy-dependencies
+</code></pre><p>当然，也可以在后面追加参数，像这样</p>
+<pre><code>mvn dependency:copy-dependencies -DoutputDirectory=lib -DincludeScope=compile
+</code></pre>
       
     </div>
 
