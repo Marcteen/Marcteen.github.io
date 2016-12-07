@@ -38,46 +38,31 @@ Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在�
         <version>${dl4j.version}</version>
     </dependency>
 
-于是打包样例程序的时候，只输出了dl4j-spark-example，然后取巧得将上面提到的依赖放到了集群SPARK_HOME/lib/目录下（注意选择对应的scala版本号）。尝试后发现好不到了。当然这里只一共这一个jar也是不够的。这是因为忽略了链式依赖，每一个依赖不可能将其所有的依赖都打包到自身，所以正确的做法是将这个依赖加入到maven当中，然后idea或者命令行maven都能将所有链式依赖一并下载，然后将集群运行时不能提供的依赖挑出来，一并打包成jar或者放置到集群上。
+于是打包样例程序的时候，只输出了dl4j-spark-example，然后取巧得将上面提到的依赖放到了集群SPARK_HOME/lib/目录下（注意选择对应的scala版本号）。尝试后发现好不到了。当然这里只一共这一个jar也是不够的。这是因为忽略了链式依赖，每一个依赖不可能将其所有的依赖都打包到自身，所以正确的做法是将这个依赖加入到maven当中，然后idea或者命令行maven都能将所有链式依赖一并下载，然后将集群运行时不能提供的依赖挑出来，一并打包成jar或者放置到集群上。下面为了简化测试过程，仅使用jcommander依赖进行。
 
 2.尝试将所有依赖打包进入spark应用程序
 
 犯了好几次错，总结来说应该像这样：
 使用Idea建立maven工程，然后讲dl4j-spark样例中的pom抄过来（依赖项，properties这些），然后令其自动解析，这样所有依赖及其链式依赖都会被下载到本地，打包的时候挑出集群没有的一并加入（Extract方式），这样正常是可以执行的。
 
-3.使用依赖项dl4j-spark_xx.jar包，在提交命令中追加依赖，像下面这样
+3.使用依赖项jcommander.jar包，实测下面两种方法都可以通过
 
-	spark-submit \
-	\--class org.deeplearning4j.mlp.MnistMLPExample \
-	\--master yarn \
-	\--deploy-mode cluster \
-	\--driver-memory 8G \
-	\--executor-memory 20G \
-	\--num-executors 4 \
-	\--jars /home/tseg/users/lc/dl14j-spark_2.10-0.6.0.jar \
-	/home/tseg/users/lc/dl4j-examples.jar \
-	\-userSparkLocal false
-前面提到只提供dl4j-spark这一个jar包是不够的，他不会包含所有链式依赖。
-这里先使用jcommander依赖进行测试，实测下面两种方法都可以通过
-
-	\--jars /home/tseg/users/lc/dl14j-spark_2.10-0.6.0.jar \
-	\--driver-class-path /home/tseg/users/lc/dl14j-spark_2.10-0.6.0.jar \
+	\--jars /home/tseg/spark-1.5.1-bin-hadoop2.6/extraJars/dl4j_extra/jcommander.jar
+	\--driver-class-path /home/tseg/spark-1.5.1-bin-hadoop2.6/extraJars/dl4j_extra/jcommander.jar
 但值得注意的是，这个参数并不支持通配符*，所以需要多个jar的时候，需要用逗号隔开多个完整路径，不是很方便。
 
 后来发现另外
 dl4j官方提供的spark例子会从网络上下载数据集，所以离线的离线的集群还是不要直接尝试了，否则很久都不会执行的，需要自己编写程序从HDFS读取数据。
 
-4.尝试将所有依赖jar添加到集群
+4.尝试将依赖jar包直接部署至集群
 
 首先需要导出所有的依赖包，maven工具可以用一个命令实现，在工程目录下输入
 
 	mvn dependency:copy-dependencies -DoutputDirectory=lib
-然后就可以在工程下的lib目录找到所有依赖的jar包了。这里先尝试了是将他们放大集群各节点的$SPARK_HOME/lib/下就能使用。
+然后就可以在工程下的lib目录找到所有依赖的jar包了。
 
-4.1首先是通过idea中artifact打成fat-jar，然后传至各节点的对应lib目录，提交执行，失败
-，那么为什么实验室集群这个目录下还有其他jar呢？例如jblas.jar。
+4.1首先是测试集群上的$SPARK_HOME/lib目录是否可以起作用，首先只是在Driver节点的对应目录添加jcommander.jar，报错找不到类，然后将其余worker节点也放上相应jar包，这会集群有一个节点挂掉了。。将其他的worker也添加jar包之后，依然找不到类jcommander。为了避免这个坏节点的影响，我又在另一个集群上进行了相同测试，结论为，这个方法没有用。
 
-4.2检验一下上一条是否由fat-jar引起，刚才报错找不到jcommander相关的类，那么将这个依赖的jar包单独拷贝到各个节点的lib文件夹，提交执行，报错信息没有任何变化。结论是似乎单纯将其放置到lib文件夹并不起作用。
 
 4.3（有问题）尝试一下在hdfs中上传所需jar包，分别使用SparkConf.setJars()与SparkContext.addJar()进行添加，都不起作用。。不管是fat-jar还是原始的jar（测试jcommander得出无效结论);同时也排除了hdfs路径存在问题的可能性，因为写不写ip端口都不行，但是有其他同学实验室这么做的，有待进一步尝试。
 
