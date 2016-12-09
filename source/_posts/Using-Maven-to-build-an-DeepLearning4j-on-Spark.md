@@ -166,25 +166,25 @@ idea与maven混用的感觉并不是很好，因为依赖管理千差万别（�
 查阅一番发现这个问题并不是那么简单，[这里](http://stackoverflow.com/questions/1459021/excluding-provided-dependencies-from-maven-assembly)指出了一种解决方案，时间还是挺久远的，语法可能都变了。。看了半天，决定好好了解一下assembly，[主页](http://maven.apache.org/plugins/maven-assembly-plugin/),总体来说就是，
 1. 对maven-dependency-plugins进行配置，这里能够实现scope的过滤，这个配置比较简单，简单列出（按照plugins主页修改，后来发现前面stackoverflow上的写法也没有过时嘛
 	
-<plugin>
-<artifactId>maven-dependency-plugin</artifactId>
-<version>${dependency.plugin.version}</version>
-<executions>
-<execution>
-<id>copy-dependencies</id>
-<phase>process-resources</phase>
-<goals>
-<goal>copy-dependencies</goal>
-</goals>
-<configuration>
-<outputDirectory>${project.build.directory}/lib</outputDirectory>
-<excludeTransitive>false</excludeTransitive>
-<stripVersion>true</stripVersion>
-<excludeScope>provided</excludeScope>
-</configuration>
-</execution>
-</executions>
-</plugin>
+	<plugin>
+		<artifactId>maven-dependency-plugin</artifactId>
+		<version>${dependency.plugin.version}</version>
+		<executions>
+			<execution>
+			<id>copy-dependencies</id>
+			<phase>process-resources</phase>
+			<goals>
+				<goal>copy-dependencies</goal>
+			</goals>
+			<configuration>
+				<outputDirectory>${project.build.directory}/lib</outputDirectory>
+				<excludeTransitive>false</excludeTransitive>
+				<stripVersion>true</stripVersion>
+				<excludeScope>provided</excludeScope>
+			</configuration>
+			</execution>
+		</executions>
+	</plugin>
 2. 				为工程配置assembly.xml指定要打包的jar来源目录，使其指向maven-dependency-plugins的输出目录即可，这需要自定义assembly描述符文件，按照plugins主页的方式，新建文件
 	
 	src/assembly/src.xml
