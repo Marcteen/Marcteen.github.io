@@ -45,11 +45,11 @@ Deeplearning主页指明，如果需要在spark应用中使用dl4j，那么在�
 犯了好几次错，总结来说应该像这样：
 使用Idea建立maven工程，然后讲dl4j-spark样例中的pom抄过来（依赖项，properties这些），然后令其自动解析，这样所有依赖及其链式依赖都会被下载到本地，打包的时候挑出集群没有的一并加入（Extract方式），这样正常是可以执行的。
 
-3.使用依赖项jcommander.jar包，实测下面两种方法都可以通过
+3.使用依赖项jcommander.jar包，有下面两种方法
 
-	\--jars /home/tseg/spark-1.5.1-bin-hadoop2.6/extraJars/dl4j_extra/jcommander.jar
+	\--jars /home/tseg/spark-1.5.1-bin-hadoop2.6/extraJars/dl4j_extra/jcommander.jar 
 	\--driver-class-path /home/tseg/spark-1.5.1-bin-hadoop2.6/extraJars/dl4j_extra/jcommander.jar
-但值得注意的是，这个参数并不支持通配符*，所以需要多个jar的时候，需要用逗号隔开多个完整路径，不是很方便。
+第一个表示了在运行时所有节点都需要的依赖，第二个则表示driver节点需要的依赖。但值得注意的是，这个两个参数并不支持通配符*，所以需要多个jar的时候，需要用逗号隔开多个完整路径，不是很方便。
 
 后来发现另外
 dl4j官方提供的spark例子会从网络上下载数据集，所以离线的离线的集群还是不要直接尝试了，否则很久都不会执行的，需要自己编写程序从HDFS读取数据。
