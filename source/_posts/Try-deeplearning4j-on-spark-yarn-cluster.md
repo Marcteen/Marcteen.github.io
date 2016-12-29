@@ -10,11 +10,11 @@ Deeplearning4j看起来是一个较为规整的java深度学习工具包，基�
 
 ## 准备样例工程目录
 
-	git clone https://github.com/deeplearning4j/dl4j-examples.git
+	git clone --depth=1 https://github.com/deeplearning4j/dl4j-examples.git
  	cd dl4j-examples/
  	mvn clean install
 
-我使用的是idea打开，也会自动解析pom.xml，maven依赖的下载速度即时是挂了代理也要相当一段时间。看了看依赖十几个，到时候集群上还得提供这些jar包才行。本地试着在idea上编译运行了一下，可以跑，但是速度非常慢，呵呵。
+我使用的是idea打开，也会自动解析pom.xml，maven依赖的下载速度即时是挂了代理也要相当一段时间。看了看依赖十几个，到时候集群上还得提供这些jar包才行。本地试着在idea上编译运行了一下，可以跑，但是速度非常慢，呵呵。这里的--depth参数是为了避免git将仓库整个历史都克隆下来。
 
 ## 如何本机使用样例
 
