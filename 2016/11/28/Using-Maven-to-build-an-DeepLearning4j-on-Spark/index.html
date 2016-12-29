@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="#在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具">
+<meta name="description" content="在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Using Maven to build an DeepLearning4j on Spark">
 <meta property="og:url" content="http://yoursite.com/2016/11/28/Using-Maven-to-build-an-DeepLearning4j-on-Spark/index.html">
 <meta property="og:site_name" content="Marcteen">
-<meta property="og:description" content="#在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具">
-<meta property="og:updated_time" content="2016-11-30T08:06:07.738Z">
+<meta property="og:description" content="在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具">
+<meta property="og:updated_time" content="2016-12-29T07:53:31.415Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Using Maven to build an DeepLearning4j on Spark">
-<meta name="twitter:description" content="#在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具">
+<meta name="twitter:description" content="在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具">
 
 
 
@@ -313,17 +313,18 @@
       
 
       
-        <p>#在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具<br><a id="more"></a><br>都知道Maven可以直接初始化一个项目工程目录，模板有很多，但是Idea里似乎默认没用内置一个合适的，看起来都很奇怪，因为是Spark Scala工程，所以我采用了下列Archetype</p>
+        <h1 id="在学习使用DeepLearning4j-on-Spark的同时，练习使用Maven构建工具"><a href="#在学习使用DeepLearning4j-on-Spark的同时，练习使用Maven构建工具" class="headerlink" title="在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具"></a>在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具</h1><a id="more"></a>
+<p>都知道Maven可以直接初始化一个项目工程目录，模板有很多，但是Idea里似乎默认没用内置一个合适的，看起来都很奇怪，因为是Spark Scala工程，所以我采用了下列Archetype</p>
 <pre><code>Archetype Group Id : net.alchim31.maven
 Archetype Artifact Id : scala-archetype-simple
 Archetype Version : 1.6
 //如果下载失败在添加Repository URL试试
 Repository URL : http://github.com/davidB/scala-archetype-simple
 </code></pre><p>然后所需要的依赖在pom.xml中添加即可，这个有一个<a href="http://mvnrepository.com/" target="_blank" rel="external">网站</a>可以很方便地查询所需依赖的写法。暂时记录到这里。<br>当然，我发现这个模板有一个bug，test中有一个JUnitRunner没有导入。</p>
-<p>##然后还遇到了一些奇怪的问题。<br>1.make工程出现EOF异常</p>
+<h2 id="然后还遇到了一些奇怪的问题。"><a href="#然后还遇到了一些奇怪的问题。" class="headerlink" title="然后还遇到了一些奇怪的问题。"></a>然后还遇到了一些奇怪的问题。</h2><p>1.make工程出现EOF异常</p>
 <p>这个没有找到原因，使用invalidate cache不起作用，但是重启电脑后就好了。</p>
 <p>2.scala指出RDD对hadoop有不恰当引用。<br>后来发现是因为spark依赖的scope问题，改为compile就不会报错了，但是这个应该设置为provided，实测命令行mvn编译不会受到这个影响。</p>
-<p>##依赖项的scope<br>参考<a href="http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html" target="_blank" rel="external">官方文档</a>，这是一个可以控制依赖作用域的依赖项属性字段，也会影响依赖是否会在idea的module-settings的artifact以及library等选项中可见，具体的定义不再赘述，不知是不是由于理解不到位，这个属性并没有想象的那样可以解决从构建到配置集群运行时环境的问题。只简单记录一下：</p>
+<h2 id="依赖项的scope"><a href="#依赖项的scope" class="headerlink" title="依赖项的scope"></a>依赖项的scope</h2><p>参考<a href="http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html" target="_blank" rel="external">官方文档</a>，这是一个可以控制依赖作用域的依赖项属性字段，也会影响依赖是否会在idea的module-settings的artifact以及library等选项中可见，具体的定义不再赘述，不知是不是由于理解不到位，这个属性并没有想象的那样可以解决从构建到配置集群运行时环境的问题。只简单记录一下：</p>
 <p>配置dependency管理插件</p>
 <pre><code>&lt;plugin&gt;
     &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt;
@@ -345,7 +346,217 @@ Repository URL : http://github.com/davidB/scala-archetype-simple
 <pre><code>mvn dependency:copy-dependencies
 </code></pre><p>当然，也可以在后面追加参数，像这样</p>
 <pre><code>mvn dependency:copy-dependencies -DoutputDirectory=lib -DincludeScope=compile
-</code></pre>
+</code></pre><h2 id="使用maven-build算法工程"><a href="#使用maven-build算法工程" class="headerlink" title="使用maven build算法工程"></a>使用maven build算法工程</h2><p>idea与maven混用的感觉并不是很好，因为依赖管理千差万别（或许吧），而且spark官网对于应用的第三方依赖解决方案并没有一个特别友好的方式（必须一个一个添加？），大概是我们项目没有构建也没有一个标准的模块化的原因吧，于是还是决定试一试使用maven，直接通过pom的配置来进行jar的生成，idea里面逐个手动添加的方式有点累。</p>
+<ol>
+<li><p>那么，按照dl4j官方例子的pom抄过来</p>
+<pre><code>&lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.scala-lang&lt;/groupId&gt;
+      &lt;artifactId&gt;scala-library&lt;/artifactId&gt;
+      &lt;version&gt;${scala.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.nd4j&lt;/groupId&gt;
+      &lt;artifactId&gt;nd4j-native-platform&lt;/artifactId&gt;
+      &lt;version&gt;${nd4j.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.deeplearning4j&lt;/groupId&gt;
+      &lt;artifactId&gt;dl4j-spark_${scala.binary.version}&lt;/artifactId&gt;
+      &lt;version&gt;${dl4j.version}&lt;/version&gt;
+      &lt;exclusions&gt;
+        &lt;exclusion&gt;
+          &lt;artifactId&gt;spark-core_2.10&lt;/artifactId&gt;
+          &lt;groupId&gt;org.apache.spark&lt;/groupId&gt;
+        &lt;/exclusion&gt;
+      &lt;/exclusions&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.apache.spark&lt;/groupId&gt;
+      &lt;artifactId&gt;spark-core_${scala.binary.version}&lt;/artifactId&gt;
+      &lt;version&gt;${spark.version}&lt;/version&gt;
+      &lt;exclusions&gt;
+        &lt;exclusion&gt;
+          &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+          &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+        &lt;/exclusion&gt;
+      &lt;/exclusions&gt;
+      &lt;scope&gt;${spark.scope}&lt;/scope&gt;
+    &lt;/dependency&gt;
+</code></pre></li>
+</ol>
+<pre><code>    &lt;dependency&gt;
+      &lt;groupId&gt;com.beust&lt;/groupId&gt;
+      &lt;artifactId&gt;jcommander&lt;/artifactId&gt;
+      &lt;version&gt;${jcommander.version}&lt;/version&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre><p>可以看到，将spark依赖设置为provided了，表明由运行时环境提供，也就是spark集群。</p>
+<ol>
+<li>使用maven打jar包</li>
+</ol>
+<p>随便看了一下网上相关的内容，打包也有好几种方式，assembly，或者引入maven-shade-plugin??不是很明白，先找了个最简单的来，好像没有很特别的配置，在工程目录输入如下命令</p>
+<pre><code>mvn clean package
+</code></pre><p>下载了一些东西，然后报错了。。看起来是因为把测试的依赖删掉了，但是测试的代码并没有删掉，那好吧先把测试的依赖加回来。在此执行，注意到一些scala版本依赖的警告，似乎是要求好几种2.10.x，不知道会有致命问题吗？</p>
+<p>然后又报错了，好像自动执行了TEST,然后测试没有通过，拜托我代码都没动，那就跳过测试好了。输入如下命令</p>
+<pre><code>mvn clean package -DskipTests
+</code></pre><p>果然成功了，打好的jar包存放于 </p>
+<pre><code>ProjectDir/target/xxx.jar
+</code></pre><p>看了一下大小，只有17K。。查看一下包含的内容，并没有把其他依赖包括进行。。这应该是需要配置插件才可以进行的。</p>
+<ol>
+<li>将外部依赖打入jar包</li>
+</ol>
+<p>参看了：<a href="http://www.cnblogs.com/xinsheng/p/4109573.html" target="_blank" rel="external">这里</a>,有点不太明白<br>又看了<a href="http://blog.csdn.net/czp11210/article/details/47808211" target="_blank" rel="external">这里</a>，简单一些，试试看吧，在pom添加插件配置如下<br>还有<a href="http://blog.csdn.net/cdl2008sky/article/details/6756177" target="_blank" rel="external">一个</a>备用的</p>
+<pre><code>&lt;build&gt;  
+    &lt;plugins&gt;  
+        &lt;plugin&gt;  
+            &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;  
+            &lt;configuration&gt;  
+                &lt;archive&gt;  
+                    &lt;manifest&gt;  
+                        &lt;mainClass&gt;com.allen.capturewebdata.Main&lt;/mainClass&gt;  
+                    &lt;/manifest&gt;  
+                &lt;/archive&gt;  
+                &lt;descriptorRefs&gt;  
+                    &lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;  
+                &lt;/descriptorRefs&gt;  
+            &lt;/configuration&gt;  
+        &lt;/plugin&gt;  
+    &lt;/plugins&gt;  
+&lt;/build&gt;
+</code></pre><p>然后使用命令</p>
+<pre><code>mvn assembly:assembly —DskipTests
+</code></pre><p>然后报错噜，因为没有回到工程根目录，返回后重新执行，成功打包，看了看大小，118M。。</p>
+<p>显然没有idea下手动挑的那样集约，那么看一下依赖树，使用命令</p>
+<pre><code>mvn dependecy:tree
+</code></pre><p>发现稍微仔细看一看，也还是比较清晰明了的，看了看发现自己的pom写的还是有问题，比如从dl4j-spark排除的spark-core重新引入后scope写成了complie，实际应该写成provided。另外个这个命令还可以方便地看出dl4j其他链式依赖的scope值。而dl4j-spark的scope写成了provided，显然应该作为compile，当然jcommander也相同，因为集群上没有。仔细按需检查修改之后，重新打包，jar包大小变为了263M。。。</p>
+<p>很奇怪为何引入的东西变多了？检查了一下hadoop都完整包含，应该是自己加入的spark依赖有问题，不应该是provided？那刚才的118M是怎么来的。。</p>
+<p>查阅一番发现这个问题并不是那么简单，<a href="http://stackoverflow.com/questions/1459021/excluding-provided-dependencies-from-maven-assembly" target="_blank" rel="external">这里</a>指出了一种解决方案，时间还是挺久远的，语法可能都变了。。看了半天，决定好好了解一下assembly，<a href="http://maven.apache.org/plugins/maven-assembly-plugin/" target="_blank" rel="external">主页</a>,总体来说就是，</p>
+<ol>
+<li><p>对maven-dependency-plugins进行配置，这里能够实现scope的过滤，这个配置比较简单，简单列出（按照plugins主页修改，后来发现前面stackoverflow上的写法也没有过时嘛</p>
+ <plugin><br>     <artifactid>maven-dependency-plugin</artifactid><br>     <version>${dependency.plugin.version}</version><br>     <executions><br>         <execution><br>         <id>copy-dependencies</id><br>         <phase>process-resources</phase><br>         <goals><br>             <goal>copy-dependencies</goal><br>         </goals><br>         <configuration><br>             <outputdirectory>${project.build.directory}/lib</outputdirectory><br>             <excludetransitive>false</excludetransitive><br>             <stripversion>true</stripversion><br>             <excludescope>provided</excludescope><br>         </configuration><br>         </execution><br>     </executions><br> </plugin></li>
+<li><p>为工程配置assembly.xml指定要打包的jar来源目录，使其指向maven-dependency-plugins的输出目录即可，这需要自定义assembly描述符文件，按照plugins主页的方式，新建文件</p>
+<p>src/assembly/src.xml</p>
+</li>
+</ol>
+<p>输入一下内容并保存</p>
+<pre><code>&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/2.0.0&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd&quot;&gt;
+  &lt;id&gt;distribution&lt;/id&gt;
+  &lt;formats&gt;
+    &lt;format&gt;jar&lt;/format&gt;
+  &lt;/formats&gt;
+  &lt;fileSets&gt;
+    &lt;fileSet&gt;
+      &lt;directory&gt;${project.basedir}/lib&lt;/directory&gt;
+      &lt;outputDirectory&gt;${project.basedir}/target&lt;/outputDirectory&gt;
+      &lt;includes&gt;
+        &lt;include&gt;*.*&lt;/include&gt;
+      &lt;/includes&gt;
+    &lt;/fileSet&gt;
+  &lt;/fileSets&gt;
+&lt;/assembly&gt;
+</code></pre><p>然后assembly plugins的插件字段配置为</p>
+<pre><code>&lt;plugin&gt;
+    &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${assembly.plugins.version}&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+          &lt;id&gt;make-assembly&lt;/id&gt; &lt;!-- this is used for inheritance merges --&gt;
+          &lt;phase&gt;package&lt;/phase&gt; &lt;!-- bind to the packaging phase --&gt;
+          &lt;goals&gt;
+            &lt;goal&gt;single&lt;/goal&gt;
+          &lt;/goals&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+    &lt;configuration&gt;
+      &lt;!--&lt;archive&gt;
+        &lt;manifest&gt;
+          &lt;mainClass&gt;com.allen.capturewebdata.Main&lt;/mainClass&gt;
+        &lt;/manifest&gt;
+      &lt;/archive&gt;--&gt;
+      &lt;descriptorRefs&gt;
+        &lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;
+      &lt;/descriptorRefs&gt;
+      &lt;descriptors&gt;
+        &lt;descriptor&gt;src/assembly/src.xml&lt;/descriptor&gt;
+      &lt;/descriptors&gt;
+    &lt;/configuration&gt;
+  &lt;/plugin&gt;
+</code></pre><p>这个实际上是将assembly绑定到了package上一同执行,后来发现字段位置写错了，果然还是用ide来写会比较好，这样容易发现一些。注意上面的descriptorRefs和descriptort是并列关系，两个都写的话，就都会生成，可以按需要取舍。<br>然后在工程根目录输入如下命令</p>
+<pre><code>mvn clean package -DskipTests
+</code></pre><p>然后通过查看依赖树，将所有集群上已经有的依赖在executions copy-dependencies中进行了过滤，然后打包，发现这个包里的内容全是jar，上传集群，然后在spark-submite命令中加入依赖，并不能找到了类，而这个类确实存在于这个jar中了。思考是不是应该先把jar进行unpack，然后再打入总jar，但是发现descriptor中fileSets内并没有提供unpack字样，dependencySets才有，那好吧，单独配一个dependency的descriptor是不是就可以不通过package进行了，于是决定使用dependencySets尝试进行打jar包的配置，而且这个里面也提供了一些过滤的设置字段。</p>
+<p>嗯，为了批量将原来的groupID生成符合的exclude形式，写了一个sh</p>
+<pre><code>#!/bin/sh
+
+while read line
+do
+    echo -e &apos;&lt;exclude&gt;&apos;${line/,/}&apos;：*&lt;/exclude&gt;&apos; &gt;&gt; $2 # 文件$1中每行去掉逗号之后，用exclude标志框起来，增加通配，然后追加到文件$2中去
+done &lt; $1
+</code></pre><p>最后我把descriptor写成了下面的样子，过滤还是可以的，虽然没有比dependency-plugins更先进。</p>
+<pre><code>&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/3.0.0&quot;
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/3.0.0 http://maven.apache.org/xsd/assembly-3.0.0.xsd&quot;&gt;
+  &lt;id&gt;distribution&lt;/id&gt;
+  &lt;formats&gt;
+    &lt;format&gt;jar&lt;/format&gt;
+  &lt;/formats&gt;
+  &lt;includeBaseDirectory&gt;&lt;/includeBaseDirectory&gt;
+  &lt;baseDirectory&gt;/&lt;/baseDirectory&gt;
+  &lt;dependencySets&gt;
+    &lt;dependencySet&gt;
+      &lt;useProjectArtifact&gt;false&lt;/useProjectArtifact&gt; &lt;!--&gt;Whether include the project&apos;s own artifact&lt;--&gt;
+      &lt;outputDirectory&gt;${project.build.directory}&lt;/outputDirectory&gt;
+      &lt;unpack&gt;true&lt;/unpack&gt;
+      &lt;excludes&gt;
+        &lt;exclude&gt;org.apache.spark:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.apache.commons:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.scalanlp:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.scalatest:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.specs2:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.slf4j:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.xerial.snappy:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.spire-math:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.spark-project:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.tukaani:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.scalamacros:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.jpmml:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.apache.parquet:*&lt;/exclude&gt;
+        &lt;exclude&gt;net.sf.opencsv:*&lt;/exclude&gt;
+        &lt;exclude&gt;com.github.rwl:*&lt;/exclude&gt;
+        &lt;exclude&gt;com.sun.jersey:*&lt;/exclude&gt;
+        &lt;exclude&gt;com.sun.xml.bind:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.codehaus:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.codehaus.jackson:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.hamcrest:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.codehaus.janino:*&lt;/exclude&gt;
+        &lt;exclude&gt;commons-codec:*&lt;/exclude&gt;
+        &lt;exclude&gt;org.scalaz:*&lt;/exclude&gt;
+        &lt;exclude&gt;*:commons.io&lt;/exclude&gt;
+        &lt;exclude&gt;*:junit&lt;/exclude&gt;
+        &lt;exclude&gt;*:datavec-api&lt;/exclude&gt;
+        &lt;exclude&gt;*:datavec-data-image&lt;/exclude&gt;
+        &lt;exclude&gt;*:jackson-databind&lt;/exclude&gt;
+        &lt;exclude&gt;*:jsr305&lt;/exclude&gt;
+        &lt;exclude&gt;*:ffmpeg-linux-ppc64le&lt;/exclude&gt;
+        &lt;exclude&gt;*:ffmpeg-macosx-x86_64&lt;/exclude&gt;
+        &lt;exclude&gt;*:ffmpeg-windows-x86_64&lt;/exclude&gt;
+        &lt;exclude&gt;*:leptonica-windows-x86_64&lt;/exclude&gt;
+        &lt;exclude&gt;*:leptonica-macosx-x86_64&lt;/exclude&gt;
+      &lt;/excludes&gt;
+    &lt;/dependencySet&gt;
+  &lt;/dependencySets&gt;
+&lt;/assembly&gt;
+</code></pre><p>然后输入命令</p>
+<pre><code>mvn clean assembly:single(为何一定要使用goal的名字，总觉得execution—id更合适。)
+</code></pre><p>可以成功打包，但是包里面的目录结构和刚才一样很奇怪，多了一系列project的绝对路径前缀，而且并不能够使得spark程序通过–jars找到类。<br>那么遗留了两个问题，怎么去掉那个奇怪的前缀路径？为什么还是找不到类，是不是没有像idea里面那样extracted的效果？综合来看，现在还是把依赖都通过idea打到应用jar包里算了。Maven算是入了一点点门，疼死了。</p>
+
       
     </div>
 
@@ -389,6 +600,10 @@ Repository URL : http://github.com/davidB/scala-archetype-simple
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/04/The-dynamic-programming/" rel="prev" title="The dynamic programming">
+                The dynamic programming <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -460,7 +675,7 @@ Repository URL : http://github.com/davidB/scala-archetype-simple
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -477,7 +692,7 @@ Repository URL : http://github.com/davidB/scala-archetype-simple
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -506,7 +721,7 @@ Repository URL : http://github.com/davidB/scala-archetype-simple
               
             
             
-              <p class="post-toc-empty">This post does not have a Table of Contents</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#在学习使用DeepLearning4j-on-Spark的同时，练习使用Maven构建工具"><span class="nav-number">1.</span> <span class="nav-text">在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#然后还遇到了一些奇怪的问题。"><span class="nav-number">1.1.</span> <span class="nav-text">然后还遇到了一些奇怪的问题。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖项的scope"><span class="nav-number">1.2.</span> <span class="nav-text">依赖项的scope</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用maven-build算法工程"><span class="nav-number">1.3.</span> <span class="nav-text">使用maven build算法工程</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="python,anaconda,dataMining," />
 
 
 
@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="如何将本地工程与github仓库关联今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。">
+<meta name="description" content="发现有一个叫做Jupyter的工具很不错，在浏览器里使用ide，试试看看">
 <meta property="og:type" content="article">
-<meta property="og:title" content="submit a new working directory to github">
-<meta property="og:url" content="http://yoursite.com/2016/11/07/submit-a-new-working-directory-to-github/index.html">
+<meta property="og:title" content="Set up Jupyter with anaconda">
+<meta property="og:url" content="http://yoursite.com/2016/12/08/Set-up-jupyter-with-anaconda/index.html">
 <meta property="og:site_name" content="Marcteen">
-<meta property="og:description" content="如何将本地工程与github仓库关联今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。">
-<meta property="og:updated_time" content="2016-11-17T06:17:10.282Z">
+<meta property="og:description" content="发现有一个叫做Jupyter的工具很不错，在浏览器里使用ide，试试看看">
+<meta property="og:updated_time" content="2016-12-29T07:53:31.392Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="submit a new working directory to github">
-<meta name="twitter:description" content="如何将本地工程与github仓库关联今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。">
+<meta name="twitter:title" content="Set up Jupyter with anaconda">
+<meta name="twitter:description" content="发现有一个叫做Jupyter的工具很不错，在浏览器里使用ide，试试看看">
 
 
 
@@ -114,10 +114,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/07/submit-a-new-working-directory-to-github/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/12/08/Set-up-jupyter-with-anaconda/"/>
 
 
-  <title> submit a new working directory to github | Marcteen </title>
+  <title> Set up Jupyter with anaconda | Marcteen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="en">
@@ -247,7 +247,7 @@
             
             
               
-                submit a new working directory to github
+                Set up Jupyter with anaconda
               
             
           </h1>
@@ -259,19 +259,38 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-11-07T23:59:56+08:00" content="2016-11-07">
-              2016-11-07
+            <time itemprop="dateCreated" datetime="2016-12-08T23:34:18+08:00" content="2016-12-08">
+              2016-12-08
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/trials/" itemprop="url" rel="index">
+                    <span itemprop="name">trials</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/11/07/submit-a-new-working-directory-to-github/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/07/submit-a-new-working-directory-to-github/" itemprop="commentsCount"></span>
+                <a href="/2016/12/08/Set-up-jupyter-with-anaconda/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/08/Set-up-jupyter-with-anaconda/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -294,18 +313,30 @@
       
 
       
-        <h1 id="如何将本地工程与github仓库关联"><a href="#如何将本地工程与github仓库关联" class="headerlink" title="如何将本地工程与github仓库关联"></a>如何将本地工程与github仓库关联</h1><p>今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。<br><a id="more"></a><br>1.首先创建好本地java工程，提交了第一个题目的解twoSum。</p>
-<p>2.然后在github上新建一个空白仓库</p>
-<p>3.终端进入工程目录，进行相关初始化设置</p>
-<pre><code>git init
-git add .
-git commit -m &quot;first commit&quot;
-git remote add origin git@github.com:Marcteen/leeTs.git
-git push origin master
-</code></pre><p>完成。</p>
-<p>对了，将仓库同步下来的时候，有一点注意一下，源码大小不大但是整个工程目录巨大无比。后来发现是.git目录很大，主要原因应该是该仓库commit很多，导致本地仓库记录了很多分支信息，解决的一个思路是控制clone的深度，因为目前往往不会参与到开源项目的贡献中,历史信息与分支暂时都没什么用。</p>
-<pre><code>git clone xxx --depth 1
-</code></pre><p>这样就可以只把仓库当前最新的内容同步下来了。</p>
+        <h1 id="发现有一个叫做Jupyter的工具很不错，在浏览器里使用ide，试试看看"><a href="#发现有一个叫做Jupyter的工具很不错，在浏览器里使用ide，试试看看" class="headerlink" title="发现有一个叫做Jupyter的工具很不错，在浏览器里使用ide，试试看看"></a>发现有一个叫做Jupyter的工具很不错，在浏览器里使用ide，试试看看</h1><a id="more"></a>
+<p>这里是<a href="http://jupyter.org" target="_blank" rel="external">Jupiter主页</a>,具体来说叫做Jupyter notebook，定义为一个开源交互式数据科学以及科学计算平台，支持超过四十多种语言，嘿嘿，scala也可以用。</p>
+<p>进入安装的说明页面，果然建议使用anaconda进行安装，正好已经安装过了，应该是符合要求的。不过为了保险还是查看一下提供的anaconda安装页面。不太确定当前系统是否默认使用ananconda内置的python。输入如下命令可以查看anaconda已经安装的库</p>
+<pre><code>conda list
+</code></pre><h2 id="确定系统当前默认使用的是哪一个python"><a href="#确定系统当前默认使用的是哪一个python" class="headerlink" title="确定系统当前默认使用的是哪一个python"></a>确定系统当前默认使用的是哪一个python</h2><p>之前折腾了一下caffe，虽然没有成功，但是python这块应该是没有问题的，为了保险起见，还是检查一下。上面命令输出信息表示包含的python版本为2.7.12。但是系统默认使用的是哪一个呢，首先输入命令查看python版本</p>
+<pre><code>python --version
+</code></pre><p>显示了如下信息</p>
+<pre><code>Python 2.7.12 :: Anaconda custom (x86_64)
+</code></pre><p>看来现在系统默认使用的就是anaconda中提供的python了，这个是怎么实现的呢，参考<a href="http://stackoverflow.com/questions/22773432/mac-using-default-python-despite-anaconda-install" target="_blank" rel="external">这里</a>，检查~/.bash_profile内容，发现应该是anaconda在安装的时候就自动修改了，将其lib路径追加到了PATH路径前面，使得其被优先采用。</p>
+<h2 id="使用anaconda安装jupiter"><a href="#使用anaconda安装jupiter" class="headerlink" title="使用anaconda安装jupiter"></a>使用anaconda安装jupiter</h2><p>嗯，安装安装说明，anaconda似乎已经包含了我所需要的Jupyter notebook，那么在终端输入下面命令</p>
+<pre><code>Jupyter notebook
+</code></pre><p>启动成功，浏览器自动打开了</p>
+<pre><code>http://localhost:8888/tree
+</code></pre><p>看了一下，不太明白是如何使用的，而且默认工作目录路径是怎么样的呢？实际上页面的Conda标签页是可以进行相关配置的，这个按照需要进行吧。那么如何终止运行呢，在启动Jupyter的命令行按下ctrl+c即可。</p>
+<h2 id="pip安装其他软件包注意事项"><a href="#pip安装其他软件包注意事项" class="headerlink" title="pip安装其他软件包注意事项"></a>pip安装其他软件包注意事项</h2><p>考虑到anaconda也自带一个pip，通过这个来安装其他软件工具包的时候，也应该使用ananconda自带的pip安装，从而避免麻烦，那么系统是否默认采用这个pip呢，输入如下命令可以进行检查</p>
+<pre><code>which pip
+</code></pre><p>输出信息为/Users/Marcteen/anaconda/bin/pip，确认完成。</p>
+<h2 id="修改Jupyter默认目录"><a href="#修改Jupyter默认目录" class="headerlink" title="修改Jupyter默认目录"></a>修改Jupyter默认目录</h2><p>首先生成一个配置文件，输入如下命令</p>
+<pre><code>jupyter notebook --generate-config
+</code></pre><p>修改如下字段的值，注意去掉注释</p>
+<pre><code>c.NotebookApp.notebook_dir
+</code></pre><p>不过到底有没有修改的必要呢？并不知道，我就单独为它创建一个文件夹吧，就使用~/NotebookDir好了。另外这些参数也可以在启动notebook的时候指定，像下面这样</p>
+<pre><code>jupyter notebook --NotebookApp.notebook_dir=xxx
+</code></pre><p>只要配置的属性名正确（错误会被忽视，无报错输出），就可以看到路径已经被成功修改啦。</p>
 
       
     </div>
@@ -326,21 +357,31 @@ git push origin master
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag">#python</a>
+          
+            <a href="/tags/anaconda/" rel="tag">#anaconda</a>
+          
+            <a href="/tags/dataMining/" rel="tag">#dataMining</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/06/Set-background-picture-for-hexo-neXt/" rel="next" title="Set background picture for hexo neXt">
-                <i class="fa fa-chevron-left"></i> Set background picture for hexo neXt
+              <a href="/2016/12/04/The-dynamic-programming/" rel="next" title="The dynamic programming">
+                <i class="fa fa-chevron-left"></i> The dynamic programming
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/11/08/Open-up-an-port-on-Linux/" rel="prev" title="Open up an port on Linux">
-                Open up an port on Linux <i class="fa fa-chevron-right"></i>
+              <a href="/2016/12/10/Set-an-extra-JDK-for-new-IDEA/" rel="prev" title="Set an extra JDK for new IDEA">
+                Set an extra JDK for new IDEA <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -367,8 +408,8 @@ git push origin master
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/11/07/submit-a-new-working-directory-to-github/"
-           data-title="submit a new working directory to github" data-url="http://yoursite.com/2016/11/07/submit-a-new-working-directory-to-github/">
+      <div class="ds-thread" data-thread-key="2016/12/08/Set-up-jupyter-with-anaconda/"
+           data-title="Set up Jupyter with anaconda" data-url="http://yoursite.com/2016/12/08/Set-up-jupyter-with-anaconda/">
       </div>
     
   </div>
@@ -459,7 +500,7 @@ git push origin master
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何将本地工程与github仓库关联"><span class="nav-number">1.</span> <span class="nav-text">如何将本地工程与github仓库关联</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#发现有一个叫做Jupyter的工具很不错，在浏览器里使用ide，试试看看"><span class="nav-number">1.</span> <span class="nav-text">发现有一个叫做Jupyter的工具很不错，在浏览器里使用ide，试试看看</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#确定系统当前默认使用的是哪一个python"><span class="nav-number">1.1.</span> <span class="nav-text">确定系统当前默认使用的是哪一个python</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用anaconda安装jupiter"><span class="nav-number">1.2.</span> <span class="nav-text">使用anaconda安装jupiter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pip安装其他软件包注意事项"><span class="nav-number">1.3.</span> <span class="nav-text">pip安装其他软件包注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改Jupyter默认目录"><span class="nav-number">1.4.</span> <span class="nav-text">修改Jupyter默认目录</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

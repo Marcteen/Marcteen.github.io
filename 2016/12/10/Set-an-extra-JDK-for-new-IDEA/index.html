@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Linux,IDEA,JDK," />
 
 
 
@@ -84,12 +84,16 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Marcteen">
-<meta property="og:url" content="http://yoursite.com/tags/KVM/index.html">
+<meta name="description" content="今天给linux虚拟机安装idea，版本很新，发现jdk的一些问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Set an extra JDK for new IDEA">
+<meta property="og:url" content="http://yoursite.com/2016/12/10/Set-an-extra-JDK-for-new-IDEA/index.html">
 <meta property="og:site_name" content="Marcteen">
+<meta property="og:description" content="今天给linux虚拟机安装idea，版本很新，发现jdk的一些问题">
+<meta property="og:updated_time" content="2016-12-29T07:53:31.391Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Marcteen">
+<meta name="twitter:title" content="Set an extra JDK for new IDEA">
+<meta name="twitter:description" content="今天给linux虚拟机安装idea，版本很新，发现jdk的一些问题">
 
 
 
@@ -110,10 +114,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/KVM/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/12/10/Set-an-extra-JDK-for-new-IDEA/"/>
 
 
-  <title> Tag: KVM | Marcteen </title>
+  <title> Set an extra JDK for new IDEA | Marcteen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="en">
@@ -134,7 +138,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -222,46 +226,156 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        KVM
-        <small>Tag</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Set an extra JDK for new IDEA
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-12-10T11:16:13+08:00" content="2016-12-10">
+              2016-12-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Tricks/" itemprop="url" rel="index">
+                    <span itemprop="name">Tricks</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/10/Set-an-extra-JDK-for-new-IDEA/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/10/Set-an-extra-JDK-for-new-IDEA/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
+      
+        <h1 id="今天给linux虚拟机安装idea，版本很新，发现jdk的一些问题"><a href="#今天给linux虚拟机安装idea，版本很新，发现jdk的一些问题" class="headerlink" title="今天给linux虚拟机安装idea，版本很新，发现jdk的一些问题"></a>今天给linux虚拟机安装idea，版本很新，发现jdk的一些问题</h1><a id="more"></a>
+<p>虚拟机内配置好了各种环境，jdk1.7也是妥妥的，但是安装好idea之后，新建scala工程最后一步总是提醒没有合适的jdk1.8，查询之后发现新版idea现在需要1.8来运行了，可以单独为其配置一个，而保持系统默认的为1.7，找到<a href="https://intellij-support.jetbrains.com/hc/en-us/articles/206544879-Selecting-the-JDK-version-the-IDE-will-run-under" target="_blank" rel="external">官网教程</a>看了一下，呵呵screw you，还说别人oracle的网站confusing，你们也一样，说了半天唯修改配置文件的地方也是很confusing，因为按照说明到配置文件目录里根本就找不到那个配置文件。同时也按照唯一清晰的指示进行了如下配置</p>
+<pre><code>export $IDEA_JDK_64=/PATHTOJDK1.8
+</code></pre><p>然后重启idea，并没有任何变化。</p>
+<p>后来看到了<a href="http://jingyan.baidu.com/article/6b97984dc9f1a31ca2b0bf24.html" target="_blank" rel="external">这里</a>，按照他的说法修改了工程默认的jdk，指向1.8路径，报错消失。</p>
 
-      <h1 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/" itemprop="url">
-              
-                <span itemprop="name">Use Kvm to customize an mirror for openstack</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h1>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-11-03T10:15:31+08:00"
-              content="2016-11-03" >
-          11-03
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag">#Linux</a>
+          
+            <a href="/tags/IDEA/" rel="tag">#IDEA</a>
+          
+            <a href="/tags/JDK/" rel="tag">#JDK</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/08/Set-up-jupyter-with-anaconda/" rel="next" title="Set up Jupyter with anaconda">
+                <i class="fa fa-chevron-left"></i> Set up Jupyter with anaconda
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -269,6 +383,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/10/Set-an-extra-JDK-for-new-IDEA/"
+           data-title="Set an extra JDK for new IDEA" data-url="http://yoursite.com/2016/12/10/Set-an-extra-JDK-for-new-IDEA/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -288,8 +410,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -339,6 +470,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#今天给linux虚拟机安装idea，版本很新，发现jdk的一些问题"><span class="nav-number">1.</span> <span class="nav-text">今天给linux虚拟机安装idea，版本很新，发现jdk的一些问题</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -442,6 +584,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
 
   
 
