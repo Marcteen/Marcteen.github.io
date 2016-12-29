@@ -61,53 +61,53 @@ idea与maven混用的感觉并不是很好，因为依赖管理千差万别（�
 
 1. 那么，按照dl4j官方例子的pom抄过来
 
-	<dependencies>
-	    <dependency>
-	      <groupId>org.scala-lang</groupId>
-	      <artifactId>scala-library</artifactId>
-	      <version>${scala.version}</version>
-	    </dependency>
+		<dependencies>
+		    <dependency>
+		      <groupId>org.scala-lang</groupId>
+		      <artifactId>scala-library</artifactId>
+		      <version>${scala.version}</version>
+		    </dependency>
 	    
-	    <dependency>
-	      <groupId>org.nd4j</groupId>
-	      <artifactId>nd4j-native-platform</artifactId>
-	      <version>${nd4j.version}</version>
-	    </dependency>
-	
-	    <dependency>
-	      <groupId>org.deeplearning4j</groupId>
-	      <artifactId>dl4j-spark_${scala.binary.version}</artifactId>
-	      <version>${dl4j.version}</version>
-	      <exclusions>
-	        <exclusion>
-	          <artifactId>spark-core_2.10</artifactId>
-	          <groupId>org.apache.spark</groupId>
-	        </exclusion>
-	      </exclusions>
-	      <scope>provided</scope>
-	    </dependency>
-	
-	    <dependency>
-	      <groupId>org.apache.spark</groupId>
-	      <artifactId>spark-core_${scala.binary.version}</artifactId>
-	      <version>${spark.version}</version>
-	      <exclusions>
-	        <exclusion>
-	          <groupId>javax.servlet</groupId>
-	          <artifactId>servlet-api</artifactId>
-	        </exclusion>
-	      </exclusions>
-	      <scope>${spark.scope}</scope>
-	    </dependency>
-	
-	
-	    <dependency>
-	      <groupId>com.beust</groupId>
-	      <artifactId>jcommander</artifactId>
-	      <version>${jcommander.version}</version>
-	      <scope>provided</scope>
-	    </dependency>
-	</dependencies>
+		    <dependency>
+		      <groupId>org.nd4j</groupId>
+		      <artifactId>nd4j-native-platform</artifactId>
+		      <version>${nd4j.version}</version>
+		    </dependency>
+		
+		    <dependency>
+		      <groupId>org.deeplearning4j</groupId>
+		      <artifactId>dl4j-spark_${scala.binary.version}</artifactId>
+		      <version>${dl4j.version}</version>
+		      <exclusions>
+		        <exclusion>
+		          <artifactId>spark-core_2.10</artifactId>
+		          <groupId>org.apache.spark</groupId>
+		        </exclusion>
+		      </exclusions>
+		      <scope>provided</scope>
+		    </dependency>
+		
+		    <dependency>
+		      <groupId>org.apache.spark</groupId>
+		      <artifactId>spark-core_${scala.binary.version}</artifactId>
+		      <version>${spark.version}</version>
+		      <exclusions>
+		        <exclusion>
+		          <groupId>javax.servlet</groupId>
+		          <artifactId>servlet-api</artifactId>
+		        </exclusion>
+		      </exclusions>
+		      <scope>${spark.scope}</scope>
+		    </dependency>
+		
+		
+		    <dependency>
+		      <groupId>com.beust</groupId>
+		      <artifactId>jcommander</artifactId>
+		      <version>${jcommander.version}</version>
+		      <scope>provided</scope>
+		    </dependency>
+		</dependencies>
 可以看到，将spark依赖设置为provided了，表明由运行时环境提供，也就是spark集群。
 
 2. 使用maven打jar包
@@ -167,26 +167,26 @@ idea与maven混用的感觉并不是很好，因为依赖管理千差万别（�
 1. 对maven-dependency-plugins进行配置，这里能够实现scope的过滤，这个配置比较简单，简单列出（按照plugins主页修改，后来发现前面stackoverflow上的写法也没有过时嘛
 	
 	<plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>${dependency.plugin.version}</version>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>
-              <excludeTransitive>false</excludeTransitive>
-              <stripVersion>true</stripVersion>
-              <excludeScope>provided</excludeScope>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-2. 为工程配置assembly.xml指定要打包的jar来源目录，使其指向maven-dependency-plugins的输出目录即可，这需要自定义assembly描述符文件，按照plugins主页的方式，新建文件
-
+		<artifactId>maven-dependency-plugin</artifactId>
+		<version>${dependency.plugin.version}</version>
+		<executions>
+			<execution>
+			<id>copy-dependencies</id>
+			<phase>process-resources</phase>
+			<goals>
+				<goal>copy-dependencies</goal>
+			</goals>
+			<configuration>
+				<outputDirectory>${project.build.directory}/lib</outputDirectory>
+				<excludeTransitive>false</excludeTransitive>
+				<stripVersion>true</stripVersion>
+				<excludeScope>provided</excludeScope>
+			</configuration>
+			</execution>
+		</executions>
+	</plugin>
+2. 				为工程配置assembly.xml指定要打包的jar来源目录，使其指向maven-dependency-plugins的输出目录即可，这需要自定义assembly描述符文件，按照plugins主页的方式，新建文件
+	
 	src/assembly/src.xml
 
 输入一下内容并保存
@@ -314,3 +314,4 @@ idea与maven混用的感觉并不是很好，因为依赖管理千差万别（�
 	mvn clean assembly:single(为何一定要使用goal的名字，总觉得execution—id更合适。)
 可以成功打包，但是包里面的目录结构和刚才一样很奇怪，多了一系列project的绝对路径前缀，而且并不能够使得spark程序通过--jars找到类。
 那么遗留了两个问题，怎么去掉那个奇怪的前缀路径？为什么还是找不到类，是不是没有像idea里面那样extracted的效果？综合来看，现在还是把依赖都通过idea打到应用jar包里算了。Maven算是入了一点点门，疼死了。
+
