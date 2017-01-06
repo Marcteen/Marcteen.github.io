@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
-<meta property="og:updated_time" content="2016-11-08T02:04:45.641Z">
+<meta property="og:updated_time" content="2017-01-06T02:15:40.603Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Use Kvm to customize an mirror for openstack">
 <meta name="twitter:description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
@@ -358,6 +358,10 @@ chkconfig --list | grep vnc
 <pre><code>kvm-img create -f raw PDME.img 10G
 </code></pre><p>很不幸，出现 kvm-img: command not found了。搜索后发现好像qemu-img也是一样的，这里注意一下，可以直接用-f指定为qcow2格式，还省去后面转换img了</p>
 <pre><code>qemu-img create -f raw PDME.img 10G
+</code></pre><p>转换命令像这样：</p>
+<pre><code>qemu-img convert -f raw src.img -o qcow2 dst.qcow2
+</code></pre><p>同时还可以调整磁盘空间（不会导致镜像文件变大）</p>
+<pre><code>qemu-img resize src.qcow2 +2G
 </code></pre><p>成功创建镜像，那么就可以使用centOS镜像将系统安装在这个创建的硬盘文件中了</p>
 <pre><code>sudo kvm -m 512 -cdrom CentOS-6.7-x86_64-bin-DVD1.iso\
  -drive file=PDME.img -boot d -net nic -net tap -nographic -vnc :0
@@ -781,7 +785,7 @@ Incalid MIT-MAGIC-COOKIE-1 keyvncviewer: unable to open display &quot;:1.0&quot;
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
