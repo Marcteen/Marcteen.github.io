@@ -83,6 +83,12 @@ AMD cpu
 很不幸，出现 kvm-img: command not found了。搜索后发现好像qemu-img也是一样的，这里注意一下，可以直接用-f指定为qcow2格式，还省去后面转换img了
 
 	qemu-img create -f raw PDME.img 10G
+转换命令像这样：
+	
+	qemu-img convert -f raw src.img -o qcow2 dst.qcow2
+同时还可以调整磁盘空间（不会导致镜像文件变大）
+
+	qemu-img resize src.qcow2 +2G
 成功创建镜像，那么就可以使用centOS镜像将系统安装在这个创建的硬盘文件中了
 	
 	sudo kvm -m 512 -cdrom CentOS-6.7-x86_64-bin-DVD1.iso\
