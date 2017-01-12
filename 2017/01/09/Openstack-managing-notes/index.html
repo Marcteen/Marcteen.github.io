@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="openstack,fuel," />
 
 
 
@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="语言文化代码和时区要怎么写呢？建好这个博客之后才发现语言有些奇怪，居然是德语，难道没设置语言默认就是如此吗。。那么就在_config.yml当中配置一下吧，不过这个字段要怎么写呢？">
+<meta name="description" content="openstack集群管理的一些常用命令">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Language and timezone">
-<meta property="og:url" content="http://yoursite.com/2016/11/02/Language-and-timezone/index.html">
+<meta property="og:title" content="Openstack managing notes">
+<meta property="og:url" content="http://yoursite.com/2017/01/09/Openstack-managing-notes/index.html">
 <meta property="og:site_name" content="Marcteen">
-<meta property="og:description" content="语言文化代码和时区要怎么写呢？建好这个博客之后才发现语言有些奇怪，居然是德语，难道没设置语言默认就是如此吗。。那么就在_config.yml当中配置一下吧，不过这个字段要怎么写呢？">
-<meta property="og:updated_time" content="2016-11-06T02:31:55.731Z">
+<meta property="og:description" content="openstack集群管理的一些常用命令">
+<meta property="og:updated_time" content="2017-01-10T08:04:59.819Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Language and timezone">
-<meta name="twitter:description" content="语言文化代码和时区要怎么写呢？建好这个博客之后才发现语言有些奇怪，居然是德语，难道没设置语言默认就是如此吗。。那么就在_config.yml当中配置一下吧，不过这个字段要怎么写呢？">
+<meta name="twitter:title" content="Openstack managing notes">
+<meta name="twitter:description" content="openstack集群管理的一些常用命令">
 
 
 
@@ -114,10 +114,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/02/Language-and-timezone/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/01/09/Openstack-managing-notes/"/>
 
 
-  <title> Language and timezone | Marcteen </title>
+  <title> Openstack managing notes | Marcteen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="en">
@@ -247,7 +247,7 @@
             
             
               
-                Language and timezone
+                Openstack managing notes
               
             
           </h1>
@@ -259,19 +259,38 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-11-02T08:44:00+08:00" content="2016-11-02">
-              2016-11-02
+            <time itemprop="dateCreated" datetime="2017-01-09T16:28:57+08:00" content="2017-01-09">
+              2017-01-09
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Tricks/" itemprop="url" rel="index">
+                    <span itemprop="name">Tricks</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/11/02/Language-and-timezone/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/02/Language-and-timezone/" itemprop="commentsCount"></span>
+                <a href="/2017/01/09/Openstack-managing-notes/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/09/Openstack-managing-notes/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -294,12 +313,69 @@
       
 
       
-        <h1 id="语言文化代码和时区要怎么写呢？"><a href="#语言文化代码和时区要怎么写呢？" class="headerlink" title="语言文化代码和时区要怎么写呢？"></a>语言文化代码和时区要怎么写呢？</h1><p>建好这个博客之后才发现语言有些奇怪，居然是德语，难道没设置语言默认就是如此吗。。<br>那么就在_config.yml当中配置一下吧，不过这个字段要怎么写呢？</p>
-<a id="more"></a>
-<p><a href="http://blog.csdn.net/hao95165/article/details/50730432" target="_blank" rel="external">语言与文化代码</a></p>
-<p>最后我选择了en，嗯因为next的language里面有en.yml。</p>
-<p>时区，这个默认看起来没有问题，在这里记录科普一下吧. <a href="http://wenku.baidu.com/link?url=-fB3Z8PSZoi-XPmz6Rn1QzQLL7iQBMObX2To60NlC72m1jp40vxa8W-VQEMaGVhvwfvXfYibwMycweC9xXqNRA1nMPVs2uSQHHw-UBVt02O" target="_blank" rel="external">时区代码</a></p>
-<p>哈哈都是超链接，懒得自己整理了。</p>
+        <h1 id="openstack集群管理的一些常用命令"><a href="#openstack集群管理的一些常用命令" class="headerlink" title="openstack集群管理的一些常用命令"></a>openstack集群管理的一些常用命令</h1><a id="more"></a>
+<h2 id="使用fuel远程到任意节点，提供身份认证信息"><a href="#使用fuel远程到任意节点，提供身份认证信息" class="headerlink" title="使用fuel远程到任意节点，提供身份认证信息"></a>使用fuel远程到任意节点，提供身份认证信息</h2><p>首先要登录到fuel上去，这个fuel具体在哪不是很清楚，是一个内网ip，那么登录上去之后，可以查看一下集群节点列表</p>
+<pre><code>fuel nodes
+</code></pre><p>或者</p>
+<pre><code>fuel node list
+</code></pre><p>注意登录的时候，所用主机名和上述输出列表中显示内容不一致，需要将编号意外的文字换成node，像这样</p>
+<pre><code>ssh node-6
+</code></pre><p>登录之后，可以使用各种openstack相关命令进行操作，但是首先要提供身份信息，使用如下命令即可，</p>
+<pre><code>source openrc # opensrc中包含了所有的身份证书信息
+</code></pre><h2 id="glance查看镜像信息"><a href="#glance查看镜像信息" class="headerlink" title="glance查看镜像信息"></a>glance查看镜像信息</h2><ul>
+<li><p>列出所有可用镜像</p>
+<pre><code>glance image-list
+</code></pre></li>
+<li><p>镜像详细信息</p>
+<pre><code>glance image-show
+</code></pre></li>
+<li><p>修改镜像信息</p>
+<pre><code>glance image-update --{Property_name} {new_value} {image_id}
+</code></pre></li>
+</ul>
+<h2 id="批量配置免密登录"><a href="#批量配置免密登录" class="headerlink" title="批量配置免密登录"></a>批量配置免密登录</h2><p>需要注意的是，authorized_keys文件权限必须是600，否则验证会失败，首先在本地生成密钥</p>
+<pre><code>cd ~/.ssh
+rm ./id_rsa*
+ssh-keygen -t rsa
+</code></pre><p>在需要登录的节点上将生成的公钥授权</p>
+<pre><code>cat ./id_rsa.pub &gt;&gt;　．/authorized_keys
+</code></pre><p>如果在本地添加，可以简单在本地验证免密登录是否配置成功</p>
+<pre><code>ssh localhost
+</code></pre><p>因为其他节点都没有任何已授权公钥，可以直接将这个文件scp过去，可以使用一个shell脚本实现</p>
+<pre><code>#! /bin/bash
+
+for line in &quot;cat $1&quot;
+do
+    scp $2 ${line}:~/.ssh/
+done
+</code></pre><p>但是这样放过去的文件权限还是不对的，需要修改文件权限，但是一个一个手动修改显然效率不高，而目前还没有实现免密码登录，我们可以使用expect来帮助执行，首先安装</p>
+<pre><code>sudo yum install expect
+</code></pre><p>然后是expect脚本</p>
+<pre><code>#!/bin/bash
+expect &lt;&lt;EOF
+set timeout 10
+set hosts [lindex $1] # shell变量使用$前缀
+set file [open \$hosts r] # expect变量使用\$前缀
+while {[gets \$file line] != -1} { # 括号处有严格空格格式
+    spawn ssh \$line
+    expect &quot;*password:&quot;
+    send &quot;tseg\n&quot;
+    expect &quot;Last*&quot;
+    send &quot;chmod 600 ~/.ssh/authorized_keys\n&quot;
+    expect &quot;$&quot; // shell 命令提示符
+    send &quot;exit\n&quot;
+    puts &quot;finish action on \$line&quot;
+}
+close \$file
+EOF
+</code></pre><p>尝试了很多次都不行，主要是expect没有采用嵌套循环的形式处理所有可能情况，比如有的节点不用输密码，有的则要，并且登录后打印的第一条信息是“Last login…”，最后全部权限改好之后发现还是没有免密码效果，疑惑良久。最后发现是上午新建了公钥，忘了给所有节点重新传一份了（这也可以用expect自动输入密码）。嗯有时候事情没有按照预想的推进，基本上就是因为它所依赖的前提条件没有满足（太基础，太久，到这一步已经不会去回想了，都假设一定正确了），而不是说这依然还需要其他后续处理。关键找一个人帮忙，对方没有被困组，很有可能打破僵局，或者自己学会重启，成为打破僵局的人。<br>到了这一步，我所认为的条件是</p>
+<ul>
+<li>authorized_key权限正确</li>
+</ul>
+<p>我忘记的条件是</p>
+<ul>
+<li>authorized_key内容正确</li>
+</ul>
 
       
     </div>
@@ -320,22 +396,26 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
+            <a href="/tags/fuel/" rel="tag">#fuel</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/02/How-to-launch-apps-with-shell-command/" rel="next" title="How to launch apps with shell command">
-                <i class="fa fa-chevron-left"></i> How to launch apps with shell command
+              <a href="/2017/01/06/Create-a-new-partition-on-linux/" rel="next" title="Create a new partition and mount it on linux">
+                <i class="fa fa-chevron-left"></i> Create a new partition and mount it on linux
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/" rel="prev" title="Use Kvm to customize an mirror for openstack">
-                Use Kvm to customize an mirror for openstack <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -361,8 +441,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/11/02/Language-and-timezone/"
-           data-title="Language and timezone" data-url="http://yoursite.com/2016/11/02/Language-and-timezone/">
+      <div class="ds-thread" data-thread-key="2017/01/09/Openstack-managing-notes/"
+           data-title="Openstack managing notes" data-url="http://yoursite.com/2017/01/09/Openstack-managing-notes/">
       </div>
     
   </div>
@@ -453,7 +533,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#语言文化代码和时区要怎么写呢？"><span class="nav-number">1.</span> <span class="nav-text">语言文化代码和时区要怎么写呢？</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#openstack集群管理的一些常用命令"><span class="nav-number">1.</span> <span class="nav-text">openstack集群管理的一些常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用fuel远程到任意节点，提供身份认证信息"><span class="nav-number">1.1.</span> <span class="nav-text">使用fuel远程到任意节点，提供身份认证信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#glance查看镜像信息"><span class="nav-number">1.2.</span> <span class="nav-text">glance查看镜像信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#批量配置免密登录"><span class="nav-number">1.3.</span> <span class="nav-text">批量配置免密登录</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

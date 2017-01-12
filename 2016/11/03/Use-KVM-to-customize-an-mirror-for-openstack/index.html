@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Linux,KVM,openstack," />
+  <meta name="keywords" content="openstack,Linux,KVM," />
 
 
 
@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
-<meta property="og:updated_time" content="2017-01-06T02:15:40.603Z">
+<meta property="og:updated_time" content="2017-01-09T13:58:22.487Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Use Kvm to customize an mirror for openstack">
 <meta name="twitter:description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
@@ -354,24 +354,16 @@ chkconfig --list | grep vnc
 <pre><code>node4:1
 </code></pre><h2 id="准备centOS-6-7镜像，创建KVM虚拟机并启动"><a href="#准备centOS-6-7镜像，创建KVM虚拟机并启动" class="headerlink" title="准备centOS-6.7镜像，创建KVM虚拟机并启动"></a>准备centOS-6.7镜像，创建KVM虚拟机并启动</h2><p>（这里遇到了一个坑，用普通用户进行虚拟机创建的话，后面通过virsh edit为虚拟机配置网桥后启动会出现权限错误，而直接使用root来创建虚拟机，网桥字段会被自动配好，再无报错，所以就不要尝试普通用户+sudo往坑里跳了。）<br>我们可以查看虚拟机列表，当然现在暂时没有任何虚拟机实例在运行</p>
 <pre><code>virsh list
-</code></pre><p>创建虚拟机硬盘文件，据说10GB可以了，不然后面使用费时费力</p>
+</code></pre><p>创建虚拟机硬盘文件，据说10GB可以了，但是最好还是一开始就将其设置为最终需要的空间。</p>
 <pre><code>kvm-img create -f raw PDME.img 10G
-</code></pre><p>很不幸，出现 kvm-img: command not found了。搜索后发现好像qemu-img也是一样的，这里注意一下，可以直接用-f指定为qcow2格式，还省去后面转换img了</p>
+</code></pre><p>很不幸，出现 kvm-img: command not found了。搜索后发现好像qemu-img也是一样的，这里注意一下，可以直接用-f指定为qcow2格式，但是发现安装过程中会提示没有足够的空间进行分区，使用raw就没有这个问题，尽管文件大小会直接显示为预设的值，但是实际占用硬盘空间还是按需增长的。</p>
 <pre><code>qemu-img create -f raw PDME.img 10G
 </code></pre><p>转换命令像这样：</p>
-<pre><code>qemu-img convert -f raw src.img -o qcow2 dst.qcow2
-</code></pre><p>同时还可以调整磁盘空间（不会导致镜像文件变大）</p>
+<pre><code>qemu-img convert -f raw src.img -O qcow2 dst.qcow2
+</code></pre><p>注意后面参数是大写O，同时还可以调整磁盘空间（不会导致镜像文件变大）</p>
 <pre><code>qemu-img resize src.qcow2 +2G
-</code></pre><p>成功创建镜像，那么就可以使用centOS镜像将系统安装在这个创建的硬盘文件中了</p>
-<pre><code>sudo kvm -m 512 -cdrom CentOS-6.7-x86_64-bin-DVD1.iso\
- -drive file=PDME.img -boot d -net nic -net tap -nographic -vnc :0
-</code></pre><p>-vnc参数用于打开vnc访问，这样就可以通过其他机器登录到这个界面安装系统了，同时注意须加上-net nic -net tap才能建立镜像到kvm网桥virbr0的映射，网络才通。</p>
-<p>不过这时候依然出现了找不到kvm命令的提示，我觉得适可而止惹。查阅后发现是新版本系统会把命令藏起来，推荐使用新命令virtual-install/virsh进行操作，而把qemu-kvm转移到了不起眼的地方/usr/libexex，那么就自己链接过来使用吧</p>
-<pre><code>sudo ln -sf /usr/libexec/qemu-kvm /usr/bin/kvm
-</code></pre><p>这好像还是和kvm-img没有关系。运行kvm创建虚拟机，报错如下</p>
-<pre><code>/etc/qemu-ifup: could not launch network script
-kvm: -net tap: Device &apos;tap&apos; could not be initialized
-</code></pre><h3 id="尝试网桥配置"><a href="#尝试网桥配置" class="headerlink" title="尝试网桥配置"></a>尝试网桥配置</h3><p>似乎是网络方面的问题？搜了一下遇到这个问题的人还是不少，不过想起自己似乎略过了针对kvm进行网络方面的配置，这里补一下吧。<br>虚拟机采用桥接方式，使其可以获得与物理机同样级别的IP，参考<a href="http://www.centoscn.com/image-text/config/2016/0218/6765.html" target="_blank" rel="external">这里</a><br>，另外还有<a href="http://blog.csdn.net/hzhsan/article/details/44098537/" target="_blank" rel="external">更详细的参考</a>，包括了NAT模式的介绍。<br>下面我们为其配置网桥模式</p>
+</code></pre><p>成功创建镜像，那么就可以使用centOS镜像将系统安装在这个创建的硬盘文件中了，安装完成系统后，可以先关闭虚拟机，然后将镜像格式转为qcow2，并修改一下虚拟机配置文件，将其指定到新的镜像文件上即可。</p>
+<h3 id="尝试网桥配置"><a href="#尝试网桥配置" class="headerlink" title="尝试网桥配置"></a>尝试网桥配置</h3><p>虚拟机采用桥接方式，这里先配置一下虚拟主机的网桥，使其可以获得与物理机同样级别的IP，参考<a href="http://www.centoscn.com/image-text/config/2016/0218/6765.html" target="_blank" rel="external">这里</a><br>，另外还有<a href="http://blog.csdn.net/hzhsan/article/details/44098537/" target="_blank" rel="external">更详细的参考</a>，包括了NAT模式的介绍。<br>下面我们为其配置网桥模式</p>
 <pre><code>cd /etc/sysconfig/network-scripts
 sudo cp ifcfg-em1 ifcfg-br1
 </code></pre><p>编辑ifcfg-em1，添加内容</p>
@@ -387,15 +379,8 @@ BOOTPROTO=dhcp
 <pre><code>sudo service NetworkManager stop
 sudo service network restart
 sudo service NetworkManager start
-</code></pre><p>可是呢，无论如何尝试，在ifcfg-em1中添加BRIDGE=br0之后，服务器就“断网”了。。<br>于是尝试virt-install,可供参考的<a href="http://www.361way.com/virt-install/2721.html" target="_blank" rel="external">内容</a>，后来发现只要不恢复NetworkManager就好像没有问题，虽然ifconfig里em*一堆的error，<a href="https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i" target="_blank" rel="external">这里</a>也是这样，看来应该没有大碍吧。还有<a href="http://www.cnblogs.com/jankie/archive/2012/10/19/2730826.html" target="_blank" rel="external">这里</a>提到，确实需要关闭NetworkManager才可以使网桥正常运行。不过也有可能是地址变化了，所以连不上？似乎依然说不通。</p>
-<pre><code>virt-install -n PDMECENTOS \
--r 512 -vcpus=1 \
--c /home/node4/techbase/CentOS-6.7-x86_64-bin-DVD1.iso \
---hvm --os-type=linux \
---disk /home/node4/techbase/PDME.img \
---graphics vnc,listen=0.0.0.0,port=7789 \
---force --autostart
-</code></pre><p>好像是可以成功的，自动打开了一个VNC连接至创建的虚拟机实例，但是一直没动静，过了一会连接至物理服务器的VNC黑掉了，重新连接还是黑的并提示未加密链接。</p>
+</code></pre><p>可是呢，无论如何尝试，在ifcfg-em1中添加BRIDGE=br0之后，服务器就“断网”了。。<br>于是尝试virt-install,可供参考的<a href="http://www.361way.com/virt-install/2721.html" target="_blank" rel="external">内容</a>，后来发现只要不恢复NetworkManager就好像没有问题，<a href="https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i" target="_blank" rel="external">这里</a>也是这样，看来应该没有大碍吧。还有<a href="http://www.cnblogs.com/jankie/archive/2012/10/19/2730826.html" target="_blank" rel="external">这里</a>提到，确实需要关闭NetworkManager才可以使网桥正常运行。不过也有可能是地址变化了，所以连不上？似乎依然说不通。</p>
+<p>然后启动虚拟机<br>    virt-install -n PDMECENTOS \<br>    -r 512 -vcpus=1 \<br>    -c /home/node4/techbase/CentOS-6.7-x86_64-bin-DVD1.iso \<br>    –hvm –os-type=linux \<br>    –disk /home/node4/techbase/PDME.img \<br>    –graphics vnc,listen=0.0.0.0,port=7789 \<br>    –force –autostart<br>好像是可以成功的，自动打开了一个VNC连接至创建的虚拟机实例，但是一直没动静，过了一会连接至物理服务器的VNC黑掉了，重新连接还是黑的并提示未加密链接。</p>
 <h2 id="笑着活下去。记录一下常用virsh命令"><a href="#笑着活下去。记录一下常用virsh命令" class="headerlink" title="笑着活下去。记录一下常用virsh命令"></a>笑着活下去。记录一下常用virsh命令</h2><ul>
 <li>virsh list #显示本地活动虚拟机</li>
 <li>virsh list –all #显示本地所有的虚拟机（活动的+不活动的）</li>
@@ -429,10 +414,13 @@ visudo
 /ALL
 </code></pre><p>找到root ALL=(ALL) ALL，在下方添加</p>
 <pre><code>student ALL=(ALL) ALL
-</code></pre><p>退出并保存，完成。</p>
-<h2 id="配置virt-vnc连接"><a href="#配置virt-vnc连接" class="headerlink" title="配置virt vnc连接"></a>配置virt vnc连接</h2><p>上面提到了一个vnc连接kvm虚拟机的参数配置问题，这下也不得不面对一下了，因为很开心地设置好用户之后将虚拟机示例shutdown，然后现在重新启动之后不知道怎么再用vnc连接了，</p>
+</code></pre><p>退出并保存，完成。下面修改密码限制，可以使用简单的短密码</p>
+<pre><code>sudo vim /etc/login.defs
+</code></pre><p>修改其中内容为</p>
+<pre><code>PASS_MIN_LEN  4
+</code></pre><h2 id="配置virt-vnc连接"><a href="#配置virt-vnc连接" class="headerlink" title="配置virt vnc连接"></a>配置virt vnc连接</h2><p>上面提到了一个vnc连接kvm虚拟机的参数配置问题，这下也不得不面对一下了，因为很开心地设置好用户之后将虚拟机示例shutdown，然后现在重新启动之后不知道怎么再用vnc连接了，</p>
 <pre><code>vncviewer 0.0.0.0:1
-</code></pre><p>对了，记录一个Mac上好用的VNC，<a href="https://sourceforge.net/projects/cotvnc/" target="_blank" rel="external">chicken of vnc</a>,恩主要是因为免费，图标简直太可爱。当然功能也是简单够用的，但是注意最好不要在建立连对就是下面的命令不起作用，输密码验证错误，我输的默认密码。。接的时候选全屏模式，会抽风。<br>那么接着尝试解决vnc连不上虚拟机的问题，尝试如下方法</p>
+</code></pre><p>对了，记录一个Mac上好用的VNC，<a href="https://sourceforge.net/projects/cotvnc/" target="_blank" rel="external">chicken of vnc</a>,恩主要是因为免费，图标简直太可爱。当然功能也是简单够用的，输密码验证错误，我输的默认密码。。接的时候选全屏模式，会抽风。<br>那么接着尝试解决vnc连不上虚拟机的问题，尝试如下方法</p>
 <pre><code>virsh console PDMECENTOS
 </code></pre><p>结果是卡住不动了，搜索之后找到了<a href="http://www.linuxidc.com/Linux/2014-10/107891.htm" target="_blank" rel="external">类似问题</a>，可是人家是vnc能连上虚拟机的情况啊。。。</p>
 <p>然后事情出现了转机，查看<a href="http://blog.csdn.net/taiyang1987912/article/details/50474219" target="_blank" rel="external">这里</a>，前面配置虚拟主机vnc没啥好说的，默认就是那样，注意后面</p>
@@ -458,10 +446,8 @@ yum -y groupinstall &quot;X Window System&quot;
 &lt;/interface&gt;
 </code></pre><p>然后启动网卡，我们可以设置其随开机启动</p>
 <pre><code>ifconfig eth0 up
-vim /etc/sysconfig/network-scripts/ifcfg-eth0 #置ONBOOT=true
-
-这个时候运行ifconfig就可以看到eth0的信息啦，然而没有卵用，最后发现安装虚拟机应该还是需要root，否则重启虚拟机的时候tap vnet会有权限错误
-</code></pre><p>很奇怪重启服务器后执行命令会遇到locale unsupport错误，可以这么解决，虽然只是当时生效，重启后就恢复原样了。</p>
+vim /etc/sysconfig/network-scripts/ifcfg-eth0 #置ONBOOT=yes
+</code></pre><h2 id="locale-unsupport错误"><a href="#locale-unsupport错误" class="headerlink" title="locale unsupport错误"></a>locale unsupport错误</h2><p>很奇怪重启服务器后执行命令会遇到locale unsupport错误，可以这么解决，虽然只是当时生效，重启后就恢复原样了。</p>
 <pre><code>export LC_ALL=C
 </code></pre><p>后来发现是mac上的终端有问题，进入其配置面板，去掉Adcanced选项卡中set locale …项前面的对勾就可以了。另外是修改系统语言的方法，比较推荐使用。</p>
 <pre><code>vim /etc/profile
@@ -625,11 +611,11 @@ Incalid MIT-MAGIC-COOKIE-1 keyvncviewer: unable to open display &quot;:1.0&quot;
       
         <div class="post-tags">
           
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
             <a href="/tags/Linux/" rel="tag">#Linux</a>
           
             <a href="/tags/KVM/" rel="tag">#KVM</a>
-          
-            <a href="/tags/openstack/" rel="tag">#openstack</a>
           
         </div>
       
@@ -720,7 +706,7 @@ Incalid MIT-MAGIC-COOKIE-1 keyvncviewer: unable to open display &quot;:1.0&quot;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">17</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -737,7 +723,7 @@ Incalid MIT-MAGIC-COOKIE-1 keyvncviewer: unable to open display &quot;:1.0&quot;
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -766,7 +752,7 @@ Incalid MIT-MAGIC-COOKIE-1 keyvncviewer: unable to open display &quot;:1.0&quot;
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"><span class="nav-number">1.</span> <span class="nav-text">在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础环境检查与简单配置"><span class="nav-number">1.1.</span> <span class="nav-text">基础环境检查与简单配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装vncserver"><span class="nav-number">1.2.</span> <span class="nav-text">安装vncserver</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备centOS-6-7镜像，创建KVM虚拟机并启动"><span class="nav-number">1.3.</span> <span class="nav-text">准备centOS-6.7镜像，创建KVM虚拟机并启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#尝试网桥配置"><span class="nav-number">1.3.1.</span> <span class="nav-text">尝试网桥配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笑着活下去。记录一下常用virsh命令"><span class="nav-number">1.4.</span> <span class="nav-text">笑着活下去。记录一下常用virsh命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置virt-vnc连接"><span class="nav-number">1.5.</span> <span class="nav-text">配置virt vnc连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置virt虚拟客户机桥接上网"><span class="nav-number">1.6.</span> <span class="nav-text">配置virt虚拟客户机桥接上网</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vnc直接连接kvm问题与进程监听地址端口的思考"><span class="nav-number">1.7.</span> <span class="nav-text">vnc直接连接kvm问题与进程监听地址端口的思考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vncserver配置文件的含义？"><span class="nav-number">2.</span> <span class="nav-text">vncserver配置文件的含义？</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"><span class="nav-number">1.</span> <span class="nav-text">在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础环境检查与简单配置"><span class="nav-number">1.1.</span> <span class="nav-text">基础环境检查与简单配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装vncserver"><span class="nav-number">1.2.</span> <span class="nav-text">安装vncserver</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备centOS-6-7镜像，创建KVM虚拟机并启动"><span class="nav-number">1.3.</span> <span class="nav-text">准备centOS-6.7镜像，创建KVM虚拟机并启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#尝试网桥配置"><span class="nav-number">1.3.1.</span> <span class="nav-text">尝试网桥配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笑着活下去。记录一下常用virsh命令"><span class="nav-number">1.4.</span> <span class="nav-text">笑着活下去。记录一下常用virsh命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置virt-vnc连接"><span class="nav-number">1.5.</span> <span class="nav-text">配置virt vnc连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置virt虚拟客户机桥接上网"><span class="nav-number">1.6.</span> <span class="nav-text">配置virt虚拟客户机桥接上网</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#locale-unsupport错误"><span class="nav-number">1.7.</span> <span class="nav-text">locale unsupport错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vnc直接连接kvm问题与进程监听地址端口的思考"><span class="nav-number">1.8.</span> <span class="nav-text">vnc直接连接kvm问题与进程监听地址端口的思考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vncserver配置文件的含义？"><span class="nav-number">2.</span> <span class="nav-text">vncserver配置文件的含义？</span></a></li></ol></div>
             
           </div>
         </section>

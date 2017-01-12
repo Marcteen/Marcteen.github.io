@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/17/Try-deeplearning4j-on-spark-yarn-cluster/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="尝试在Spark on Yarn集群上运行DeepLearning4j样例程序Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个测评指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了">
-<meta property="og:updated_time" content="2016-12-29T07:51:32.764Z">
+<meta property="og:updated_time" content="2017-01-12T14:16:02.320Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Try deeplearning4j on spark yarn cluster">
 <meta name="twitter:description" content="尝试在Spark on Yarn集群上运行DeepLearning4j样例程序Deeplearning4j看起来是一个较为规整的java深度学习工具包，基于jvm实现，考虑了底层线性代数科学运算的问题，使用ND4J作为底层支持，而且有一个较为友好的主页，虽然有一个测评指出其性能和拟合效果都比较不够好。。（怎么会这样呢），还是先拿它开刀好了">
@@ -317,7 +317,7 @@
 <h2 id="准备样例工程目录"><a href="#准备样例工程目录" class="headerlink" title="准备样例工程目录"></a>准备样例工程目录</h2><pre><code>git clone --depth=1 https://github.com/deeplearning4j/dl4j-examples.git
  cd dl4j-examples/
  mvn clean install
-</code></pre><p>我使用的是idea打开，也会自动解析pom.xml，maven依赖的下载速度即时是挂了代理也要相当一段时间。看了看依赖十几个，到时候集群上还得提供这些jar包才行。本地试着在idea上编译运行了一下，可以跑，但是速度非常慢，呵呵。这里的–depth参数是为了避免git将仓库整个历史都克隆下来。</p>
+</code></pre><p>我使用的是idea打开，也会自动解析pom.xml，maven依赖的下载速度即时是挂了代理也要相当一段时间。看了看依赖十几个，到时候集群上还得提供这些jar包才行。本地试着在idea上编译运行了一下，可以跑，但是速度非常慢，呵呵。这里的–depth参数是为了避免git将仓库整个历史都克隆下来, 同时也可通过-b制定要克隆的分支，毕竟其他分支开发的内容一般都是为了最终合并到master上，对于一般使用，只保留master应该就可以了。</p>
 <h2 id="如何本机使用样例"><a href="#如何本机使用样例" class="headerlink" title="如何本机使用样例"></a>如何本机使用样例</h2><p>代码全是java，看来可以学着怎么使用java开发spark应用程序了。使用的样例是MnistMLPExample，其成员变量使用了@Parameter字段进行注解，像这样</p>
 <pre><code>@Parameter(names = &quot;-useSparkLocal&quot;, description = &quot;Use spark local (helper for testing/running without spark submit)&quot;, arity = 1)
 private boolean useSparkLocal = true;
@@ -495,7 +495,7 @@ done
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">17</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -512,7 +512,7 @@ done
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
