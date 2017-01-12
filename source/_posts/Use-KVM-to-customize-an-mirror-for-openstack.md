@@ -77,35 +77,23 @@ AMD cpu
 我们可以查看虚拟机列表，当然现在暂时没有任何虚拟机实例在运行
 	
 	virsh list
-创建虚拟机硬盘文件，据说10GB可以了，不然后面使用费时费力
+创建虚拟机硬盘文件，据说10GB可以了，但是最好还是一开始就将其设置为最终需要的空间。
 
 	kvm-img create -f raw PDME.img 10G
-很不幸，出现 kvm-img: command not found了。搜索后发现好像qemu-img也是一样的，这里注意一下，可以直接用-f指定为qcow2格式，还省去后面转换img了
+很不幸，出现 kvm-img: command not found了。搜索后发现好像qemu-img也是一样的，这里注意一下，可以直接用-f指定为qcow2格式，但是发现安装过程中会提示没有足够的空间进行分区，使用raw就没有这个问题，尽管文件大小会直接显示为预设的值，但是实际占用硬盘空间还是按需增长的。
 
 	qemu-img create -f raw PDME.img 10G
 转换命令像这样：
 	
-	qemu-img convert -f raw src.img -o qcow2 dst.qcow2
-同时还可以调整磁盘空间（不会导致镜像文件变大）
+	qemu-img convert -f raw src.img -O qcow2 dst.qcow2
+注意后面参数是大写O，同时还可以调整磁盘空间（不会导致镜像文件变大）
 
 	qemu-img resize src.qcow2 +2G
-成功创建镜像，那么就可以使用centOS镜像将系统安装在这个创建的硬盘文件中了
+成功创建镜像，那么就可以使用centOS镜像将系统安装在这个创建的硬盘文件中了，安装完成系统后，可以先关闭虚拟机，然后将镜像格式转为qcow2，并修改一下虚拟机配置文件，将其指定到新的镜像文件上即可。
 	
-	sudo kvm -m 512 -cdrom CentOS-6.7-x86_64-bin-DVD1.iso\
-	 -drive file=PDME.img -boot d -net nic -net tap -nographic -vnc :0
--vnc参数用于打开vnc访问，这样就可以通过其他机器登录到这个界面安装系统了，同时注意须加上-net nic -net tap才能建立镜像到kvm网桥virbr0的映射，网络才通。
-
-不过这时候依然出现了找不到kvm命令的提示，我觉得适可而止惹。查阅后发现是新版本系统会把命令藏起来，推荐使用新命令virtual-install/virsh进行操作，而把qemu-kvm转移到了不起眼的地方/usr/libexex，那么就自己链接过来使用吧
-
-	sudo ln -sf /usr/libexec/qemu-kvm /usr/bin/kvm
-
-这好像还是和kvm-img没有关系。运行kvm创建虚拟机，报错如下
-
-	/etc/qemu-ifup: could not launch network script
-	kvm: -net tap: Device 'tap' could not be initialized
 ### 尝试网桥配置
-似乎是网络方面的问题？搜了一下遇到这个问题的人还是不少，不过想起自己似乎略过了针对kvm进行网络方面的配置，这里补一下吧。
-虚拟机采用桥接方式，使其可以获得与物理机同样级别的IP，参考[这里](http://www.centoscn.com/image-text/config/2016/0218/6765.html)
+
+虚拟机采用桥接方式，这里先配置一下虚拟主机的网桥，使其可以获得与物理机同样级别的IP，参考[这里](http://www.centoscn.com/image-text/config/2016/0218/6765.html)
 ，另外还有[更详细的参考](http://blog.csdn.net/hzhsan/article/details/44098537/)，包括了NAT模式的介绍。
 下面我们为其配置网桥模式
 
@@ -130,8 +118,9 @@ AMD cpu
 	sudo service network restart
 	sudo service NetworkManager start
 可是呢，无论如何尝试，在ifcfg-em1中添加BRIDGE=br0之后，服务器就“断网”了。。
-于是尝试virt-install,可供参考的[内容](http://www.361way.com/virt-install/2721.html)，后来发现只要不恢复NetworkManager就好像没有问题，虽然ifconfig里em*一堆的error，[这里](https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i)也是这样，看来应该没有大碍吧。还有[这里](http://www.cnblogs.com/jankie/archive/2012/10/19/2730826.html)提到，确实需要关闭NetworkManager才可以使网桥正常运行。不过也有可能是地址变化了，所以连不上？似乎依然说不通。
+于是尝试virt-install,可供参考的[内容](http://www.361way.com/virt-install/2721.html)，后来发现只要不恢复NetworkManager就好像没有问题，[这里](https://www.chenyudong.com/archives/libvirt-kvm-bridge-network.html#i)也是这样，看来应该没有大碍吧。还有[这里](http://www.cnblogs.com/jankie/archive/2012/10/19/2730826.html)提到，确实需要关闭NetworkManager才可以使网桥正常运行。不过也有可能是地址变化了，所以连不上？似乎依然说不通。
 
+然后启动虚拟机
     virt-install -n PDMECENTOS \
     -r 512 -vcpus=1 \
     -c /home/node4/techbase/CentOS-6.7-x86_64-bin-DVD1.iso \
@@ -179,14 +168,19 @@ AMD cpu
 找到root ALL=(ALL) ALL，在下方添加
 
 	student ALL=(ALL) ALL
-退出并保存，完成。
+退出并保存，完成。下面修改密码限制，可以使用简单的短密码
+
+	sudo vim /etc/login.defs
+修改其中内容为
+	
+	PASS_MIN_LEN  4
 
 ## 配置virt vnc连接
 上面提到了一个vnc连接kvm虚拟机的参数配置问题，这下也不得不面对一下了，因为很开心地设置好用户之后将虚拟机示例shutdown，然后现在重新启动之后不知道怎么再用vnc连接了，
 
 	vncviewer 0.0.0.0:1
 
-对了，记录一个Mac上好用的VNC，[chicken of vnc](https://sourceforge.net/projects/cotvnc/),恩主要是因为免费，图标简直太可爱。当然功能也是简单够用的，但是注意最好不要在建立连对就是下面的命令不起作用，输密码验证错误，我输的默认密码。。接的时候选全屏模式，会抽风。
+对了，记录一个Mac上好用的VNC，[chicken of vnc](https://sourceforge.net/projects/cotvnc/),恩主要是因为免费，图标简直太可爱。当然功能也是简单够用的，输密码验证错误，我输的默认密码。。接的时候选全屏模式，会抽风。
 那么接着尝试解决vnc连不上虚拟机的问题，尝试如下方法
 
 	virsh console PDMECENTOS
@@ -227,9 +221,9 @@ AMD cpu
 然后启动网卡，我们可以设置其随开机启动
 
 	ifconfig eth0 up
-	vim /etc/sysconfig/network-scripts/ifcfg-eth0 #置ONBOOT=true
+	vim /etc/sysconfig/network-scripts/ifcfg-eth0 #置ONBOOT=yes
 	
-	这个时候运行ifconfig就可以看到eth0的信息啦，然而没有卵用，最后发现安装虚拟机应该还是需要root，否则重启虚拟机的时候tap vnet会有权限错误
+## locale unsupport错误
 很奇怪重启服务器后执行命令会遇到locale unsupport错误，可以这么解决，虽然只是当时生效，重启后就恢复原样了。
 
 	export LC_ALL=C
