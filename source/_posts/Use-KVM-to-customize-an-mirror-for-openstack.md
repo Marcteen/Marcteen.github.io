@@ -12,6 +12,11 @@ categories: [trials]
 <!--more-->
 
 ## 基础环境检查与简单配置
+
+嗯嗯，首先如果服务器终端一直在刷屏一些奇怪的信息，可以用如下命令暂时解决
+	
+	echo 4 > /proc/sys/kernel/printk
+
 [参考内容1](http://www.111cn.net/sys/CentOS/87211.htm)
 [参考内容2](http://www.vpsee.com/2012/02/create-centos-kvm-image-for-openstack-nova/)
 Intel cpu

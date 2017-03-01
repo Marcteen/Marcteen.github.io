@@ -71,7 +71,7 @@ categories: [Tricks]
         send "tseg\n"
         expect "Last*"
         send "chmod 600 ~/.ssh/authorized_keys\n"
-        expect "$" // shell 命令提示符
+        expect "$" // shell 命令提示符，好像没用，捕获不到
         send "exit\n"
         puts "finish action on \$line"
 	}
@@ -83,6 +83,38 @@ categories: [Tricks]
 
 我忘记的条件是
 * authorized_key内容正确
+
+## 一个更为完善的expect命令脚本
+
+	#! /bin/bash
+	expect <<EOF
+	set timeout 7
+	set hosts [lindex $1]
+	set file [open \$hosts r]
+	while {[gets \$file line] != -1} {
+        spawn ssh \$line # 发送命令，会产生新的shell进程
+        expect { # 并行匹配，同时捕获Are或password进行对应动作
+            "Are" {
+                send "yes\n"
+				exp_continue # 继续后面的捕获，这里表现为捕获Are后，依然会继续捕获后面的Are以及password并行捕获执行
+            }
+			“Are” { # 有可能出现主机名验证不一致，再次确认，这是hosts设定导致的问题
+				send "yes\n"
+				exp_continue
+			}
+            "password" {
+                send "r00tme\n"
+            } # 注意并行的 "捕获串""空格"{xxx xxx}严格格式
+        }
+        expect "#" # 命令提示符，发现$和用户名都不起作用，一定会等到超时才下一步？？但这个#确实可以
+        send "shutdown -h now\n"
+        expect "for" #shutdown 命令占用终端时输出，这里可以立即捕获并执行exit
+        send "exit\n"
+        puts "finish action on \$line"
+	}
+	close \$file
+	EOF
+
 
 
 	

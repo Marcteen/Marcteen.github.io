@@ -126,6 +126,10 @@ idea与maven混用的感觉并不是很好，因为依赖管理千差万别（�
 	ProjectDir/target/xxx.jar
 看了一下大小，只有17K。。查看一下包含的内容，并没有把其他依赖包括进行。。这应该是需要配置插件才可以进行的。
 
+后来有遇到在打包过程中出现了javadoc生成报错，显示的信息还有奇怪的乱码，无从查证，可能是jdk兼容的问题，加上下面的命令可以跳过javadoc生成，报错消失
+
+	-Dmaven.javadoc.skip=true
+
 3. 将外部依赖打入jar包
 
 参看了：[这里](http://www.cnblogs.com/xinsheng/p/4109573.html),有点不太明白
