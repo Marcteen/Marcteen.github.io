@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/03/Use-KVM-to-customize-an-mirror-for-openstack/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
-<meta property="og:updated_time" content="2017-01-09T13:58:22.487Z">
+<meta property="og:updated_time" content="2017-01-19T02:40:10.071Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Use Kvm to customize an mirror for openstack">
 <meta name="twitter:description" content="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。">
@@ -315,7 +315,9 @@
       
         <h1 id="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"><a href="#在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成" class="headerlink" title="在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成"></a>在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成</h1><p>由于，这里有一个基于openstack的教学项目，所以，真的要把这个镜像做出来了，不然月底要完蛋。<br>服务器上应该是已经安装好了kvm相关环境，但是学弟遇到了一些问题一直没有解决，今天我自己看一看吧。用服务器来做总比用虚拟机强。</p>
 <a id="more"></a>
-<h2 id="基础环境检查与简单配置"><a href="#基础环境检查与简单配置" class="headerlink" title="基础环境检查与简单配置"></a>基础环境检查与简单配置</h2><p><a href="http://www.111cn.net/sys/CentOS/87211.htm" target="_blank" rel="external">参考内容1</a><br><a href="http://www.vpsee.com/2012/02/create-centos-kvm-image-for-openstack-nova/" target="_blank" rel="external">参考内容2</a><br>Intel cpu</p>
+<h2 id="基础环境检查与简单配置"><a href="#基础环境检查与简单配置" class="headerlink" title="基础环境检查与简单配置"></a>基础环境检查与简单配置</h2><p>嗯嗯，首先如果服务器终端一直在刷屏一些奇怪的信息，可以用如下命令暂时解决</p>
+<pre><code>echo 4 &gt; /proc/sys/kernel/printk
+</code></pre><p><a href="http://www.111cn.net/sys/CentOS/87211.htm" target="_blank" rel="external">参考内容1</a><br><a href="http://www.vpsee.com/2012/02/create-centos-kvm-image-for-openstack-nova/" target="_blank" rel="external">参考内容2</a><br>Intel cpu</p>
 <pre><code>cat /proc/cpuinfo | grep &quot;vmx&quot;
 </code></pre><p>AMD cpu</p>
 <pre><code>cat /proc/cpuinfo | grep &quot;svm&quot;

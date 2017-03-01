@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/28/Using-Maven-to-build-an-DeepLearning4j-on-Spark/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具">
-<meta property="og:updated_time" content="2016-12-29T07:53:31.415Z">
+<meta property="og:updated_time" content="2017-01-16T01:30:23.434Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Using Maven to build an DeepLearning4j on Spark">
 <meta name="twitter:description" content="在学习使用DeepLearning4j on Spark的同时，练习使用Maven构建工具">
@@ -408,7 +408,9 @@ Repository URL : http://github.com/davidB/scala-archetype-simple
 </code></pre><p>果然成功了，打好的jar包存放于 </p>
 <pre><code>ProjectDir/target/xxx.jar
 </code></pre><p>看了一下大小，只有17K。。查看一下包含的内容，并没有把其他依赖包括进行。。这应该是需要配置插件才可以进行的。</p>
-<ol>
+<p>后来有遇到在打包过程中出现了javadoc生成报错，显示的信息还有奇怪的乱码，无从查证，可能是jdk兼容的问题，加上下面的命令可以跳过javadoc生成，报错消失</p>
+<pre><code>-Dmaven.javadoc.skip=true
+</code></pre><ol>
 <li>将外部依赖打入jar包</li>
 </ol>
 <p>参看了：<a href="http://www.cnblogs.com/xinsheng/p/4109573.html" target="_blank" rel="external">这里</a>,有点不太明白<br>又看了<a href="http://blog.csdn.net/czp11210/article/details/47808211" target="_blank" rel="external">这里</a>，简单一些，试试看吧，在pom添加插件配置如下<br>还有<a href="http://blog.csdn.net/cdl2008sky/article/details/6756177" target="_blank" rel="external">一个</a>备用的</p>
