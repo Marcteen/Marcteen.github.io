@@ -1,8 +1,8 @@
 ---
 title: Build Deeplearning4j on windows
 date: 2017-01-16 09:47:36
-tags:[deepLearning, maven, java]
-categories:[Trials]
+tags: [deepLearning, maven, java]
+categories: [Trials]
 ---
 # 记录一下使用maven自己编译deeplearning4j的过程
 <!--more-->
@@ -111,3 +111,5 @@ categories:[Trials]
 	</dependency>
 如果找不到，仔细安装的时候各项字段的内容，容易出小错误。
 	
+
+
