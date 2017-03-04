@@ -1,8 +1,8 @@
 ---
 title: How to launch apps with shell command
 date: 2016-11-02 08:08:48
-tags: [linux, Unix, OSX, link]
-categories: [tricks]
+tags: [linux, unix, osx, link]
+categories: [Tricks]
 ---
 
 # 就像vim那样在shell终端启动应用程序吧！

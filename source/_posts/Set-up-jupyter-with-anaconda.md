@@ -1,8 +1,8 @@
 ---
 title: Set up Jupyter with anaconda
 date: 2016-12-08 23:34:18
-tags: [python, anaconda, dataMining]
-categories: [trials]
+tags: [python, anaconda]
+categories: [Trials]
 ---
 # 发现有一个叫做Jupyter的工具很不错，在浏览器里使用ide，试试看看
 <!--more-->

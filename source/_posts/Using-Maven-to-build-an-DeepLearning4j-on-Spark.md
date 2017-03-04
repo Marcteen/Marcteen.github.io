@@ -1,7 +1,7 @@
 ---
 title: Using Maven to build an DeepLearning4j on Spark
 date: 2016-11-28 10:30:15
-tags: [Maven, Scala, DeepLearning4j, idea]
+tags: [maven, scala, deepLearning4j, idea]
 categories: [Tricks]
 
 ---

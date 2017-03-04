@@ -2,7 +2,7 @@
 title: first post
 date: 2016-10-31 23:45:36
 tags: [hexo, post, git]
-categories: [trials]
+categories: [Trials]
 comments: true
 ---
 # 如何使用git管理hexo源码目录并在多台电脑上同步

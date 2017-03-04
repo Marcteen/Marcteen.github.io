@@ -1,7 +1,7 @@
 ---
 title: Understanding KMP
 date: 2016-11-17 21:44:28
-tags: [algorithm, String, Java]
+tags: [algorithm, string, java]
 categories: [Tricks]
 ---
 # 复习一百遍都难以彻底记住的KMP算法

@@ -1,8 +1,8 @@
 ---
 title: The dynamic programming
 date: 2016-12-04 20:47:18
-tags: [Algorithm, Leetcode]
-categories: [tricks]
+tags: [algorithm, leetcode, kmp]
+categories: [Tricks]
 ---
 # 认识一下大名鼎鼎的动态规划
 算法是我永远的痛，抽象思维能力不足，还不努力。那么还是来看一下一个简单有趣的讲解材料吧，想到以前本科上过的坑爹算法课，眼泪掉下来啊，啥也没学到。

@@ -1,8 +1,8 @@
 ---
 title: Use Kvm to customize an mirror for openstack
 date: 2016-11-03 10:15:31
-tags: [Linux, KVM, openstack]
-categories: [trials]
+tags: [linux, kvm, openstack]
+categories: [Trials]
 ---
 
 # 在linux上使用kvm，qemu，vnc等工具进行虚拟机定制以及qcow2镜像的生成

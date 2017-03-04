@@ -1,7 +1,7 @@
 ---
 title: Set an extra JDK for new IDEA
 date: 2016-12-10 11:16:13
-tags: [IDEA, Linux, JDK]
+tags: [idea, linux, jdk]
 categories: [Tricks]
 ---
 # 今天给linux虚拟机安装idea，版本很新，发现jdk的一些问题

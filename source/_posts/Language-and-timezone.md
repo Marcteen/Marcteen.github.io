@@ -1,7 +1,8 @@
 ---
 title: Language and timezone
 date: 2016-11-02 08:44:00
-tags:
+tags: [hexo]
+category: [Tricks]
 ---
 # 语言文化代码和时区要怎么写呢？
 建好这个博客之后才发现语言有些奇怪，居然是德语，难道没设置语言默认就是如此吗。。

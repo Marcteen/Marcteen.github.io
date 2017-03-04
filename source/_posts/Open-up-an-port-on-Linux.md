@@ -1,8 +1,8 @@
 ---
 title: Open up an port on Linux
 date: 2016-11-08 09:43:12
-tags:
-categories:
+tags: [linux, network]
+categories: [Tricks]
 ---
 # 为Linux系统开放特定端口
 linux系统默认会开启防火墙（嗯应该是个系统就会开吧），那么如何开放特定端口满足实际需求呢？
@@ -20,3 +20,4 @@ linux系统默认会开启防火墙（嗯应该是个系统就会开吧），那
 	/sbin/iptables -L -n
 
 完成。
+

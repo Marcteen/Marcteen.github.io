@@ -2,7 +2,7 @@
 title: Fix an bug bring by GitPage's update
 date: 2016-11-05 11:23:29
 tags: [debug, hexo, 前端]
-categories: [trials]
+categories: [Trials]
 ---
 # 据说是GitPage默默上线新版导致的bug
 昨晚发现托管于Git的博客打开之后只显示框架，内容链接全部都显示为空白，可是特定位置的链接还是可以点击，在本地预览一切正常。

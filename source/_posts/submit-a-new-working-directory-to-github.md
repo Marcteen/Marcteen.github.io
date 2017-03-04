@@ -1,8 +1,8 @@
 ---
 title: submit a new working directory to github
 date: 2016-11-07 23:59:56
-tags:
-categories:
+tags: [git]
+categories: [Trials]
 ---
 # 如何将本地工程与github仓库关联
 今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。
