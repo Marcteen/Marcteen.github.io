@@ -69,6 +69,8 @@ git clone git@github.com:Marcteen/Marcteen.github.io
 但是这时候只有一个hexo分支，这是为什么呢？[参考内容](http://ilewen.com/questions/1940)
 
 2.重新配置hexo工程，这个可以参考上文首次配置中的第二步就可以了，唯一的不同就是不要执行hexo init，不然git工程配置文件就挂了。后来有次在实验室的win7机器上，突然出现了local hexo未安装的异常，无论如何安装都不行，即使重新clone下来后按上述步骤配置也不行，而且git-bash也已经由管理员身份运行了。后来发现，重启的电脑后，重新clone并配置，就一切正常。
+## 配置分类页面
+
 
 ## 发布博文注意事项
 1.新建并编辑博文，[参考](http://blog.csdn.net/wizardforcel/article/details/40684575)

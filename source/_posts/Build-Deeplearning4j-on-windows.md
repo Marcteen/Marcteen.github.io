@@ -57,7 +57,7 @@ categories: [Trials]
 	 ▒▒Ч▒▒Դ▒▒▒а▒: 1.8
 
 ## 跳回0.6.0
-这要如何是好？是不是因为系统没有1.8的jdk？看了看报错的插件是[maven-compiler-plugin](http://maven.apache.org/plugins/maven-compiler-plugin/)，可以在编译的时候[Setting the -source and -target of the Java Compiler](http://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-source-and-target.html)，看起来像是可以令jdk1.8编译出来的jar包可以在1.7环境下运行，但是，这需要代码中没有使用1.8新特性，而集群上现在还是jdk1.8，所以这是不行的。。仔细想想0.7.3的deeplearning4j还是太新了，反正只是一个继承关系的修改，使用更先前的版本（比如0.7.1，），当然也要避免使用利用了jdk1.8特性的版本。当然这还需要自己检查，一检查就发现这几版deeplearning4j其实还是改动挺大的，结果还是退回到了0.6.0
+这要如何是好？是不是因为系统没有1.8的jdk？看了看报错的插件是[maven-compiler-plugin](http://maven.apache.org/plugins/maven-compiler-plugin/)，可以在编译的时候[Setting the -source and -target of the Java Compiler](http://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-source-and-target.html)，看起来像是可以令jdk1.7编译出来的jar包可以在1.7环境下运行，但是，这需要代码中没有使用1.8新特性，而集群上现在还是jdk1.8，所以这是不行的。。仔细想想0.7.3的deeplearning4j还是太新了，反正只是一个继承关系的修改，使用更先前的版本（比如0.7.1，），当然也要避免使用利用了jdk1.8特性的版本。当然这还需要自己检查，一检查就发现这几版deeplearning4j其实还是改动挺大的，结果还是退回到了0.6.0
 
 	git clone -b deeplearning4j-0.6.0 --depth=1  git@github.com:deeplearning4j/deeplearning4j.git
 高于这个release都使用了jdk1.8特性，这就比较不好了，需要我们其他运行环境全部升级支持到1.8才可以。另外由于本地没有准备cuda本地库，所以就需要跳过cuda相关的编译，命令如下
