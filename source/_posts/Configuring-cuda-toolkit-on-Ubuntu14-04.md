@@ -28,7 +28,7 @@ categories: [Trials]
 运行后显示安装的是367.57，显示安装完成后，检查驱动版本号
 	
 	cat /proc/driver/nvidia/version
-发现没有这个nvidia目录，这说明驱动没有加载。重启后再试，就可以了
+发现没有这个nvidia目录，这说明驱动没有加载。首先重启后再试，发现驱动成功加载
 	
 	NVRM version: NVIDIA UNIX x86_64 Kernel Module  367.57  Mon Oct  3 20:37:01 PDT 2016
 	GCC version:  gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-12ubuntu1)
