@@ -4,12 +4,12 @@ date: 2017-03-11 11:40:20
 tags: [cuda, unbuntu]
 categories: [Trials]
 ---
-# 包含一个删除重装的cuda7.0配置过程
+# 包含一个删除重装的cuda8.0配置过程
 <!--more-->
 
 [参考内容](http://blog.csdn.net/xuezhisdc/article/details/48651003)
 
-## 使用.run文件安装cuda，apt-get安装驱动
+## 使用.run文件安装cuda，apt-get安装驱动，pascal架构的titan x必须使用cuda8.0
 
 首先为了保证不再出现其他问题，先将之前配置的所有nvidia驱动以及cuda删除，首先关闭图形环境
 
@@ -40,9 +40,9 @@ categories: [Trials]
 还可以查看一下此时加载的驱动
 
 	sudo prime-slelct query
-上述命令输出为nvidia，此时切换到cuda7.0所在目录，执行
+上述命令输出为nvidia，此时切换到cuda8.0所在目录，执行
 	
-	./cuda_7.0.28_linux.run
+	./cuda_8.0.28_linux.run
 长按d移至最下方，按照提示输入，除了不安装驱动，不安装openGL之外，其他的都为接受和默认值即可，安装完成后，因为选择了不安装驱动，会出现提示信息
 	
 	***WARNING: Incomplete installation! This installation did not install the CUDA Driver. A driver of version at least 346.00 is required for CUDA 7.0 functionality to work.
@@ -71,24 +71,22 @@ categories: [Trials]
 	Copyright (c) 2005-2015 NVIDIA Corporation
 	Built on Mon_Feb_16_22:59:02_CST_2015
 	Cuda compilation tools, release 7.0, V7.0.27
-然后可以到执行显卡信息查询
+可以查询一下GPU的状态
 
-	NVIDIA_CUDA-7.0_Samples/bin/x86_64/linux/release/deviceQuery
+	nvidia-smi
+然后可以到执行显卡信息查询，如果exmaple下面没有bin，说明是未编译的源码，先执行
+
+	make
+然后就可以执行deviceQuery的例子了
+
+	NVIDIA_CUDA-8.0_Samples/bin/x86_64/linux/release/deviceQuery
 稍等片刻，各个GPU的信息都能够显示出来，此时可以恢复图形界面服务
 	
 	sudo service lightdm start
+然后配置cudnn，比较简单，主要是文件的复制，进入cudnn目录，拷贝相应文件到目标位置
 
-然后配置cudnn，比较简单，主要是文件的复制和替换软链接
-
-	cd cudnn-6.5-linux-x64-v2
-	sudo cp lib* /usr/local/cuda/lib64/
-	sudo cp cudnn.h /usr/local/cuda/include/
-然后处理软连接
-
-	cd /usr/local/cuda/lib64/ 
-	sudo rm -rf libcudnn.so libcudnn.so.6.5 
-	sudo ln -s libcudnn.so.6.5.48 libcudnn.so.6.5 
-	sudo ln -s libcudnn.so.6.5 libcudnn.so 
+	cp include/cudnn.h /usr/local/cuda/include/
+	cp lib64/* /usr/local/cuda/lib64
 此时可以通过运行cudnn的例子进行验证。
 
 然后matlab之前已经成功安装完成，此时再验证一下，首先不要忘记开启vncserver
@@ -96,7 +94,7 @@ categories: [Trials]
 	vncserver :1
 然后打开终端，输入matlab，能够看到matlab启动即可，然后是opencv，猜想之前的ffmpeg编译安装有问题，因此，先卸载掉ffmpeg
 
-## 再次尝试编译ffmpeg（不建议参照）
+## 再次尝试编译ffmpeg
 
 	rm -rf /usr/local/bin/ffmpeg /usr/local/bin/ffprob /usr/local/bin/ffserver
 尝试重新编译安装，因为要使用GNU来进行编译，稍微了解一下这些命令的基本情况还是必须的，[参考这里](http://blog.csdn.net/nemo2011/article/details/7384501)，首先要通过
@@ -157,7 +155,7 @@ categories: [Trials]
 
 	make -j # -j可加速编译
 	
-最后看到了这些，估计没什么问题了
+最后看到了这些，估计没什么问题了,ffmpeg编译成功
 
 	LD	ffmpeg_g
 	LD	ffplay_g
@@ -171,46 +169,98 @@ categories: [Trials]
 	STRIP	ffserver
 	CP	ffmpeg
 	STRIP	ffmpeg
-然后继续编译opencv，依然是这个报错信息
+## 编译opencv的过程
+
+然后继续编译opencv，依然是这个报错信息，检查了一下CMAKE的参数，发现CUDA_GENERATION参数前没有-D字段，这显然是不对的，加上后发现并没有这个参数并没有Pascal选项，遂改为Auto，命令如下
 	
-		Linking CXX shared library ../../lib/libopencv_highgui.so
+	mkdir build
+	cd build
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_TBB=ON -D BUILD_NEW_PYTHON_SUPPORT=ON -D WITH_V4L=ON -D INSTALL_C_EXAMPLES=ON -D INSTALL_PYTHON_EXAMPLES=ON -D BUILD_EXAMPLES=ON -D WITH_QT=ON -D WITH_OPENGL=ON -D CUDA_GENERATION=Auto ..
+	make -j
+执行出现如下问题
+
+	Linking CXX shared library ../../lib/libopencv_highgui.so
 	/usr/bin/ld: /usr/local/lib/libavcodec.a(avpacket.o): relocation R_X86_64_32 against `.rodata.str1.1' can not be used when making a shared object; recompile with -fPIC
 	/usr/local/lib/libavcodec.a: error adding symbols: Bad value
 	collect2: error: ld returned 1 exit status
 	make[2]: *** [lib/libopencv_highgui.so.2.4.11] Error 1
 	make[1]: *** [modules/highgui/CMakeFiles/opencv_highgui.dir/all] Error 2
 	make: *** [all] Error 2
-检查了一下CMAKE的参数，发现CUDA_GENERATION参数前没有-D字段，这显然是不对的，加上后发现并没有这个参数并没有Pascal选项，遂改为Auto，命令如下
+注意看报错信息，当前是将opencv编译成动态链接库（遇到问题时，正要链接出libopencv_highgui.so），需要使用其他库生成的静态链接库（libavcodec.a），但是指出这个静态链接库在编译时没有开启-fPIC选项，看上面个的命令，显然编译ffmpeg的时候，-fPIC是加上了的，查了一下，编译后生成的/usr/local/ffmpeg/lib目录下有一个同名文件，但这并不是报错中指出的/usr/local/lib/libavcodec.a，说明编译时并没有引用我们自己编译生成的ffmpeg库文件，那么在/etc/ld.so.conf.d/下新建文件ffmpeg.conf，并加载库文件至cache
 	
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_TBB=ON -D BUILD_NEW_PYTHON_SUPPORT=ON -D WITH_V4L=ON -D INSTALL_C_EXAMPLES=ON -D INSTALL_PYTHON_EXAMPLES=ON -D BUILD_EXAMPLES=ON -D WITH_QT=ON -D WITH_OPENGL=ON -D CUDA_GENERATION=Auto ..
-执行出现如下问题
+	echo /usr/local/ffmpeg/lib >>　/etc/ld.so.conf.d/ffmpeg.conf
+	ldconfig
+然后还是在build目录中，执行
+	
+	make clean
+然后就可以继续make了，然后执行到了65%，报错如下
 
-	nvcc fatal   : Unsupported gpu architecture 'compute_61'
-	CMake Error at cuda_compile_generated_matrix_operations.cu.o.cmake:208 (message):
-	  Error generating
-	  /home/lthpc/opencv/opencv-2.4.11/build/modules/core/CMakeFiles/cuda_compile.dir/__/dynamicuda/src/cuda/./cuda_compile_generated_matrix_operations.cu.o
-查到[这里](http://blog.csdn.net/jacke121/article/details/55007527)，但是找不到这个所谓的makefile.config，可能cmake没有这个东西？也不知道为什么，这些源码包的编译一会用cmake，一会用gcc，试了是opencv3.0，码，使用3.0，然后执行
-	make -j
-依然会出现一样的nvcc报错信息。然后发现，似乎pascal架构的显卡必须使用cuda8.0，比如[这里](http://www.cnblogs.com/yaoyaoliu/p/5850993.html)，网上找到的关于这个问题的解决方法，发布时间都早于pascal面世，而打patch的方法，检查了一下下载的opencv源码里面已经是修改后的内容
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:120:54: error: ‘NppiGraphcutState’ has not been declared
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:135:18: error: expected type-specifier before ‘NppiGraphcutState’
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:141:9: error: ‘NppiGraphcutState’ does not name a type
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp: In constructor ‘{anonymous}::NppiGraphcutStateHandler::NppiGraphcutStateHandler(NppiSize, Npp8u*, {anonymous}::init_func_t)’:
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:127:13: error: ‘pState’ was not declared in this scope
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp: In destructor ‘{anonymous}::NppiGraphcutStateHandler::~NppiGraphcutStateHandler()’:
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:132:13: error: ‘pState’ was not declared in this scope
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:132:13: error: ‘nppiGraphcutFree’ was not declared in this scope
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp: In function ‘void cv::gpu::graphcut(cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::Stream&)’:
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:174:5: error: ‘nppiGraphcutGetSize’ was not declared in this scope
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:182:61: error: ‘nppiGraphcutInitAlloc’ was not declared in this scope
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:190:9: error: ‘nppiGraphcut_32s8u’ was not declared in this scope
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:195:9: error: ‘nppiGraphcut_32f8u’ was not declared in this scope
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp: In function ‘void cv::gpu::graphcut(cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::GpuMat&, cv::gpu::Stream&)’:
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:246:5: error: ‘nppiGraphcut8GetSize’ was not declared in this scope
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:254:61: error: ‘nppiGraphcut8InitAlloc’ was not declared in this scope
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:264:9: error: ‘nppiGraphcut8_32s8u’ was not declared in this scope
+	/home/lthpc/opencv/opencv-2.4.11/modules/gpu/src/graphcuts.cpp:271:9: error: ‘nppiGraphcut8_32f8u’ was not declared in this scope
+	make[2]: *** [modules/gpu/CMakeFiles/opencv_gpu.dir/src/graphcuts.cpp.o] Error 1
+	make[2]: *** Waiting for unfinished jobs....
+	make[1]: *** [modules/gpu/CMakeFiles/opencv_gpu.dir/all] Error 2
+	make: *** [all] Error 2
+[这里](http://blog.csdn.net/caozhantao/article/details/51479172)表示是opencv与cuda8.0的版本兼容问题，更换为16年发布的v2.4.13（或者最新v3.2.0）都可以解决。然后安装编译的库文件到系统，并将opencv库加入到系统的库路径中去
 
+	make install
+	echo /usr/local/lib >> /etc/ld.so.conf.d/opencv.conf
+	ldconfig
+### 可能遇到的其他错误及解决办法
 
-那么还是先清理一下opencv的碎片吧
+#### [LIBTIFF问题](http://answers.opencv.org/question/35642/libtiff_40-link-errors/)
+报错信息如
+
+	/usr/lib/libopencv_highgui.so.2.4: undefined reference to TIFFIsTiled@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference toTIFFOpen@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference to TIFFReadEncodedStrip@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference toTIFFSetField@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference to TIFFWriteScanline@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference toTIFFGetField@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference to TIFFScanlineSize@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference toTIFFSetWarningHandler@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference to TIFFSetErrorHandler@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference toTIFFReadEncodedTile@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference to TIFFReadRGBATile@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference toTIFFClose@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference to TIFFRGBAImageOK@LIBTIFF_4.0' 1> /usr/lib/libopencv_highgui.so.2.4: undefined reference toTIFFReadRGBAStrip@LIBTIFF_4.0'
+解决方法：CMAKE命令追加，同时还可以尝试通过apt-get安装/卸载重装libtiff-dev
+	
+	-DBUILD_TIFF=ON
+#### [Eigen/Eigenvalues问题](https://stackoverflow.com/questions/31425454/fatal-error-eigen-eigenvalues-in-ubuntu)
+报错信息如
+
+	opencv-xxx/modules/calib3d/src/dls.cpp:11:31: fatal error: Eigen/Eigenvalues: No such file or directory
+	xxx
+	compilation terminated.
+	make[2]: *** [modules/calib3d/CMakeFiles/opencv_calib3d.dir /src/dls.cpp.o] Error 1
+	make[1]: *** [modules/calib3d/CMakeFiles/opencv_calib3d.dir/all] Error 2
+	make: *** [all] Error 2
+这是因为系统对特征值库的引用不对，首先确认已经安装了eigen3，可使用apt-get重装，然后在cmake命令后追加如下内容保证正确引用
+
+	 -D EIGEN_INCLUDE_PATH=/usr/include/eigen3
+eigen3的路径可以通过如下方法获得
+	
+	whereis eigen3
+#### 卸载opencv的命令
+因为opencv的编译过程没有指定prefix，所以卸载好像没有那么方便，可以使用如下命令进行比较彻底的清楚，然后就可以重来了
 
 	rm -r /usr/local/include/opencv2 /usr/local/include/opencv /usr/include/opencv /usr/include/opencv2 /usr/local/share/opencv /usr/local/share/OpenCV /usr/share/opencv /usr/share/OpenCV /usr/local/bin/opencv* /usr/local/lib/libopencv*
-	
 ## 按照简洁的官网教程继续
-转到caffe[官网教程](http://caffe.berkeleyvision.org/install_apt.html)继续，嗯这个opencv直接使用apt-get解决了，那好吧
+转到caffe[官网教程](http://caffe.berkeleyvision.org/install_apt.html)继续，虽然官网教程没有指出要编译安装opencv，并且直接使用apt-get安装了libopencv，但这并不能说明自己编译安装opencv是不必要的。
 
 	sudo apt-get install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libhdf5-serial-dev protobuf-compiler
 	sudo apt-get install --no-install-recommends libboost-all-dev
 最搞笑的是服务器的网关验证老是自动断开，让人误以为是仓库不响应。。使用apt-get会让本地磁盘的缓存越来越大，可以定期清理一下
 	
 	apt-get clean
-	
 然后是安装blas，虽然GPU自己可以使用cuBlas，但是有些layer只有cpu实现，所以为cpu安装blas还是有必要的，服务器是因特尔处理器，但是mkl还要用邮箱申请序列号。。那就先用atlas好了
 	
 	sudo apt-get install libatlas-base-dev
-	
 然后是安装python的dev包，配合系统自带的python提供对pycaffe接口构建的支持。
 
 剩下的一些依赖
@@ -224,8 +274,9 @@ categories: [Trials]
 
 	/usr/local/anaconda # 其实是少打了一个2
 安装完成后，在/etc/profile中加入
-
-	export PATH="/usr/local/anaconda/bin:$PATH"
+	
+	export ANACONDA_HOME="/usr/local/anaconda"
+	export PATH="$ANACONDA_HOME/bin:$PATH"
 然后验证一下当前系统使用的python
 
 	which python
@@ -233,9 +284,85 @@ categories: [Trials]
 
 	conda search boost
 	conda install boost
-制定一个符合caffe要求群的版本即可，然后安装通过anaconda的pip安装theano（为何要装这个？）
+然后克隆一个caffe仓库到本地
+
+	git clone https://github.com/BVLC/caffe.git
+修改配置文件Makefile.config，去掉如下语句的注释
 	
-	pip install theano -i http://pypi.douban.com/simple
+	USE_CUDNN := 1
+如果使用了其他的python（例如anaconda python），修改其中的python指向，文件中都有相关语句，matlab同理，这些通过改变语句注释即可，很方便，如下
 
 
+	MATLAB_DIR := /usr/local
+	MATLAB_DIR := /usr/local/MATLAB/R2014a
+	ANACONDA_HOME := /usr/local/anaconda
+	PYTHON_INCLUDE := $(ANACONDA_HOME)/include \
+                 $(ANACONDA_HOME)/include/python2.7 \
+                 $(ANACONDA_HOME)/lib/python2.7/site-packages/numpy/core/include
+	PYTHON_LIB := $(ANACONDA_HOME)/lib
+	WITH_PYTHON_LAYER := 1
+然后就可以启动make了，建议使用多核加速 -j
 
+	make all -j
+	make test -j
+	make runtest -j
+执行runtest报错为
+	.build_release/tools/caffe: error while loading shared libraries: libboost_system.so.1.61.0: cannot open shared object file: No such file or directory
+执行如下命令，会发现anacoda包含了该库，但是库文件不在系统的库路径当中
+	locate libboost_system.so.1.61.0
+	/usr/local/anaconda/lib/libboost_system.so.1.61.0
+这会很自然地让人想到将这个路径加入到/etc/ld.so.conf.d当中，但这却会有使得系统无法正常启动的风险，原因在如上路径中加入动态链接库有可能引入冲突，导致系统在启动时加载一些库失败，正确的做法是在用户的~/.bashrc或者/etc/profile当中追加
+
+	export LD_LIBRARY_PATH=$ANACONDA_HOME/lib:$LD_LIBRARY_PATH
+如果没有这一步，caffe实际上找不到的不只这一个库，这里就显示出了anaconda的便利，当然，配置使用还是要稍稍谨慎一些。测试应该全部通过，此时这个caffe目录就是安装好的caffe包了，我们可以继续编译python及matlab要使用的caffe库文件
+
+	make pycaffe -j
+	make matcaffe -j
+编译matcaffe出错了，输出为
+	
+	MEX matlab/+caffe/private/caffe_.cpp
+	Building with 'g++'.
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp: In function ‘void delete_solver(int, mxArray**, int, const mxArray**)’:
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp:208:3: warning: lambda expressions only available with -std=c++11 or -std=gnu++11 [enabled by default]
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp:208:4: error: no matching function for call to ‘remove_if(std::vector<boost::shared_ptr<caffe::Solver<float> > >::iterator, std::vector<boost::shared_ptr<caffe::Solver<float> > >::iterator, delete_solver(int, mxArray**, int, const mxArray**)::<lambda(const boost::shared_ptr<caffe::Solver<float> >&)>)’
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp:208:4: note: candidate is:
+	In file included from /usr/include/c++/4.7/algorithm:63:0,
+	                 from ./include/caffe/blob.hpp:4,
+	                 from ./include/caffe/caffe.hpp:7,
+	                 from /usr/local/caffe/matlab/+caffe/private/caffe_.cpp:18:
+	/usr/include/c++/4.7/bits/stl_algo.h:1166:5: note: template<class _FIter, class _Predicate> _FIter std::remove_if(_FIter, _FIter, _Predicate)
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp:208:4: error: template argument for ‘template<class _FIter, class _Predicate> _FIter std::remove_if(_FIter, _FIter, _Predicate)’ uses local type ‘delete_solver(int, mxArray**, int, const mxArray**)::<lambda(const boost::shared_ptr<caffe::Solver<float> >&)>’
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp:208:4: error:   trying to instantiate ‘template<class _FIter, class _Predicate> _FIter std::remove_if(_FIter, _FIter, _Predicate)’
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp: In function ‘void delete_net(int, mxArray**, int, const mxArray**)’:
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp:293:3: warning: lambda expressions only available with -std=c++11 or -std=gnu++11 [enabled by default]
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp:293:4: error: no matching function for call to ‘remove_if(std::vector<boost::shared_ptr<caffe::Net<float> > >::iterator, std::vector<boost::shared_ptr<caffe::Net<float> > >::iterator, delete_net(int, mxArray**, int, const mxArray**)::<lambda(const boost::shared_ptr<caffe::Net<float> >&)>)’
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp:293:4: note: candidate is:
+	In file included from /usr/include/c++/4.7/algorithm:63:0,
+	                 from ./include/caffe/blob.hpp:4,
+	                 from ./include/caffe/caffe.hpp:7,
+	                 from /usr/local/caffe/matlab/+caffe/private/caffe_.cpp:18:
+	/usr/include/c++/4.7/bits/stl_algo.h:1166:5: note: template<class _FIter, class _Predicate> _FIter std::remove_if(_FIter, _FIter, _Predicate)
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp:293:4: error: template argument for ‘template<class _FIter, class _Predicate> _FIter std::remove_if(_FIter, _FIter, _Predicate)’ uses local type ‘delete_net(int, mxArray**, int, const mxArray**)::<lambda(const boost::shared_ptr<caffe::Net<float> >&)>’
+	/usr/local/caffe/matlab/+caffe/private/caffe_.cpp:293:4: error:   trying to instantiate ‘template<class _FIter, class _Predicate> _FIter std::remove_if(_FIter, _FIter, _Predicate)’
+	In file included from /usr/local/anaconda/include/boost/filesystem/path_traits.hpp:23:0,
+	                 from /usr/local/anaconda/include/boost/filesystem/path.hpp:25,
+	                 from /usr/local/anaconda/include/boost/filesystem.hpp:16,
+	                 from ./include/caffe/util/io.hpp:4,
+	                 from ./include/caffe/caffe.hpp:18,
+	                 from /usr/local/caffe/matlab/+caffe/private/caffe_.cpp:18:
+	/usr/local/anaconda/include/boost/system/error_code.hpp: At global scope:
+	/usr/local/anaconda/include/boost/system/error_code.hpp:221:36: warning: ‘boost::system::posix_category’ defined but not used [-Wunused-variable]
+	/usr/local/anaconda/include/boost/system/error_code.hpp:222:36: warning: ‘boost::system::errno_ecat’ defined but not used [-Wunused-variable]
+	/usr/local/anaconda/include/boost/system/error_code.hpp:223:36: warning: ‘boost::system::native_ecat’ defined but not used [-Wunused-variable]
+	
+	make: *** [matlab/+caffe/private/caffe_.mexa64] Error 255
+在[这里](http://caffecn.cn/?/question/1113)找到了解决方法，编辑caffe目录下的文件Makefile，添加一行代码
+	
+	CXXFLAGS += -std=c++11
+保存后再次执行，就可以了。为了让python能够使用caffe，需要配置python环境变量，在/etc/profile当中添加如下内容
+	
+	export CAFFE_HOME=/usr/local/caffe
+	export PYTHONPATH=$CAFFE_HOME/python:$PYTHONPATH
+	
+
+	
