@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/10/31/first-post/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="如何使用git管理hexo源码目录并在多台电脑上同步费了些力气，终于是把hexo-gitPage搭起来了，因为觉得自己无论如何要开始做好记录，以便以后能够回顾。git是熟悉了又忘记，这篇文章就先记录一下如何使用git将hexo工程的源码一并管理，方便在不同的机器上撰写并发布post。">
-<meta property="og:updated_time" content="2016-11-06T02:48:17.110Z">
+<meta property="og:updated_time" content="2017-03-13T07:58:35.905Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="first post">
 <meta name="twitter:description" content="如何使用git管理hexo源码目录并在多台电脑上同步费了些力气，终于是把hexo-gitPage搭起来了，因为觉得自己无论如何要开始做好记录，以便以后能够回顾。git是熟悉了又忘记，这篇文章就先记录一下如何使用git将hexo工程的源码一并管理，方便在不同的机器上撰写并发布post。">
@@ -273,8 +273,8 @@
               <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/trials/" itemprop="url" rel="index">
-                    <span itemprop="name">trials</span>
+                  <a href="/categories/Trials/" itemprop="url" rel="index">
+                    <span itemprop="name">Trials</span>
                   </a>
                 </span>
 
@@ -346,7 +346,7 @@ rm -rf ../blog #可以考虑将其删除，或者刚才直接使用mv命令
 <p>git clone git@github.com:Marcteen/Marcteen.github.io</p>
 <p>但是这时候只有一个hexo分支，这是为什么呢？<a href="http://ilewen.com/questions/1940" target="_blank" rel="external">参考内容</a></p>
 <p>2.重新配置hexo工程，这个可以参考上文首次配置中的第二步就可以了，唯一的不同就是不要执行hexo init，不然git工程配置文件就挂了。后来有次在实验室的win7机器上，突然出现了local hexo未安装的异常，无论如何安装都不行，即使重新clone下来后按上述步骤配置也不行，而且git-bash也已经由管理员身份运行了。后来发现，重启的电脑后，重新clone并配置，就一切正常。</p>
-<h2 id="发布博文注意事项"><a href="#发布博文注意事项" class="headerlink" title="发布博文注意事项"></a>发布博文注意事项</h2><p>1.新建并编辑博文，<a href="http://blog.csdn.net/wizardforcel/article/details/40684575" target="_blank" rel="external">参考</a></p>
+<h2 id="配置分类页面"><a href="#配置分类页面" class="headerlink" title="配置分类页面"></a>配置分类页面</h2><h2 id="发布博文注意事项"><a href="#发布博文注意事项" class="headerlink" title="发布博文注意事项"></a>发布博文注意事项</h2><p>1.新建并编辑博文，<a href="http://blog.csdn.net/wizardforcel/article/details/40684575" target="_blank" rel="external">参考</a></p>
 <pre><code>hexo new “title”
 </code></pre><p>常用的文章属性有</p>
 <ul>
@@ -497,7 +497,7 @@ git commit -m &quot;message&quot;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-count">31</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -505,7 +505,7 @@ git commit -m &quot;message&quot;
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -514,7 +514,7 @@ git commit -m &quot;message&quot;
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">45</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -543,7 +543,7 @@ git commit -m &quot;message&quot;
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何使用git管理hexo源码目录并在多台电脑上同步"><span class="nav-number">1.</span> <span class="nav-text">如何使用git管理hexo源码目录并在多台电脑上同步</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#首次配置hexo与node-js环境"><span class="nav-number">1.1.</span> <span class="nav-text">首次配置hexo与node.js环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在新机器上同步hexo仓库并进行撰文"><span class="nav-number">1.2.</span> <span class="nav-text">在新机器上同步hexo仓库并进行撰文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布博文注意事项"><span class="nav-number">1.3.</span> <span class="nav-text">发布博文注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一点用git进行同步与合并分支的内容"><span class="nav-number">1.4.</span> <span class="nav-text">一点用git进行同步与合并分支的内容</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何使用git管理hexo源码目录并在多台电脑上同步"><span class="nav-number">1.</span> <span class="nav-text">如何使用git管理hexo源码目录并在多台电脑上同步</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#首次配置hexo与node-js环境"><span class="nav-number">1.1.</span> <span class="nav-text">首次配置hexo与node.js环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在新机器上同步hexo仓库并进行撰文"><span class="nav-number">1.2.</span> <span class="nav-text">在新机器上同步hexo仓库并进行撰文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置分类页面"><span class="nav-number">1.3.</span> <span class="nav-text">配置分类页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布博文注意事项"><span class="nav-number">1.4.</span> <span class="nav-text">发布博文注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一点用git进行同步与合并分支的内容"><span class="nav-number">1.5.</span> <span class="nav-text">一点用git进行同步与合并分支的内容</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
