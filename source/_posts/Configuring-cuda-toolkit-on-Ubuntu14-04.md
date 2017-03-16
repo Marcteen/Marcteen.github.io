@@ -139,9 +139,11 @@ categories: [Trials]
 
 	The program 'yasm' is currently not installed. You can install it by typing:
 	apt-get install yasm
-英吹思婷，其实就不要用它好了，在./configure后追加一个flag就可以实现
+英吹思婷，其实也可以不用它，只是一个加速编译的工具，在./configure后追加一个flag就可以实现
+
 	--disable-yasm
 不过还是先试着重新安装一下
+
 	apt-get --purge remove yasm
 	apt-get install yasm
 果然yasm正常了，再次configure之后，提示信息变成了
@@ -149,11 +151,12 @@ categories: [Trials]
 	ERROR: libx264 not found
 回头发现刚才脚本里安装的是x264，[其他教程](http://blog.csdn.net/u012891472/article/details/51482460)里安装的是libx264-dev，那么就删掉重新安装一次试试
 
-	apt-get --purge remove yasm
+	apt-get --purge remove x264
 	apt-get install libx264-dev
 再次configure，看起来很顺利，没有奇怪的提示了，接下来尝试编译
 
 	make -j # -j可加速编译
+	make install
 	
 最后看到了这些，估计没什么问题了,ffmpeg编译成功
 
@@ -363,6 +366,10 @@ eigen3的路径可以通过如下方法获得
 	
 	export CAFFE_HOME=/usr/local/caffe
 	export PYTHONPATH=$CAFFE_HOME/python:$PYTHONPATH
+此时可以进入python测试一下
 	
+	python
+	import caffe
+出现一些找不到依赖的情况，使用conda安装一下应该就可以了
 
 	
