@@ -174,7 +174,7 @@ categories: [Trials]
 	STRIP	ffmpeg
 ## 编译opencv的过程
 
-然后继续编译opencv，依然是这个报错信息，检查了一下CMAKE的参数，发现CUDA_GENERATION参数前没有-D字段，这显然是不对的，加上后发现并没有这个参数并没有Pascal选项，遂改为Auto，命令如下
+首先建议cuda8.0以及最新版本caffe搭配3.2使用，因为后面在测试caffe的时候发现找不到3.x的opencv库。继续编译opencv前，检查了一下教程给出的CMAKE的参数，发现CUDA_GENERATION参数前没有-D字段，这显然是不对的，加上后发现这个参数并不支持Pascal选项，遂改为Auto，命令如下
 	
 	mkdir build
 	cd build
@@ -249,6 +249,32 @@ categories: [Trials]
 eigen3的路径可以通过如下方法获得
 	
 	whereis eigen3
+#### ippicv下载龟速
+运气好的话，大概5，6分钟能够下载完成，同时也可以自己手动下载
+	
+	wget https://raw.githubusercontent.com/Itseez/opencv_3rdparty/81a676001ca8075ada498583e4166079e5744668/ippicv/ippicv_linux_20151201.tgz
+然后将这个文件放入到opencv源码工程的如下路径中
+
+	3rdparty/ippicv/downloads/linux-808b791a6eac9ed78d32a7666804320e
+
+
+#### undefined reference
+
+	../../lib/libopencv_videoio.so.3.2.0: undefined reference to `av_packet_unref'
+	../../lib/libopencv_videoio.so.3.2.0: undefined reference to `avformat_get_mov_video_tags'
+	collect2: error: ld returned 1 exit status
+	make[2]: *** [bin/opencv_visualisation] Error 1
+	make[1]: *** [apps/visualisation/CMakeFiles/opencv_visualisation.dir/all] Error 2
+
+这个不知道是怎么回事，查了查是属于ffmpeg的功能，尝试重新
+	
+	ldconfig -v
+还有就是
+	
+	apt-get install libavcodec-dev
+	apt-get --purge remove libavcodec-dev
+他就莫名其妙地好了。。。或许是库cache有延迟吧。。
+
 #### 卸载opencv的命令
 因为opencv的编译过程没有指定prefix，所以卸载好像没有那么方便，可以使用如下命令进行比较彻底的清楚，然后就可以重来了
 
@@ -293,6 +319,13 @@ eigen3的路径可以通过如下方法获得
 修改配置文件Makefile.config，去掉如下语句的注释
 	
 	USE_CUDNN := 1
+	OPENCV_VERSION := 3
+注意，因为启用了opencv3，我们需要在Makefile文件中进行相应的修改
+
+	LiBRARIES += opencv_core opencv_highgui opencv_imgproc
+在这一行后面追加
+
+	opencv_imgcodecs
 如果使用了其他的python（例如anaconda python），修改其中的python指向，文件中都有相关语句，matlab同理，这些通过改变语句注释即可，很方便，如下
 
 
@@ -371,5 +404,27 @@ eigen3的路径可以通过如下方法获得
 	python
 	import caffe
 出现一些找不到依赖的情况，使用conda安装一下应该就可以了
+
+### 其他可能的问题
+
+#### kEmptyString’ is not a member of ‘google::protobuf::internel
+
+可能是系统内存在多个版本的libprotobuf和protobuf-compiler，如果安装了anaconda，一般都包含了这个两个工具，不要再使用apt-get单独安装，卸载后可排除错误
+
+#### fatal error: caffe/proto/caffe.pb.h: No such file or directory  #include "caffe/proto/caffe.pb.h"
+
+caffe目录内缺失了东西，使用protoc生成一下就行，在caffe目录中
+
+	protoc src/caffe/proto/caffe.proto --cpp_out=.
+	mkdir include/caffe/proto
+	mv src/caffe/proto/caffe.pb.h includ/caffe/proto
+然后再重新编译即可
+
+#### 使用draw_net.py报错attributeError:int object has no attribute '_values'
+
+这个有人指出是protobuf的问题，但是实际上很可能是caffe源码自己的bug，对应文件为
+
+	caffe_dir/python/caffe.draw.py
+github上从rc4开始，这一文件被更新，但是这个更新全是差评，大家都指出这直接导致了上面的错误，所以一个解决方法是，使用rc3的对应文件替换，这样一般可以解决。
 
 	
