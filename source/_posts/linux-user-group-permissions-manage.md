@@ -4,13 +4,15 @@ date: 2017-03-16 09:25:49
 tags: [linux, user, permission]
 categories: [Tricks]
 ---
+
 # 一些管理linux用户的笔记
 <!--more-->
 
-##　添加用户，以及一些基本配置
+## 添加用户，以及一些基本配置
 	
 	useradd -r -m -s /bin/bash username
-	passwd xxx's password
+	passwd username
+	"username's password"
 注意useradd的参数，此时我们可以加入账户自动过期的功能，比如
 
 	useradd ... -e YYYY/MM/DD
@@ -111,3 +113,5 @@ categories: [Tricks]
 	        matlab_r2014a: /usr/local/matlab                                        #
 	        caffe: /usr/loca/caffe                                                  #
 	################################################################################
+
+
