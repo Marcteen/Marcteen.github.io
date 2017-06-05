@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/01/09/Openstack-managing-notes/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="openstack集群管理的一些常用命令">
-<meta property="og:updated_time" content="2017-01-19T08:49:15.462Z">
+<meta property="og:updated_time" content="2017-05-09T03:08:07.038Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Openstack managing notes">
 <meta name="twitter:description" content="openstack集群管理的一些常用命令">
@@ -404,7 +404,14 @@ while {[gets \$file line] != -1} {
 }
 close \$file
 EOF
-</code></pre>
+</code></pre><p>补充另外几点</p>
+<ul>
+<li>send一定要和expect配套，否则不会有效执行命令</li>
+<li>对于非root，也可使用“<em>~</em>”作为expect</li>
+<li>如果要远程写文件，换行符会与send混淆，一下子不知道怎么处理，可以用 &gt;&gt; 逐行追加避免使用换行符</li>
+<li></li>
+</ul>
+
       
     </div>
 
@@ -519,7 +526,7 @@ EOF
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -536,7 +543,7 @@ EOF
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">45</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>

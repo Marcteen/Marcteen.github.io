@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="git," />
+  <meta name="keywords" content="deep_learing，tensor_flow," />
 
 
 
@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="如何将本地工程与github仓库关联今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。">
+<meta name="description" content="使用Anaconda(python3.6)配置TensorFlow">
 <meta property="og:type" content="article">
-<meta property="og:title" content="submit a new working directory to github">
-<meta property="og:url" content="http://yoursite.com/2016/11/07/submit-a-new-working-directory-to-github/index.html">
+<meta property="og:title" content="Quick Configuring of TensorFlow">
+<meta property="og:url" content="http://yoursite.com/2017/04/14/Quick-Configuring-of-TensorFlow/index.html">
 <meta property="og:site_name" content="Marcteen">
-<meta property="og:description" content="如何将本地工程与github仓库关联今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。">
-<meta property="og:updated_time" content="2017-03-11T03:39:36.873Z">
+<meta property="og:description" content="使用Anaconda(python3.6)配置TensorFlow">
+<meta property="og:updated_time" content="2017-04-16T12:24:42.195Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="submit a new working directory to github">
-<meta name="twitter:description" content="如何将本地工程与github仓库关联今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。">
+<meta name="twitter:title" content="Quick Configuring of TensorFlow">
+<meta name="twitter:description" content="使用Anaconda(python3.6)配置TensorFlow">
 
 
 
@@ -114,10 +114,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/07/submit-a-new-working-directory-to-github/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/14/Quick-Configuring-of-TensorFlow/"/>
 
 
-  <title> submit a new working directory to github | Marcteen </title>
+  <title> Quick Configuring of TensorFlow | Marcteen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="en">
@@ -247,7 +247,7 @@
             
             
               
-                submit a new working directory to github
+                Quick Configuring of TensorFlow
               
             
           </h1>
@@ -259,38 +259,19 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-11-07T23:59:56+08:00" content="2016-11-07">
-              2016-11-07
+            <time itemprop="dateCreated" datetime="2017-04-14T10:23:10+08:00" content="2017-04-14">
+              2017-04-14
             </time>
           </span>
 
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Trials/" itemprop="url" rel="index">
-                    <span itemprop="name">Trials</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/11/07/submit-a-new-working-directory-to-github/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/07/submit-a-new-working-directory-to-github/" itemprop="commentsCount"></span>
+                <a href="/2017/04/14/Quick-Configuring-of-TensorFlow/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/14/Quick-Configuring-of-TensorFlow/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -313,18 +294,49 @@
       
 
       
-        <h1 id="如何将本地工程与github仓库关联"><a href="#如何将本地工程与github仓库关联" class="headerlink" title="如何将本地工程与github仓库关联"></a>如何将本地工程与github仓库关联</h1><p>今天开始刷LeetCode了，决定使用eclipse，并将工程使用git进行管理。<br><a id="more"></a><br>1.首先创建好本地java工程，提交了第一个题目的解twoSum。</p>
-<p>2.然后在github上新建一个空白仓库</p>
-<p>3.终端进入工程目录，进行相关初始化设置</p>
-<pre><code>git init
-git add .
-git commit -m &quot;first commit&quot;
-git remote add origin git@github.com:Marcteen/leeTs.git
-git push origin master
-</code></pre><p>完成。</p>
-<p>对了，将仓库同步下来的时候，有一点注意一下，源码大小不大但是整个工程目录巨大无比。后来发现是.git目录很大，主要原因应该是该仓库commit很多，导致本地仓库记录了很多分支信息，解决的一个思路是控制clone的深度，因为目前往往不会参与到开源项目的贡献中,历史信息与分支暂时都没什么用。</p>
-<pre><code>git clone xxx --depth 1
-</code></pre><p>这样就可以只把仓库当前最新的内容同步下来了。</p>
+        <h1 id="使用Anaconda-python3-6-配置TensorFlow"><a href="#使用Anaconda-python3-6-配置TensorFlow" class="headerlink" title="使用Anaconda(python3.6)配置TensorFlow"></a>使用Anaconda(python3.6)配置TensorFlow</h1><a id="more"></a>
+<h2 id="安装配置anaconda"><a href="#安装配置anaconda" class="headerlink" title="安装配置anaconda"></a>安装配置anaconda</h2><p>官网下载安装脚本，运行即可</p>
+<pre><code>wget https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh
+bash Anaconda3-4.3.1-Linux-x86_64.sh
+</code></pre><p>然后创建一个conda环境，并可以对其指定Python运行版本</p>
+<pre><code>conda create -n tensorflow
+</code></pre><p>激活这个运行环境</p>
+<pre><code>source activate tensorflow
+</code></pre><p>停用这个运行环境</p>
+<pre><code>source deactivate tensorflow
+</code></pre><h2 id="安装TensorFlow"><a href="#安装TensorFlow" class="headerlink" title="安装TensorFlow"></a>安装TensorFlow</h2><p>激活后，命令提示符前显示当前使用的环境配置名，那么进行TensorFlow的安装</p>
+<pre><code>pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.0.1-cp36-cp36m-linux_x86_64.whl
+</code></pre><p>注意最后一个url参数需要在<a href="https://www.tensorflow.org/install/install_linux" target="_blank" rel="external">这里</a>按照版本匹配选择。完成后，就可以开始安装验证了。</p>
+<h2 id="验证刚才安装的Tensorflow"><a href="#验证刚才安装的Tensorflow" class="headerlink" title="验证刚才安装的Tensorflow"></a>验证刚才安装的Tensorflow</h2><p>保持刚才的conda环境，进入python，运行如下脚本</p>
+<pre><code>import tensorflow as tf
+hello = tf.constant(&quot;Hello, TensorFlow!&quot;)
+sess = tf.Session()
+print(sess.run(hello))
+</code></pre><p>import报错如下</p>
+<pre><code>ImportError: /lib64/libc.so.6: version `GLIBC_2.16&apos; not found (required by /home/tseg/anaconda3/lib/python3.6/site-packages/tensorflow/python/_pywrap_tensorflow.so)
+</code></pre><p>静态链接库的版本问题，可以查看glibc支持的版本</p>
+<pre><code>strings /lib64/libc.so.6 |grep GLIBC
+</code></pre><p>输出最高只有2.12，需要更高版本来支持，一些攻略会建议给用户自己安装一个libc，但是在添加到动态链接库缓存后会出现<a href="http://blog.csdn.net/levy_cui/article/details/51251095" target="_blank" rel="external">严重问题</a>，所以还是直接升级为妙</p>
+<pre><code>mkdir ~/lib_local
+cd lib_local
+wget http://ftp.gnu.org/gnu/glibc/glibc-2.16.0.tar.gz
+tar -xzvf glibc-2.16.0.tar.gz
+cd glibc-2.16.0
+</code></pre><p>建立构建目录并进入</p>
+<pre><code>mkdir build
+cd build
+</code></pre><p>进行配置（指定编译后库文件的安装位置，这里指定到用户目录内）</p>
+<pre><code>../configure --prefix=/usr --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
+</code></pre><p>然后启动编译，需要等待一定时间</p>
+<pre><code>make -j
+</code></pre><p>然后安装</p>
+<pre><code>sudo make install
+</code></pre><p>此时再次检查libc.so.6内容，可以看到增加了新版本2.16，但是，这时候python载入报错信息变成glibc_2.17了。。。检查了一下另一个已经成功运行tensorflow-1.0的机器，发现glibc版本一直到了2.18，重新安装编译2.18之后，问题解决，再次执行刚才的测试程序成功执行，但是有如下提示</p>
+<pre><code>W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use SSE3 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+</code></pre><p>这只是表示，如果TensorFlow用进行编译安装，可以获得更好性能（刚才直接使用anaconda安装的），一般没有大碍，可以参考<a href="http://stackoverflow.com/questions/42334777/tensorflow-installation-using-sse-instructions-with-pip" target="_blank" rel="external">这里</a></p>
 
       
     </div>
@@ -347,7 +359,7 @@ git push origin master
       
         <div class="post-tags">
           
-            <a href="/tags/git/" rel="tag">#git</a>
+            <a href="/tags/deep-learing，tensor-flow/" rel="tag">#deep_learing，tensor_flow</a>
           
         </div>
       
@@ -356,17 +368,13 @@ git push origin master
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/06/Set-background-picture-for-hexo-neXt/" rel="next" title="Set background picture for hexo neXt">
-                <i class="fa fa-chevron-left"></i> Set background picture for hexo neXt
+              <a href="/2017/03/16/linux-user-group-permissions-manage/" rel="next" title="linux user/group permissions manage">
+                <i class="fa fa-chevron-left"></i> linux user/group permissions manage
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/11/08/Open-up-an-port-on-Linux/" rel="prev" title="Open up an port on Linux">
-                Open up an port on Linux <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -392,8 +400,8 @@ git push origin master
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/11/07/submit-a-new-working-directory-to-github/"
-           data-title="submit a new working directory to github" data-url="http://yoursite.com/2016/11/07/submit-a-new-working-directory-to-github/">
+      <div class="ds-thread" data-thread-key="2017/04/14/Quick-Configuring-of-TensorFlow/"
+           data-title="Quick Configuring of TensorFlow" data-url="http://yoursite.com/2017/04/14/Quick-Configuring-of-TensorFlow/">
       </div>
     
   </div>
@@ -484,7 +492,7 @@ git push origin master
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何将本地工程与github仓库关联"><span class="nav-number">1.</span> <span class="nav-text">如何将本地工程与github仓库关联</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Anaconda-python3-6-配置TensorFlow"><span class="nav-number">1.</span> <span class="nav-text">使用Anaconda(python3.6)配置TensorFlow</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装配置anaconda"><span class="nav-number">1.1.</span> <span class="nav-text">安装配置anaconda</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装TensorFlow"><span class="nav-number">1.2.</span> <span class="nav-text">安装TensorFlow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证刚才安装的Tensorflow"><span class="nav-number">1.3.</span> <span class="nav-text">验证刚才安装的Tensorflow</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
