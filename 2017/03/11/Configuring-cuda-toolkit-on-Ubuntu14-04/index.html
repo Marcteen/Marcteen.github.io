@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/03/11/Configuring-cuda-toolkit-on-Ubuntu14-04/index.html">
 <meta property="og:site_name" content="Marcteen">
 <meta property="og:description" content="包含一个删除重装的cuda8.0配置过程">
-<meta property="og:updated_time" content="2017-03-22T02:59:10.094Z">
+<meta property="og:updated_time" content="2017-06-07T08:45:03.774Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Configuring cuda(toolkit) on Ubuntu14.04">
 <meta name="twitter:description" content="包含一个删除重装的cuda8.0配置过程">
@@ -340,7 +340,7 @@ GCC version:  gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-12ubuntu1)
 To install the driver using this installer, run the following command, replacing &lt;CudaInstaller&gt; with the name of this run file:
 sudo &lt;CudaInstaller&gt;.run -silent -driver
 </code></pre><p>都是唬人的，按照其他提示在/etc/profile中添加如下内容</p>
-<pre><code>export PATH=$PATH:/usr/local/cuda-7.0/bin
+<pre><code>export PATH=$PATH:/usr/local/cuda-8.0/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 </code></pre><p>然后source使其立即生效</p>
 <pre><code>source /etc/profile
