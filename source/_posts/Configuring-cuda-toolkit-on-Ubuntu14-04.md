@@ -50,7 +50,7 @@ categories: [Trials]
     sudo <CudaInstaller>.run -silent -driver
 都是唬人的，按照其他提示在/etc/profile中添加如下内容
 
-	export PATH=$PATH:/usr/local/cuda-7.0/bin
+	export PATH=$PATH:/usr/local/cuda-8.0/bin
 	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 然后source使其立即生效
 
