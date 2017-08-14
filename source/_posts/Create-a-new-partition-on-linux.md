@@ -170,3 +170,32 @@ categories: [Trials]
 
 	sudo chown -R tseg /home/tseg
 
+## 大容量硬盘处理
+
+参考[这里](http://www.blogjava.net/haha1903/archive/2011/12/21/366942.html)，fdisk使用的MBR分区表，支持的最大卷容量为2T,大容量的硬盘（例如这里的4T硬盘），需要使用GPT分区表，这需要使用分区工具parted来实现。另外，如果查看分区后显示
+
+	Disk /dev/sdb doesn't contain a valid partition table
+这说明当前该硬盘还没有被正确分区，那么开始使用parted给这个大硬盘创建分区表
+
+	parted /dev/sdb
+这个好像是指定分区label
+
+	mklabel gpt
+然后创建主分区
+
+	mkpart primary 0KB 4001GB
+可以用print查看一下分区结果。quit退出parted，继续进行挂载。首先进行格式化
+
+	mkfs.ext4 /dev/sdb1
+接下来进行挂载
+
+	mount /dev/sdb1 /home/sea
+使用df命令可以验证挂载情况。设置自动挂载
+
+	echo  "/dev/sdb1  /home/sea    ext4    defaults    0 2" >> /etc/fstab
+但要注意的是，ubuntu自动挂载需要给出分区的uuid，而不是分区路径，获得各分区的uuid方法
+
+	blkid
+然后执行
+
+	echo  "UUID=0eee5080-f1eb-43da-bbaf-ca4e78971e45  /home/sea  ext4  defaults  0  2" >> /etc/fstab

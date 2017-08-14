@@ -115,6 +115,11 @@ categories: [Tricks]
 	close \$file
 	EOF
 
+补充另外几点
 
+* send一定要和expect配套，否则不会有效执行命令
+* 对于非root，也可使用“*~*”作为expect
+* 如果要远程写文件，换行符会与send混淆，一下子不知道怎么处理，可以用 >> 逐行追加避免使用换行符
+* 
 
 	

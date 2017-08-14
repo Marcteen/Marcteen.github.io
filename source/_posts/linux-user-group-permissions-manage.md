@@ -66,6 +66,14 @@ categories: [Tricks]
 
 	vim /etc/passwd
 
+## 允许用户在图形登录界面输入用户名进行登录
+
+	vim /usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf
+添加一行
+
+	greeter-show-manual-login=true
+保存后重启即可
+
 ## 修改欢迎信息
 
 首先新建文件，保存要打印的文本
